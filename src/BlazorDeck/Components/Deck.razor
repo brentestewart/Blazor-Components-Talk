@@ -17,6 +17,13 @@
 <MudThemeProvider Theme="_mudTheme" IsDarkMode="t.IsDark" />
 <CascadingValue Value="State.Theme">
     <div class="deck" style="--accent:var(--mud-palette-primary); --deck-bg:var(--mud-palette-background); --deck-fg:var(--mud-palette-text-primary); --deck-surface:var(--mud-palette-surface); --deck-surface-2:var(--mud-palette-background-gray); --deck-border:var(--mud-palette-lines-default); --deck-comment:@comment">
+        <div class="deck-aurora" aria-hidden="true">
+            <span class="blob b1"></span>
+            <span class="blob b2"></span>
+        </div>
+        <div class="deck-grid" aria-hidden="true"></div>
+        <div class="deck-index" aria-hidden="true">@((State.Index + 1).ToString("D2"))</div>
+        <div class="deck-tag" aria-hidden="true"><span class="br">&lt;</span>@ComponentName<span class="br"> /&gt;</span></div>
         <div class="deck-progress" style="width:@ProgressPercent%"></div>
         <div class="stage">
             <div class="slide-anim" @key="State.Index">
@@ -94,6 +101,9 @@
 
     private int ProgressPercent =>
         Slides.Count == 0 ? 0 : (int)Math.Round((State.Index + 1) * 100.0 / Slides.Count);
+
+    private string ComponentName =>
+        Slides.Count == 0 ? "" : Slides[State.Index].Type.Name;
 
     private DotNetObjectReference<Deck>? _ref;
     private IJSObjectReference? _module;

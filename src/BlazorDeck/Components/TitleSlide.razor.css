@@ -7,11 +7,11 @@
 }
 
 .ts-title {
-    font-size: clamp(2.4rem, 6.5vw, 4.6rem);
-    font-weight: 700;
-    line-height: 1.04;
-    letter-spacing: -0.03em;
-    margin: 0 0 1.5rem;
+    font-size: clamp(2.8rem, 8.5vw, 6.2rem);
+    font-weight: 800;
+    line-height: 1.0;
+    letter-spacing: -0.04em;
+    margin: 0 0 1.75rem;
 }
 
 .ts-sub {

@@ -1,14 +1,105 @@
 .deck {
     position: fixed;
     inset: 0;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     background-color: var(--deck-bg);
-    background-image:
-        radial-gradient(90% 60% at 92% -8%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 60%),
-        radial-gradient(70% 50% at 0% 108%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 55%);
     color: var(--deck-fg);
     font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+/* Living aurora: slow-drifting accent light behind everything. */
+.deck-aurora {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.deck-aurora .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(75px);
+}
+
+.deck-aurora .b1 {
+    width: 52vw;
+    height: 52vw;
+    top: -16vw;
+    right: -10vw;
+    background: radial-gradient(circle, color-mix(in srgb, var(--accent) 60%, transparent), transparent 70%);
+    opacity: 0.42;
+    animation: drift-1 19s ease-in-out infinite alternate;
+}
+
+.deck-aurora .b2 {
+    width: 44vw;
+    height: 44vw;
+    bottom: -18vw;
+    left: -8vw;
+    background: radial-gradient(circle, color-mix(in srgb, var(--accent) 42%, transparent), transparent 70%);
+    opacity: 0.32;
+    animation: drift-2 24s ease-in-out infinite alternate;
+}
+
+@keyframes drift-1 {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(-7vw, 6vw) scale(1.18); }
+}
+
+@keyframes drift-2 {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(6vw, -5vw) scale(1.12); }
+}
+
+/* Blueprint grid — components are building blocks. Fades out toward the edges. */
+.deck-grid {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+        linear-gradient(color-mix(in srgb, var(--deck-fg) 7%, transparent) 1px, transparent 1px),
+        linear-gradient(90deg, color-mix(in srgb, var(--deck-fg) 7%, transparent) 1px, transparent 1px);
+    background-size: 68px 68px;
+    -webkit-mask-image: radial-gradient(circle at 50% 42%, black, transparent 82%);
+    mask-image: radial-gradient(circle at 50% 42%, black, transparent 82%);
+}
+
+/* Giant ghosted slide number as a graphic anchor. */
+.deck-index {
+    position: absolute;
+    z-index: 0;
+    right: 3vw;
+    bottom: 1vh;
+    font-size: 38vh;
+    font-weight: 800;
+    line-height: 0.8;
+    letter-spacing: -0.05em;
+    color: var(--accent);
+    opacity: 0.07;
+    font-variant-numeric: tabular-nums;
+    pointer-events: none;
+    user-select: none;
+}
+
+/* The meta signature: this slide's real component name. */
+.deck-tag {
+    position: absolute;
+    z-index: 3;
+    top: 2.4rem;
+    left: 2.8rem;
+    font-family: "Cascadia Code", "JetBrains Mono", ui-monospace, monospace;
+    font-size: 0.85rem;
+    letter-spacing: 0.02em;
+    color: color-mix(in srgb, var(--deck-fg) 50%, transparent);
+    pointer-events: none;
+}
+
+.deck-tag .br {
+    color: var(--accent);
 }
 
 .deck-progress {
@@ -18,38 +109,45 @@
     height: 3px;
     background: var(--accent);
     border-radius: 0 2px 2px 0;
-    transition: width 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+    box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 70%, transparent);
+    transition: width 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
     z-index: 5;
 }
 
 .stage {
+    position: relative;
+    z-index: 1;
     flex: 1;
     min-height: 0;
 }
 
 .slide-anim {
     height: 100%;
-    animation: slide-in 0.42s cubic-bezier(0.2, 0.7, 0.2, 1);
+    animation: slide-in 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes slide-in {
     from {
         opacity: 0;
-        transform: translateY(16px);
+        transform: translateY(24px);
+        clip-path: inset(0 0 12% 0);
     }
     to {
         opacity: 1;
         transform: translateY(0);
+        clip-path: inset(0 0 0 0);
     }
 }
 
 .deck-bar {
+    position: relative;
+    z-index: 4;
     display: flex;
     align-items: center;
     gap: 0.4rem;
     padding: 0.5rem 1.25rem;
-    background: color-mix(in srgb, var(--deck-bg) 78%, transparent);
-    backdrop-filter: blur(10px);
+    background: color-mix(in srgb, var(--deck-bg) 72%, transparent);
+    backdrop-filter: blur(12px);
     border-top: 1px solid var(--deck-border);
 }
 
@@ -86,7 +184,9 @@
 .overview {
     position: absolute;
     inset: 0 0 3rem 0;
-    background: var(--deck-bg);
+    z-index: 6;
+    background: color-mix(in srgb, var(--deck-bg) 88%, transparent);
+    backdrop-filter: blur(16px);
     padding: 2rem 3rem;
     box-sizing: border-box;
     overflow: hidden;

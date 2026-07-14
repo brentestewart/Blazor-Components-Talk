@@ -10,11 +10,11 @@
 
 .slide-title {
     margin: 0 0 2.5rem;
-    font-size: clamp(2rem, 5vw, 3.4rem);
-    font-weight: 600;
+    font-size: clamp(2.4rem, 6vw, 4.4rem);
+    font-weight: 800;
     color: var(--accent);
-    line-height: 1.1;
-    letter-spacing: -0.02em;
+    line-height: 1.05;
+    letter-spacing: -0.035em;
 }
 
 .slide-body {
