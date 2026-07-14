@@ -4,9 +4,12 @@
 
 <PageTitle>BlazorDeck</PageTitle>
 
-<Deck Slides="Slides" />
+<Deck Slides="Slides" InitialSlide="SlideParam" />
 
 @code {
+    [SupplyParameterFromQuery(Name = "slide")]
+    public int? SlideParam { get; set; }
+
     // The ordered table of contents. Each entry is a slide component + its overview title.
     private static readonly SlideInfo[] Slides =
     {

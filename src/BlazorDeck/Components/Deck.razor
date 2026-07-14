@@ -1,6 +1,7 @@
 @namespace BlazorDeck.Components
 @inject DeckState State
 @inject IJSRuntime JS
+@inject NavigationManager Nav
 @implements IAsyncDisposable
 
 @* The deck root. Shows: DynamicComponent as the rendering engine (#17),
@@ -48,15 +49,25 @@
     [Parameter, EditorRequired]
     public IReadOnlyList<SlideInfo> Slides { get; set; } = Array.Empty<SlideInfo>();
 
+    /// <summary>1-based slide to open on (from the ?slide= query). Applied once on init.</summary>
+    [Parameter] public int? InitialSlide { get; set; }
+
     private DotNetObjectReference<Deck>? _ref;
     private IJSObjectReference? _module;
     private List<OverviewEntry> _indexed = new();
+    private bool _ready;
+    private int _syncedIndex = -1;
 
     private record OverviewEntry(int Index, SlideInfo Info);
 
     protected override void OnInitialized()
     {
+        State.SetCount(Slides.Count);
         State.OnChange += OnStateChanged;
+        if (InitialSlide is int slide)
+        {
+            State.Goto(slide - 1);
+        }
     }
 
     protected override void OnParametersSet()
@@ -65,7 +76,16 @@
         _indexed = Slides.Select((info, i) => new OverviewEntry(i, info)).ToList();
     }
 
-    private void OnStateChanged() => InvokeAsync(StateHasChanged);
+    private void OnStateChanged()
+    {
+        // Keep the URL in sync so a reload (e.g. Auto → WASM) restores the current slide.
+        if (_ready && State.Index != _syncedIndex)
+        {
+            _syncedIndex = State.Index;
+            Nav.NavigateTo(Nav.GetUriWithQueryParameter("slide", State.Index + 1), replace: true);
+        }
+        InvokeAsync(StateHasChanged);
+    }
 
     private void Jump(int index)
     {
@@ -76,6 +96,8 @@
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (!firstRender) return;
+        _syncedIndex = State.Index;
+        _ready = true;
         _module = await JS.InvokeAsync<IJSObjectReference>(
             "import", "./_content/BlazorDeck/deck.js");
         _ref = DotNetObjectReference.Create(this);
