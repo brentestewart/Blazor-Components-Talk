@@ -6,7 +6,7 @@
    Shows: lifecycle (#8, OnAfterRenderAsync), JS interop (#18, IJSObjectReference module),
    CSS isolation (#21), cascading theme (#11). *@
 
-<div class="code-slide" style="--accent:@Theme.Accent">
+<div class="code-slide">
     @if (!string.IsNullOrWhiteSpace(Title))
     {
         <h1 class="cs-title">@Title</h1>
@@ -15,8 +15,6 @@
 </div>
 
 @code {
-    [CascadingParameter] public DeckTheme Theme { get; set; } = DeckThemes.DarkIndigo;
-
     [Parameter] public string? Title { get; set; }
     [Parameter] public string Code { get; set; } = string.Empty;
     [Parameter] public string Language { get; set; } = "csharp";

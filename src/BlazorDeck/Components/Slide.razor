@@ -3,7 +3,7 @@
 @* Base slide layout. Shows: component structure (#3), parameters (#4),
    attribute splatting (#5), cascading parameters (#11), CSS isolation (#21). *@
 
-<div class="slide" style="--accent:@Theme.Accent" @attributes="Extra">
+<div class="slide" @attributes="Extra">
     @if (!string.IsNullOrWhiteSpace(Title))
     {
         <h1 class="slide-title">@Title</h1>
@@ -18,8 +18,6 @@
 </div>
 
 @code {
-    [CascadingParameter] public DeckTheme Theme { get; set; } = DeckThemes.DarkIndigo;
-
     [Parameter] public string? Title { get; set; }
     [Parameter] public int? Number { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }

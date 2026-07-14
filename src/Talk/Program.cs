@@ -1,4 +1,5 @@
 using Talk.Components;
+using MudBlazor.Services;
 using BlazorDeck.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +9,7 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
 
+builder.Services.AddMudServices();
 builder.Services.AddScoped<DeckState>();
 
 var app = builder.Build();

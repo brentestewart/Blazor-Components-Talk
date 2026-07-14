@@ -176,6 +176,12 @@ The reusable layout components in `BlazorDeck` (compose these inside per-talk sl
 All verified live in the browser (8 showcase slides, build clean, no console errors): overview jump,
 theme flip, live counter, `@bind` slider, split/compare/section layouts.
 
+**MudBlazor integrated (theming aligned).** The deck wraps `MudThemeProvider`; the `t` toggle drives
+MudBlazor `IsDarkMode` + primary across 4 presets (Dark/Light × Indigo/Amber). All `--deck-*`
+variables resolve *from* `--mud-palette-*`, so custom slides and MudBlazor components share one
+palette — the Segment F "feels native" capstone (#23) is now structural, not staged. Verified:
+`--deck-bg` === `--mud-palette-background`, `--accent` === `--mud-palette-primary`.
+
 Known content-sizing note: `SplitSlide` code overflows if too wide — keep split-code snippets short.
 
 ## Step 3 progress — slide content per segment

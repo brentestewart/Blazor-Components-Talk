@@ -10,9 +10,13 @@
 
 @{
     var t = State.Theme;
+    _mudTheme.PaletteLight.Primary = t.Accent;
+    _mudTheme.PaletteDark.Primary = t.Accent;
+    var comment = t.IsDark ? "#6a9955" : "#4d7a2e";
 }
+<MudThemeProvider Theme="_mudTheme" IsDarkMode="t.IsDark" />
 <CascadingValue Value="State.Theme">
-    <div class="deck" style="--accent:@t.Accent; --deck-bg:@t.Bg; --deck-fg:@t.Fg; --deck-surface:@t.Surface; --deck-surface-2:@t.Surface2; --deck-border:@t.Border; --deck-comment:@t.CodeComment">
+    <div class="deck" style="--accent:var(--mud-palette-primary); --deck-bg:var(--mud-palette-background); --deck-fg:var(--mud-palette-text-primary); --deck-surface:var(--mud-palette-surface); --deck-surface-2:var(--mud-palette-background-gray); --deck-border:var(--mud-palette-lines-default); --deck-comment:@comment">
         <div class="stage">
             @if (Slides.Count > 0)
             {
@@ -52,6 +56,35 @@
 @code {
     [Parameter, EditorRequired]
     public IReadOnlyList<SlideInfo> Slides { get; set; } = Array.Empty<SlideInfo>();
+
+    // MudBlazor theme: surfaces/text/borders come from here (per light/dark palette),
+    // and Primary is set each render from the current preset's accent. The deck maps
+    // these to its --deck-* variables so custom slides and MudBlazor components match.
+    private readonly MudTheme _mudTheme = new()
+    {
+        PaletteLight = new PaletteLight
+        {
+            Background = "#f6f7f9",
+            Surface = "#ffffff",
+            BackgroundGray = "#eef1f4",
+            TextPrimary = "#1b1d23",
+            TextSecondary = "#5b616b",
+            LinesDefault = "#dce1e8",
+            AppbarBackground = "#ffffff",
+            DrawerBackground = "#ffffff",
+        },
+        PaletteDark = new PaletteDark
+        {
+            Background = "#0f1115",
+            Surface = "#12141a",
+            BackgroundGray = "#0b0c10",
+            TextPrimary = "#e8e8ea",
+            TextSecondary = "#9aa0ac",
+            LinesDefault = "#23262f",
+            AppbarBackground = "#0a0b0e",
+            DrawerBackground = "#12141a",
+        },
+    };
 
     /// <summary>1-based slide to open on (from the ?slide= query). Applied once on init.</summary>
     [Parameter] public int? InitialSlide { get; set; }
