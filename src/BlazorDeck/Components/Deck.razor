@@ -26,7 +26,7 @@
         <div class="deck-tag" aria-hidden="true"><span class="br">&lt;</span>@ComponentName<span class="br"> /&gt;</span></div>
         <div class="deck-progress" style="width:@ProgressPercent%"></div>
         <div class="stage">
-            <div class="slide-anim" @key="State.Index">
+            <div class="slide-anim @TransitionClass @DirectionClass" @key="State.Index">
                 @if (Slides.Count > 0)
                 {
                     <DynamicComponent Type="Slides[State.Index].Type" />
@@ -98,6 +98,30 @@
 
     /// <summary>1-based slide to open on (from the ?slide= query). Applied once on init.</summary>
     [Parameter] public int? InitialSlide { get; set; }
+
+    /// <summary>Fallback transition for slides that don't set their own.</summary>
+    [Parameter] public SlideTransition DefaultTransition { get; set; } = SlideTransition.Rise;
+
+    private SlideTransition EffectiveTransition
+    {
+        get
+        {
+            if (Slides.Count == 0) return DefaultTransition;
+            var t = Slides[State.Index].Transition;
+            return t == SlideTransition.Inherit ? DefaultTransition : t;
+        }
+    }
+
+    private string TransitionClass => EffectiveTransition switch
+    {
+        SlideTransition.None => "t-none",
+        SlideTransition.Fade => "t-fade",
+        SlideTransition.Slide => "t-slide",
+        SlideTransition.Scale => "t-scale",
+        _ => "t-rise",
+    };
+
+    private string DirectionClass => State.LastForward ? "dir-fwd" : "dir-back";
 
     private int ProgressPercent =>
         Slides.Count == 0 ? 0 : (int)Math.Round((State.Index + 1) * 100.0 / Slides.Count);

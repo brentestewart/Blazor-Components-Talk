@@ -14,6 +14,9 @@ public class DeckState
     public DeckTheme Theme => DeckThemes.All[_themeIndex];
     public bool ShowOverview { get; private set; }
 
+    /// <summary>Whether the last move advanced (true) or went back (false) — drives directional transitions.</summary>
+    public bool LastForward { get; private set; } = true;
+
     public event Action? OnChange;
 
     public void SetCount(int count) => Count = count;
@@ -31,17 +34,22 @@ public class DeckState
 
     public void Next()
     {
-        if (Index < Count - 1) { Index++; Notify(); }
+        if (Index < Count - 1) { LastForward = true; Index++; Notify(); }
     }
 
     public void Prev()
     {
-        if (Index > 0) { Index--; Notify(); }
+        if (Index > 0) { LastForward = false; Index--; Notify(); }
     }
 
     public void Goto(int index)
     {
-        if (index >= 0 && index < Count && index != Index) { Index = index; Notify(); }
+        if (index >= 0 && index < Count && index != Index)
+        {
+            LastForward = index > Index;
+            Index = index;
+            Notify();
+        }
     }
 
     public void CycleTheme()

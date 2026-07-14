@@ -4,7 +4,7 @@
 
 <PageTitle>BlazorDeck</PageTitle>
 
-<Deck Slides="Slides" InitialSlide="SlideParam" />
+<Deck Slides="Slides" InitialSlide="SlideParam" DefaultTransition="SlideTransition.Rise" />
 
 @code {
     [SupplyParameterFromQuery(Name = "slide")]
@@ -14,12 +14,13 @@
     private static readonly SlideInfo[] Slides =
     {
         // Segment A · Set the stage
-        new(typeof(A1Title), "Title"),
+        // Most slides inherit the deck default (Rise); a few set their own transition.
+        new(typeof(A1Title), "Title", SlideTransition.Fade),
         new(typeof(A2Reveal), "It's all components"),
         new(typeof(A3Hello), "Hello"),
-        new(typeof(A4Agenda), "What we'll cover"),
-        new(typeof(A5RenderModes), "Four render modes"),
-        new(typeof(A6ModeLive), "Which mode is this slide?"),
+        new(typeof(A4Agenda), "What we'll cover", SlideTransition.Slide),
+        new(typeof(A5RenderModes), "Four render modes", SlideTransition.Slide),
+        new(typeof(A6ModeLive), "Which mode is this slide?", SlideTransition.Scale),
         new(typeof(A7WhyItMatters), "Why render mode matters"),
     };
 }
