@@ -1,0 +1,28 @@
+@namespace Talk.Client.Slides
+
+<Slide Title="What we'll cover">
+    <BulletList Items="_items">
+        <ItemTemplate Context="i">
+            <strong style="color:var(--accent)">@i.Head</strong> — @i.Sub
+        </ItemTemplate>
+    </BulletList>
+    <p class="foot">…and it's all running on this deck.</p>
+</Slide>
+
+@code {
+    private record AgendaItem(string Head, string Sub);
+
+    private static readonly AgendaItem[] _items =
+    {
+        new("Fundamentals", "structure, parameters, binding, lifecycle"),
+        new("Communication & DI", "talking between components, shared state"),
+        new("Advanced composition", "templates, generics, dynamic, JS interop"),
+        new("Performance", "rendering, @key, virtualization"),
+        new("Reuse", "CSS isolation, libraries, MudBlazor"),
+        new("Testing", "bUnit"),
+    };
+}
+
+<style>
+    .foot { margin: 2rem 0 0; opacity: 0.55; font-style: italic; }
+</style>

@@ -1,0 +1,25 @@
+@namespace Talk.Client.Slides
+
+<Slide Title="Why the render mode matters">
+    <BulletList Items="_impacts">
+        <ItemTemplate Context="x">
+            <strong style="color:var(--accent)">@x.Head</strong> — @x.Sub
+        </ItemTemplate>
+    </BulletList>
+    <p class="foot">Hold this thought — it comes back in Communication (DI lifetimes) and JS interop.</p>
+</Slide>
+
+@code {
+    private record Impact(string Head, string Sub);
+
+    private static readonly Impact[] _impacts =
+    {
+        new("Lifecycle", "prerendering runs OnInitialized twice; OnAfterRender only once interactive"),
+        new("DI lifetimes", "\"scoped\" means per-circuit on Server, per-app on WebAssembly"),
+        new("JS interop", "no calling JavaScript until the component is actually interactive"),
+    };
+}
+
+<style>
+    .foot { margin: 2rem 0 0; opacity: 0.6; font-style: italic; max-width: 52ch; }
+</style>

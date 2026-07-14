@@ -178,8 +178,19 @@ theme flip, live counter, `@bind` slider, split/compare/section layouts.
 
 Known content-sizing note: `SplitSlide` code overflows if too wide — keep split-code snippets short.
 
+## Step 3 progress — slide content per segment
+
+- [x] **Segment A · Set the stage** — built & verified (`src/Talk.Client/Slides/SegmentA/`)
+  - A1 Title · A2 "It's all components" (reveal hook) · A3 Hello (⚠ placeholder bio to fill)
+  - A4 Agenda (bullet list) · A5 Four render modes · A6 Mode-live self-demo (RendererInfo → WebAssembly)
+  - A7 Why render mode matters (sets up DI lifetimes + JS interop callbacks)
+  - Showcase slides removed (in git history); `Present.razor` now lists Segment A only.
+- [ ] Segment B · Fundamentals
+- [ ] Segments C–G
+
 ## Open items
 
-- [ ] Draft slide content per segment (Step 3), building on the palette above
+- [ ] Fill in A3 speaker bio placeholders (name, role, handles)
+- [ ] Continue Step 3 with Segment B
 - [ ] Later: real highlighter (vendor Prism/Shiki to replace the spike's minimal one),
       bUnit tests (#24), PDF-export fallback, `DiagramSlide` if the lifecycle timeline needs it

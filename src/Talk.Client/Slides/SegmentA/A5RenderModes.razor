@@ -1,0 +1,21 @@
+@namespace Talk.Client.Slides
+
+<Slide Title="Four render modes">
+    <BulletList Items="_modes">
+        <ItemTemplate Context="m">
+            <strong style="color:var(--accent)">@m.Name</strong> — @m.Desc
+        </ItemTemplate>
+    </BulletList>
+</Slide>
+
+@code {
+    private record Mode(string Name, string Desc);
+
+    private static readonly Mode[] _modes =
+    {
+        new("Static SSR", "HTML rendered on the server, no interactivity"),
+        new("Interactive Server", "UI runs on the server over a SignalR circuit"),
+        new("Interactive WebAssembly", ".NET runs in the browser"),
+        new("Interactive Auto", "Server first for a fast start, then WebAssembly once it loads"),
+    };
+}
