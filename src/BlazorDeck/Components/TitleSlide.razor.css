@@ -1,22 +1,9 @@
 .ts-kicker {
-    position: relative;
     color: var(--accent);
     text-transform: uppercase;
     letter-spacing: 0.15em;
     font-size: 0.9rem;
     margin: 0 0 1.25rem;
-    padding-top: 1.5rem;
-}
-
-.ts-kicker::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 3rem;
-    height: 4px;
-    border-radius: 2px;
-    background: var(--accent);
 }
 
 .ts-title {
