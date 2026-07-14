@@ -39,6 +39,7 @@
             <button title="Next" @onclick="() => State.Next()">&rsaquo;</button>
             <span class="spacer"></span>
             <button title="Overview (o)" @onclick="() => State.ToggleOverview()">overview</button>
+            <button title="Reload — watch Server → WebAssembly (r)" @onclick="Reload">&#x27f3;</button>
             <button title="Toggle theme (t)" @onclick="() => State.ToggleTheme()">@State.Theme.Name</button>
             <button title="Fullscreen (f)" @onclick="ToggleFullscreen">&#x2922;</button>
         </footer>
@@ -117,8 +118,13 @@
             case "Escape": State.CloseOverview(); break;
             case "t": State.ToggleTheme(); break;
             case "f": _ = ToggleFullscreen(); break;
+            case "r": Reload(); break;
         }
     }
+
+    // Full reload of the current URL (position is preserved via ?slide=). Lets the
+    // audience watch Interactive Auto re-decide: Server first, then WebAssembly.
+    private void Reload() => Nav.NavigateTo(Nav.Uri, forceLoad: true);
 
     private async Task ToggleFullscreen()
     {

@@ -6,7 +6,7 @@ let handler = null;
 
 const NAV_KEYS = [
     "ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown",
-    "PageUp", "PageDown", "Home", "End", " ", "Enter", "t", "f", "o", "Escape"
+    "PageUp", "PageDown", "Home", "End", " ", "Enter", "t", "f", "o", "r", "Escape"
 ];
 
 export function registerKeys(dotNetRef) {
