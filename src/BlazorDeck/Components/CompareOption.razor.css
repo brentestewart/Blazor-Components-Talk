@@ -1,8 +1,8 @@
 .compare-option {
     flex: 1 1 0;
     min-width: 12rem;
-    background: #12141a;
-    border: 1px solid #23262f;
+    background: var(--deck-surface);
+    border: 1px solid var(--deck-border);
     border-radius: 10px;
     padding: 1.25rem 1.4rem;
     font-size: clamp(0.95rem, 1.7vw, 1.2rem);

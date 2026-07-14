@@ -8,8 +8,11 @@
    state container subscription (#13), cascading theme (#11),
    JS interop for keyboard + fullscreen (#18), virtualized overview (#20). *@
 
+@{
+    var t = State.Theme;
+}
 <CascadingValue Value="State.Theme">
-    <div class="deck" style="--accent:@State.Theme.Accent">
+    <div class="deck" style="--accent:@t.Accent; --deck-bg:@t.Bg; --deck-fg:@t.Fg; --deck-surface:@t.Surface; --deck-surface-2:@t.Surface2; --deck-border:@t.Border; --deck-comment:@t.CodeComment">
         <div class="stage">
             @if (Slides.Count > 0)
             {
@@ -40,7 +43,7 @@
             <span class="spacer"></span>
             <button title="Overview (o)" @onclick="() => State.ToggleOverview()">overview</button>
             <button title="Reload — watch Server → WebAssembly (r)" @onclick="Reload">&#x27f3;</button>
-            <button title="Toggle theme (t)" @onclick="() => State.ToggleTheme()">@State.Theme.Name</button>
+            <button title="Cycle theme (t)" @onclick="() => State.CycleTheme()">@State.Theme.Name</button>
             <button title="Fullscreen (f)" @onclick="ToggleFullscreen">&#x2922;</button>
         </footer>
     </div>
@@ -116,7 +119,7 @@
             case "End": State.Goto(Slides.Count - 1); break;
             case "o": State.ToggleOverview(); break;
             case "Escape": State.CloseOverview(); break;
-            case "t": State.ToggleTheme(); break;
+            case "t": State.CycleTheme(); break;
             case "f": _ = ToggleFullscreen(); break;
             case "r": _ = Reload(); break;
         }

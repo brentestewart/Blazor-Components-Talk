@@ -45,7 +45,7 @@ export function highlight(el) {
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;");
-    s = s.replace(/(\/\/[^\n]*)/g, (m) => `<span style="color:#6a9955">${m}</span>`);
+    s = s.replace(/(\/\/[^\n]*)/g, (m) => `<span style="color:var(--deck-comment,#6a9955)">${m}</span>`);
     s = s.replace(KEYWORDS, (m) => `<span style="color:var(--accent)">${m}</span>`);
     el.innerHTML = s;
 }

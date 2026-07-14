@@ -17,8 +17,8 @@
 .cs-pre {
     margin: 0;
     padding: 1.5rem 1.75rem;
-    background: #0b0c10;
-    border: 1px solid #23262f;
+    background: var(--deck-surface-2);
+    border: 1px solid var(--deck-border);
     border-left: 3px solid var(--accent);
     border-radius: 10px;
     overflow: auto;
@@ -29,5 +29,5 @@
     font-size: clamp(0.9rem, 1.7vw, 1.25rem);
     line-height: 1.6;
     white-space: pre;
-    color: #d6d8de;
+    color: var(--deck-fg);
 }

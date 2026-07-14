@@ -9,8 +9,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #0b0c10;
-    border: 1px solid #23262f;
+    background: var(--deck-surface-2);
+    border: 1px solid var(--deck-border);
     border-radius: 12px;
     padding: 2rem;
     min-height: 12rem;
