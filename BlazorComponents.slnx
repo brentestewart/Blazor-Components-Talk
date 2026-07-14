@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/BlazorDeck/BlazorDeck.csproj" />
+    <Project Path="src/Talk.Client/Talk.Client.csproj" />
+    <Project Path="src/Talk/Talk.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/BlazorDeck.Tests/BlazorDeck.Tests.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,16 @@
+@page "/"
+@rendermode InteractiveAuto
+@layout FullScreenLayout
+
+<PageTitle>BlazorDeck</PageTitle>
+
+<Deck Slides="Slides" />
+
+@code {
+    private static readonly Type[] Slides =
+    {
+        typeof(Slide01Title),
+        typeof(Slide02RenderModes),
+        typeof(Slide03Code),
+    };
+}

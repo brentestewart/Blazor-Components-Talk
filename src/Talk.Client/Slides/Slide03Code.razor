@@ -1,0 +1,14 @@
+@namespace Talk.Client.Slides
+
+@* Meta: this code slide shows the source of the previous slide. *@
+<CodeSlide Title="A slide is just a component" Language="razor" Code="@Source" />
+
+@code {
+    private const string Source = @"<Slide Title=""Render modes, live"" Number=""2"">
+    <p>This very slide is currently running as:</p>
+    <p class=""mode"">@RendererInfo.Name</p>
+</Slide>
+
+// The deck renders the current slide via <DynamicComponent Type=""..."" />
+// and shares the index through a DeckState container.";
+}
