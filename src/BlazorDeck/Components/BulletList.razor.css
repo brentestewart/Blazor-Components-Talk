@@ -1,15 +1,25 @@
 .bullets {
     margin: 0;
-    padding-left: 1.3em;
+    padding-left: 0;
+    list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 0.85rem;
+    gap: 1rem;
 }
 
 .bullets li {
+    position: relative;
+    padding-left: 1.5em;
     line-height: 1.5;
 }
 
-.bullets li::marker {
-    color: var(--accent);
+.bullets li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.62em;
+    width: 0.7em;
+    height: 0.16em;
+    border-radius: 2px;
+    background: var(--accent);
 }

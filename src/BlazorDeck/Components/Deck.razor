@@ -17,11 +17,14 @@
 <MudThemeProvider Theme="_mudTheme" IsDarkMode="t.IsDark" />
 <CascadingValue Value="State.Theme">
     <div class="deck" style="--accent:var(--mud-palette-primary); --deck-bg:var(--mud-palette-background); --deck-fg:var(--mud-palette-text-primary); --deck-surface:var(--mud-palette-surface); --deck-surface-2:var(--mud-palette-background-gray); --deck-border:var(--mud-palette-lines-default); --deck-comment:@comment">
+        <div class="deck-progress" style="width:@ProgressPercent%"></div>
         <div class="stage">
-            @if (Slides.Count > 0)
-            {
-                <DynamicComponent Type="Slides[State.Index].Type" />
-            }
+            <div class="slide-anim" @key="State.Index">
+                @if (Slides.Count > 0)
+                {
+                    <DynamicComponent Type="Slides[State.Index].Type" />
+                }
+            </div>
         </div>
 
         @if (State.ShowOverview)
@@ -88,6 +91,9 @@
 
     /// <summary>1-based slide to open on (from the ?slide= query). Applied once on init.</summary>
     [Parameter] public int? InitialSlide { get; set; }
+
+    private int ProgressPercent =>
+        Slides.Count == 0 ? 0 : (int)Math.Round((State.Index + 1) * 100.0 / Slides.Count);
 
     private DotNetObjectReference<Deck>? _ref;
     private IJSObjectReference? _module;

@@ -14,6 +14,17 @@
     font-weight: 600;
     color: var(--accent);
     line-height: 1.1;
+    letter-spacing: -0.02em;
+}
+
+.slide-title::before {
+    content: "";
+    display: block;
+    width: 2.75rem;
+    height: 4px;
+    margin-bottom: 1.4rem;
+    border-radius: 2px;
+    background: var(--accent);
 }
 
 .slide-body {

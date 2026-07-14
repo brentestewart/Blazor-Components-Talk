@@ -3,9 +3,23 @@
     inset: 0;
     display: flex;
     flex-direction: column;
-    background: var(--deck-bg);
+    background-color: var(--deck-bg);
+    background-image:
+        radial-gradient(90% 60% at 92% -8%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 60%),
+        radial-gradient(70% 50% at 0% 108%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 55%);
     color: var(--deck-fg);
     font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.deck-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: var(--accent);
+    border-radius: 0 2px 2px 0;
+    transition: width 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+    z-index: 5;
 }
 
 .stage {
@@ -13,34 +27,56 @@
     min-height: 0;
 }
 
+.slide-anim {
+    height: 100%;
+    animation: slide-in 0.42s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@keyframes slide-in {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .deck-bar {
     display: flex;
     align-items: center;
-    gap: 0.6rem;
-    padding: 0.5rem 1rem;
-    background: var(--deck-surface-2);
+    gap: 0.4rem;
+    padding: 0.5rem 1.25rem;
+    background: color-mix(in srgb, var(--deck-bg) 78%, transparent);
+    backdrop-filter: blur(10px);
     border-top: 1px solid var(--deck-border);
 }
 
 .deck-bar button {
-    background: var(--deck-surface);
+    background: transparent;
     color: var(--deck-fg);
-    border: 1px solid var(--deck-border);
-    border-radius: 6px;
-    padding: 0.3rem 0.75rem;
-    font-size: 1rem;
+    opacity: 0.65;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    padding: 0.3rem 0.7rem;
+    font-size: 0.95rem;
     cursor: pointer;
     line-height: 1;
+    transition: opacity 0.15s, border-color 0.15s, background 0.15s;
 }
 
 .deck-bar button:hover {
-    border-color: var(--accent);
-    color: var(--accent);
+    opacity: 1;
+    border-color: var(--deck-border);
+    background: var(--deck-surface);
 }
 
 .pos {
-    opacity: 0.7;
+    opacity: 0.55;
     font-variant-numeric: tabular-nums;
+    font-size: 0.9rem;
+    letter-spacing: 0.02em;
 }
 
 .spacer {

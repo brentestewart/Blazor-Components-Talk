@@ -14,13 +14,41 @@
     color: var(--accent);
 }
 
-.cs-pre {
-    margin: 0;
-    padding: 1.5rem 1.75rem;
+.cs-window {
     background: var(--deck-surface-2);
     border: 1px solid var(--deck-border);
-    border-left: 3px solid var(--accent);
-    border-radius: 10px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 18px 50px -25px color-mix(in srgb, var(--accent) 55%, transparent);
+}
+
+.cs-chrome {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid var(--deck-border);
+}
+
+.cs-dot {
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 50%;
+    background: var(--deck-border);
+}
+
+.cs-lang {
+    margin-left: auto;
+    font-family: "Cascadia Code", "JetBrains Mono", ui-monospace, monospace;
+    font-size: 0.8rem;
+    color: var(--accent);
+    text-transform: lowercase;
+    letter-spacing: 0.03em;
+}
+
+.cs-pre {
+    margin: 0;
+    padding: 1.4rem 1.6rem;
     overflow: auto;
 }
 

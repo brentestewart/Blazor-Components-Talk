@@ -11,7 +11,13 @@
     {
         <h1 class="cs-title">@Title</h1>
     }
-    <pre class="cs-pre"><code @ref="_code">@Code</code></pre>
+    <div class="cs-window">
+        <div class="cs-chrome">
+            <span class="cs-dot"></span><span class="cs-dot"></span><span class="cs-dot"></span>
+            <span class="cs-lang">@Language</span>
+        </div>
+        <pre class="cs-pre"><code @ref="_code">@Code</code></pre>
+    </div>
 </div>
 
 @code {
