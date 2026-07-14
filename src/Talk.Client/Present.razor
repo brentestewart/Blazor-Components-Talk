@@ -7,10 +7,16 @@
 <Deck Slides="Slides" />
 
 @code {
-    private static readonly Type[] Slides =
+    // The ordered table of contents. Each entry is a slide component + its overview title.
+    private static readonly SlideInfo[] Slides =
     {
-        typeof(Slide01Title),
-        typeof(Slide02RenderModes),
-        typeof(Slide03Code),
+        new(typeof(Slide01Title), "Title"),
+        new(typeof(Slide02RenderModes), "Render modes, live"),
+        new(typeof(Slide03Code), "A slide is just a component"),
+        new(typeof(Slide04Section), "Section · Communication & DI"),
+        new(typeof(Slide05Split), "Split — code + notes"),
+        new(typeof(Slide06Compare), "Compare — which mechanism?"),
+        new(typeof(Slide07Demo), "Demo — live component"),
+        new(typeof(Slide08Playground), "Playground — live @bind"),
     };
 }

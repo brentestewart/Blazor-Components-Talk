@@ -10,10 +10,22 @@ public class DeckState
     public int Index { get; private set; }
     public int Count { get; private set; }
     public DeckTheme Theme { get; private set; } = DeckTheme.Indigo;
+    public bool ShowOverview { get; private set; }
 
     public event Action? OnChange;
 
     public void SetCount(int count) => Count = count;
+
+    public void ToggleOverview()
+    {
+        ShowOverview = !ShowOverview;
+        Notify();
+    }
+
+    public void CloseOverview()
+    {
+        if (ShowOverview) { ShowOverview = false; Notify(); }
+    }
 
     public void Next()
     {

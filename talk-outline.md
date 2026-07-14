@@ -156,8 +156,30 @@ Validated live (build clean, 0 warnings, no console errors):
 
 Spike files are the real foundation — Step 3 builds on them (not throwaway).
 
+## Slide-type palette — BUILT ✓
+
+The reusable layout components in `BlazorDeck` (compose these inside per-talk slide wrappers):
+
+| Layout | Purpose | Demonstrates |
+|--------|---------|--------------|
+| `TitleSlide` | Opening / big statement (kicker + title + subtitle) | structure, params |
+| `SectionSlide` | Segment divider (marker + title) | — |
+| `Slide` | Generic title + freeform body (base others build on) | #3 #4 #5 #11 #21 |
+| `CodeSlide` | Full code + JS-interop highlighting | #8 #18 #21 |
+| `SplitSlide` | Two columns via named `Left`/`Right` fragments | templating #15 |
+| `BulletList<T>` | Typed, templated list (used inside slides) | generics #16, #15, #19 |
+| `CompareSlide` + `CompareOption` | Side-by-side options w/ a recommended pick | parent/child #9 |
+| `DemoSlide` | Frames a live interactive component inline | the meta moments |
+| `PlaygroundSlide` | Preview + controls panes; per-slide wires `@bind` | data binding #6 |
+| `Overview` (in `Deck`) | Press-`o` virtualized slide list, click to jump | virtualization #20, #19 |
+
+All verified live in the browser (8 showcase slides, build clean, no console errors): overview jump,
+theme flip, live counter, `@bind` slider, split/compare/section layouts.
+
+Known content-sizing note: `SplitSlide` code overflows if too wide — keep split-code snippets short.
+
 ## Open items
 
-- [ ] Draft slide content per segment (Step 3), building on the spike
-- [ ] Later: `Overview` (virtualized thumbnails, #20), `PlaygroundSlide` (#6), a real highlighter
-      (vendor Prism/Shiki), `SlideNav` polish, bUnit tests (#24), PDF-export fallback
+- [ ] Draft slide content per segment (Step 3), building on the palette above
+- [ ] Later: real highlighter (vendor Prism/Shiki to replace the spike's minimal one),
+      bUnit tests (#24), PDF-export fallback, `DiagramSlide` if the lifecycle timeline needs it

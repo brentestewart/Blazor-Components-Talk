@@ -1,0 +1,25 @@
+@namespace BlazorDeck.Components
+@typeparam TItem
+
+@* A typed, templated list. Demonstrates generics (#16) + templating (#15) + @key (#19).
+   Used inside slides (often the right side of a SplitSlide). *@
+<ul class="bullets">
+    @foreach (var item in Items ?? Enumerable.Empty<TItem>())
+    {
+        <li @key="item">
+            @if (ItemTemplate is not null)
+            {
+                @ItemTemplate(item)
+            }
+            else
+            {
+                @item?.ToString()
+            }
+        </li>
+    }
+</ul>
+
+@code {
+    [Parameter] public IEnumerable<TItem>? Items { get; set; }
+    [Parameter] public RenderFragment<TItem>? ItemTemplate { get; set; }
+}

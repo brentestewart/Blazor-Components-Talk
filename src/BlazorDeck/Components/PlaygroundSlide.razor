@@ -1,0 +1,16 @@
+@namespace BlazorDeck.Components
+
+@* Layout: a live preview pane + a controls pane. The per-slide component wires @bind
+   in Controls to drive Preview — demonstrates data binding (#6) on stage. *@
+<Slide Title="@Title">
+    <div class="playground">
+        <div class="pg-preview">@Preview</div>
+        <div class="pg-controls">@Controls</div>
+    </div>
+</Slide>
+
+@code {
+    [Parameter] public string? Title { get; set; }
+    [Parameter] public RenderFragment? Preview { get; set; }
+    [Parameter] public RenderFragment? Controls { get; set; }
+}

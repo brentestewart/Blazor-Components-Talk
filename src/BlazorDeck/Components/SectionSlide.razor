@@ -1,0 +1,22 @@
+@namespace BlazorDeck.Components
+
+@* Layout: a segment divider ("C · Communication"). *@
+<Slide>
+    <div class="section-slide">
+        @if (!string.IsNullOrWhiteSpace(Marker))
+        {
+            <div class="ss-marker">@Marker</div>
+        }
+        <h1 class="ss-title">@Title</h1>
+        @if (!string.IsNullOrWhiteSpace(Subtitle))
+        {
+            <p class="ss-sub">@Subtitle</p>
+        }
+    </div>
+</Slide>
+
+@code {
+    [Parameter] public string? Marker { get; set; }
+    [Parameter] public string? Title { get; set; }
+    [Parameter] public string? Subtitle { get; set; }
+}

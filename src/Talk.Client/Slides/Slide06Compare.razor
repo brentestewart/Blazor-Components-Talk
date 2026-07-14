@@ -1,0 +1,16 @@
+@namespace Talk.Client.Slides
+
+<CompareSlide Title="Which communication mechanism?">
+    <CompareOption Title="Parameters">
+        Parent → child. The default. Pass data down as inputs.
+    </CompareOption>
+    <CompareOption Title="EventCallback">
+        Child → parent. Bubble events up without a hard reference.
+    </CompareOption>
+    <CompareOption Title="Cascading" Recommended="true">
+        Ancestor → deep descendants, skipping the levels between.
+    </CompareOption>
+    <CompareOption Title="State container">
+        Anywhere ↔ anywhere. Shared service for unrelated components.
+    </CompareOption>
+</CompareSlide>

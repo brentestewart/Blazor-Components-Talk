@@ -1,0 +1,25 @@
+@namespace BlazorDeck.Components
+
+@* Layout: the opening / big-statement slide. Composes the base Slide. *@
+<Slide Number="Number">
+    <div class="title-slide">
+        @if (!string.IsNullOrWhiteSpace(Kicker))
+        {
+            <p class="ts-kicker">@Kicker</p>
+        }
+        <h1 class="ts-title">@Title</h1>
+        @if (!string.IsNullOrWhiteSpace(Subtitle))
+        {
+            <p class="ts-sub">@Subtitle</p>
+        }
+        @ChildContent
+    </div>
+</Slide>
+
+@code {
+    [Parameter] public string? Kicker { get; set; }
+    [Parameter] public string? Title { get; set; }
+    [Parameter] public string? Subtitle { get; set; }
+    [Parameter] public int? Number { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

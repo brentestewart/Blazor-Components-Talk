@@ -1,0 +1,19 @@
+@namespace BlazorDeck.Components
+
+@* A single option card inside a CompareSlide. Parent/child composition (#9). *@
+<div class="compare-option @(Recommended ? "rec" : "")">
+    <div class="co-head">
+        <span class="co-title">@Title</span>
+        @if (Recommended)
+        {
+            <span class="co-badge">pick</span>
+        }
+    </div>
+    <div class="co-body">@ChildContent</div>
+</div>
+
+@code {
+    [Parameter] public string? Title { get; set; }
+    [Parameter] public bool Recommended { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

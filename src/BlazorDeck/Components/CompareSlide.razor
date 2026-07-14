@@ -1,0 +1,14 @@
+@namespace BlazorDeck.Components
+
+@* Layout: side-by-side options for "which do I reach for?" decisions.
+   Author drops <CompareOption> children inside. *@
+<Slide Title="@Title">
+    <div class="compare">
+        @ChildContent
+    </div>
+</Slide>
+
+@code {
+    [Parameter] public string? Title { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

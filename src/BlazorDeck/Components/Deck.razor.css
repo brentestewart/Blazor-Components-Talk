@@ -46,3 +46,58 @@
 .spacer {
     flex: 1;
 }
+
+.overview {
+    position: absolute;
+    inset: 0 0 3rem 0;
+    background: rgba(10, 11, 14, 0.97);
+    padding: 2rem 3rem;
+    box-sizing: border-box;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.ov-head {
+    color: var(--accent);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+}
+
+.ov-list {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.ov-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.6rem 0.9rem;
+    border: 1px solid #20232b;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+}
+
+.ov-item:hover {
+    border-color: var(--accent);
+}
+
+.ov-item.cur {
+    border-color: var(--accent);
+    background: #14161d;
+}
+
+.ov-num {
+    opacity: 0.5;
+    font-variant-numeric: tabular-nums;
+    min-width: 1.5rem;
+}
+
+.ov-title {
+    font-size: 1.05rem;
+}

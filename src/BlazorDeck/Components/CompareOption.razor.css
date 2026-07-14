@@ -1,0 +1,41 @@
+.compare-option {
+    flex: 1 1 0;
+    min-width: 12rem;
+    background: #12141a;
+    border: 1px solid #23262f;
+    border-radius: 10px;
+    padding: 1.25rem 1.4rem;
+    font-size: clamp(0.95rem, 1.7vw, 1.2rem);
+    line-height: 1.5;
+}
+
+.compare-option.rec {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent) inset;
+}
+
+.co-head {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.75rem;
+}
+
+.co-title {
+    font-weight: 600;
+    font-size: 1.1em;
+}
+
+.co-badge {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 99px;
+    padding: 0.05em 0.6em;
+}
+
+.co-body {
+    opacity: 0.85;
+}

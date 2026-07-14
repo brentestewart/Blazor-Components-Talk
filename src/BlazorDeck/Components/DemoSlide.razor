@@ -1,0 +1,14 @@
+@namespace BlazorDeck.Components
+
+@* Layout: frames a live, interactive component inline on a slide (the meta moments). *@
+<Slide Title="@Title">
+    <div class="demo-frame">
+        <div class="demo-tag">live component</div>
+        <div class="demo-stage">@ChildContent</div>
+    </div>
+</Slide>
+
+@code {
+    [Parameter] public string? Title { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

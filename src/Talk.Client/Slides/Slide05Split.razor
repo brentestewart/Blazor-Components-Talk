@@ -1,0 +1,31 @@
+@namespace Talk.Client.Slides
+
+<SplitSlide Title="Code, and what to notice">
+    <Left>
+        <CodeSlide Language="razor" Code="@Snippet" />
+    </Left>
+    <Right>
+        <BulletList Items="_points">
+            <ItemTemplate Context="p">
+                <strong style="color:var(--accent)">@p.Head</strong> — @p.Body
+            </ItemTemplate>
+        </BulletList>
+    </Right>
+</SplitSlide>
+
+@code {
+    private const string Snippet = @"[Parameter]
+public string Title { get; set; }
+
+[Parameter, EditorRequired]
+public RenderFragment ChildContent { get; set; }";
+
+    private record Point(string Head, string Body);
+
+    private static readonly Point[] _points =
+    {
+        new("[Parameter]", "marks a public property as an input"),
+        new("EditorRequired", "flags a missing required param at build time"),
+        new("RenderFragment", "lets the caller supply templated content"),
+    };
+}

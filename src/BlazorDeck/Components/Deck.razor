@@ -5,21 +5,39 @@
 
 @* The deck root. Shows: DynamicComponent as the rendering engine (#17),
    state container subscription (#13), cascading theme (#11),
-   JS interop for keyboard + fullscreen (#18), EventCallback-style nav (#7). *@
+   JS interop for keyboard + fullscreen (#18), virtualized overview (#20). *@
 
 <CascadingValue Value="State.Theme">
     <div class="deck" style="--accent:@State.Theme.Accent">
         <div class="stage">
             @if (Slides.Count > 0)
             {
-                <DynamicComponent Type="Slides[State.Index]" />
+                <DynamicComponent Type="Slides[State.Index].Type" />
             }
         </div>
+
+        @if (State.ShowOverview)
+        {
+            <div class="overview">
+                <div class="ov-head">Overview — click to jump (Esc to close)</div>
+                <div class="ov-list">
+                    <Virtualize Items="_indexed" Context="entry">
+                        <div class="ov-item @(entry.Index == State.Index ? "cur" : "")"
+                             @key="entry.Index" @onclick="() => Jump(entry.Index)">
+                            <span class="ov-num">@(entry.Index + 1)</span>
+                            <span class="ov-title">@entry.Info.Title</span>
+                        </div>
+                    </Virtualize>
+                </div>
+            </div>
+        }
+
         <footer class="deck-bar">
             <button title="Previous" @onclick="() => State.Prev()">&lsaquo;</button>
             <span class="pos">@(State.Index + 1) / @Slides.Count</span>
             <button title="Next" @onclick="() => State.Next()">&rsaquo;</button>
             <span class="spacer"></span>
+            <button title="Overview (o)" @onclick="() => State.ToggleOverview()">overview</button>
             <button title="Toggle theme (t)" @onclick="() => State.ToggleTheme()">@State.Theme.Name</button>
             <button title="Fullscreen (f)" @onclick="ToggleFullscreen">&#x2922;</button>
         </footer>
@@ -28,18 +46,32 @@
 
 @code {
     [Parameter, EditorRequired]
-    public IReadOnlyList<Type> Slides { get; set; } = Array.Empty<Type>();
+    public IReadOnlyList<SlideInfo> Slides { get; set; } = Array.Empty<SlideInfo>();
 
     private DotNetObjectReference<Deck>? _ref;
     private IJSObjectReference? _module;
+    private List<OverviewEntry> _indexed = new();
+
+    private record OverviewEntry(int Index, SlideInfo Info);
 
     protected override void OnInitialized()
     {
-        State.SetCount(Slides.Count);
         State.OnChange += OnStateChanged;
     }
 
+    protected override void OnParametersSet()
+    {
+        State.SetCount(Slides.Count);
+        _indexed = Slides.Select((info, i) => new OverviewEntry(i, info)).ToList();
+    }
+
     private void OnStateChanged() => InvokeAsync(StateHasChanged);
+
+    private void Jump(int index)
+    {
+        State.Goto(index);
+        State.CloseOverview();
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -59,6 +91,8 @@
             case "ArrowLeft" or "ArrowUp" or "PageUp": State.Prev(); break;
             case "Home": State.Goto(0); break;
             case "End": State.Goto(Slides.Count - 1); break;
+            case "o": State.ToggleOverview(); break;
+            case "Escape": State.CloseOverview(); break;
             case "t": State.ToggleTheme(); break;
             case "f": _ = ToggleFullscreen(); break;
         }

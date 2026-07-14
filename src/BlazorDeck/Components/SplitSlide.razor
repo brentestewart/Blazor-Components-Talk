@@ -1,0 +1,16 @@
+@namespace BlazorDeck.Components
+
+@* Layout: two columns (e.g. code + notes). Demonstrates templated components (#15)
+   via two named RenderFragments. *@
+<Slide Title="@Title">
+    <div class="split">
+        <div class="split-left">@Left</div>
+        <div class="split-right">@Right</div>
+    </div>
+</Slide>
+
+@code {
+    [Parameter] public string? Title { get; set; }
+    [Parameter] public RenderFragment? Left { get; set; }
+    [Parameter] public RenderFragment? Right { get; set; }
+}
