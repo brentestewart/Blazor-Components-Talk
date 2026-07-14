@@ -24,6 +24,10 @@ export function unregisterKeys() {
     handler = null;
 }
 
+export function reload() {
+    location.reload();
+}
+
 export function toggleFullscreen() {
     if (document.fullscreenElement) {
         document.exitFullscreen();

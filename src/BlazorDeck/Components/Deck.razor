@@ -118,13 +118,25 @@
             case "Escape": State.CloseOverview(); break;
             case "t": State.ToggleTheme(); break;
             case "f": _ = ToggleFullscreen(); break;
-            case "r": Reload(); break;
+            case "r": _ = Reload(); break;
         }
     }
 
-    // Full reload of the current URL (position is preserved via ?slide=). Lets the
-    // audience watch Interactive Auto re-decide: Server first, then WebAssembly.
-    private void Reload() => Nav.NavigateTo(Nav.Uri, forceLoad: true);
+    // Reload the current page (position preserved via ?slide=) so the audience can watch
+    // Interactive Auto re-decide: Server first, then WebAssembly. Uses location.reload()
+    // rather than a scripted navigation, which Chrome would treat as a reason to exit
+    // native fullscreen.
+    private async Task Reload()
+    {
+        if (_module is not null)
+        {
+            await _module.InvokeVoidAsync("reload");
+        }
+        else
+        {
+            Nav.NavigateTo(Nav.Uri, forceLoad: true);
+        }
+    }
 
     private async Task ToggleFullscreen()
     {
