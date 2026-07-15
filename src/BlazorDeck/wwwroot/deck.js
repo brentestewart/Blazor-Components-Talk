@@ -28,14 +28,6 @@ export function reload() {
     location.reload();
 }
 
-export function saveSetting(key, value) {
-    try { localStorage.setItem("blazordeck:" + key, value); } catch (e) { /* storage unavailable */ }
-}
-
-export function loadSetting(key) {
-    try { return localStorage.getItem("blazordeck:" + key); } catch (e) { return null; }
-}
-
 export function toggleFullscreen() {
     if (document.fullscreenElement) {
         document.exitFullscreen();

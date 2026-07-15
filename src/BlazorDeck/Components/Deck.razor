@@ -156,6 +156,10 @@
     /// <summary>Fallback transition for slides that don't set their own.</summary>
     [Parameter] public SlideTransition DefaultTransition { get; set; } = SlideTransition.Fade;
 
+    /// <summary>Persisted theme key + transition (from the URL), applied once on init.</summary>
+    [Parameter] public string? InitialTheme { get; set; }
+    [Parameter] public string? InitialTransition { get; set; }
+
     private static readonly SlideTransition[] TransitionOptions =
     {
         SlideTransition.Fade, SlideTransition.Slide, SlideTransition.SlideVertical,
@@ -179,14 +183,16 @@
         }
     }
 
-    private string TransitionClass => EffectiveTransition switch
-    {
-        SlideTransition.None => "t-none",
-        SlideTransition.Slide => "t-slide",
-        SlideTransition.SlideVertical => "t-slidev",
-        SlideTransition.Scale => "t-scale",
-        _ => "t-fade",
-    };
+    private string TransitionClass => !_hasNavigated
+        ? "t-none"                       // first slide on (re)load just appears — no entrance animation
+        : EffectiveTransition switch
+        {
+            SlideTransition.None => "t-none",
+            SlideTransition.Slide => "t-slide",
+            SlideTransition.SlideVertical => "t-slidev",
+            SlideTransition.Scale => "t-scale",
+            _ => "t-fade",
+        };
 
     // The exit animation for the outgoing slide — mirrors the incoming transition.
     private string OutgoingClass => EffectiveTransition switch
@@ -210,9 +216,10 @@
     private IJSObjectReference? _module;
     private List<OverviewEntry> _indexed = new();
     private bool _ready;
+    private bool _hasNavigated;
     private int _syncedIndex = -1;
-    private int _lastSavedTheme = -1;
-    private SlideTransition _lastSavedTransition = (SlideTransition)(-1);
+    private int _syncedTheme = -1;
+    private SlideTransition _syncedTransition = (SlideTransition)(-1);
 
     // Two-layer transitions: while moving, the slide being left stays mounted as the
     // "outgoing" layer and animates out, so a Slide push slides off the opposite side.
@@ -226,7 +233,23 @@
     protected override void OnInitialized()
     {
         State.SetCount(Slides.Count);
+
+        // Apply the author default, then any persisted settings from the URL. Done here
+        // (before first paint / prerender) so the correct theme renders with no flash.
         State.SetDefaultTransition(DefaultTransition);
+        if (!string.IsNullOrEmpty(InitialTheme))
+        {
+            for (var i = 0; i < DeckThemes.All.Count; i++)
+            {
+                if (ThemeKey(DeckThemes.All[i]) == InitialTheme) { State.SetTheme(i); break; }
+            }
+        }
+        if (!string.IsNullOrEmpty(InitialTransition) &&
+            Enum.TryParse<SlideTransition>(InitialTransition, out var tr))
+        {
+            State.SetDefaultTransition(tr);
+        }
+
         State.OnChange += OnStateChanged;
         if (InitialSlide is int slide)
         {
@@ -243,21 +266,21 @@
 
     private async void OnStateChanged()
     {
-        // Keep the URL in sync so a reload (e.g. Auto → WASM) restores the current slide.
-        if (_ready && State.Index != _syncedIndex)
+        // Keep slide + settings (theme, transition) in the URL so a reload restores them
+        // with no flash — they're read back at init, even during prerender.
+        if (_ready && (State.Index != _syncedIndex
+                       || State.ThemeIndex != _syncedTheme
+                       || State.DefaultTransition != _syncedTransition))
         {
             _syncedIndex = State.Index;
-            Nav.NavigateTo(Nav.GetUriWithQueryParameter("slide", State.Index + 1), replace: true);
-        }
-
-        // Persist settings (theme + default transition) so they survive reloads.
-        if (_ready && _module is not null &&
-            (State.ThemeIndex != _lastSavedTheme || State.DefaultTransition != _lastSavedTransition))
-        {
-            _lastSavedTheme = State.ThemeIndex;
-            _lastSavedTransition = State.DefaultTransition;
-            _ = _module.InvokeVoidAsync("saveSetting", "theme", ThemeKey(State.Theme)).AsTask();
-            _ = _module.InvokeVoidAsync("saveSetting", "transition", State.DefaultTransition.ToString()).AsTask();
+            _syncedTheme = State.ThemeIndex;
+            _syncedTransition = State.DefaultTransition;
+            Nav.NavigateTo(Nav.GetUriWithQueryParameters(new Dictionary<string, object?>
+            {
+                ["slide"] = State.Index + 1,
+                ["theme"] = ThemeKey(State.Theme),
+                ["transition"] = State.DefaultTransition.ToString(),
+            }), replace: true);
         }
 
         if (State.Index != _shownIndex)
@@ -265,6 +288,7 @@
             // Show the slide we're leaving as the outgoing layer while it animates out.
             if (_ready)
             {
+                _hasNavigated = true;
                 _outgoing = _shownIndex;
             }
             _shownIndex = State.Index;
@@ -295,29 +319,12 @@
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (!firstRender) return;
+        _syncedIndex = State.Index;
+        _syncedTheme = State.ThemeIndex;
+        _syncedTransition = State.DefaultTransition;
+        _ready = true;
         _module = await JS.InvokeAsync<IJSObjectReference>(
             "import", "./_content/BlazorDeck/deck.js");
-
-        // Restore persisted settings (applied before _ready so this doesn't re-save them).
-        var savedTheme = await _module.InvokeAsync<string?>("loadSetting", "theme");
-        if (savedTheme is not null)
-        {
-            for (var i = 0; i < DeckThemes.All.Count; i++)
-            {
-                if (ThemeKey(DeckThemes.All[i]) == savedTheme) { State.SetTheme(i); break; }
-            }
-        }
-        var savedTransition = await _module.InvokeAsync<string?>("loadSetting", "transition");
-        if (savedTransition is not null && Enum.TryParse<SlideTransition>(savedTransition, out var tr))
-        {
-            State.SetDefaultTransition(tr);
-        }
-
-        _syncedIndex = State.Index;
-        _lastSavedTheme = State.ThemeIndex;
-        _lastSavedTransition = State.DefaultTransition;
-        _ready = true;
-
         _ref = DotNetObjectReference.Create(this);
         await _module.InvokeVoidAsync("registerKeys", _ref);
     }

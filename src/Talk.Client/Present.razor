@@ -4,11 +4,18 @@
 
 <PageTitle>BlazorDeck</PageTitle>
 
-<Deck Slides="Slides" InitialSlide="SlideParam" DefaultTransition="SlideTransition.Fade" />
+<Deck Slides="Slides" InitialSlide="SlideParam" InitialTheme="@ThemeParam"
+      InitialTransition="@TransitionParam" DefaultTransition="SlideTransition.Fade" />
 
 @code {
     [SupplyParameterFromQuery(Name = "slide")]
     public int? SlideParam { get; set; }
+
+    [SupplyParameterFromQuery(Name = "theme")]
+    public string? ThemeParam { get; set; }
+
+    [SupplyParameterFromQuery(Name = "transition")]
+    public string? TransitionParam { get; set; }
 
     // The ordered table of contents. Each entry is a slide component + its overview title.
     private static readonly SlideInfo[] Slides =
