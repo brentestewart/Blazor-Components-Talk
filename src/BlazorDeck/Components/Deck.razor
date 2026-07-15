@@ -91,11 +91,11 @@
                     <div class="set-row">
                         <div class="set-label">Default transition</div>
                         <div class="set-opts">
-                            @foreach (var tr in TransitionOptions)
+                            @foreach (var tr in SlideTransitions.Selectable)
                             {
                                 var trv = tr;
                                 <button class="set-opt @(State.DefaultTransition == trv ? "active" : "")"
-                                        @onclick="() => State.SetDefaultTransition(trv)">@trv</button>
+                                        @onclick="() => State.SetDefaultTransition(trv)">@trv.Label()</button>
                             }
                         </div>
                     </div>
@@ -110,6 +110,7 @@
             <span class="spacer"></span>
             <button title="Overview (o)" @onclick="() => State.ToggleOverview()">overview</button>
             <button title="Reload — watch Server → WebAssembly (r)" @onclick="Reload">&#x27f3;</button>
+            <button title="Cycle transition" @onclick="() => State.CycleTransition()">@State.DefaultTransition.Label()</button>
             <button title="Cycle theme (t)" @onclick="() => State.CycleTheme()">@State.Theme.Name</button>
             <button title="Settings (s)" @onclick="() => State.ToggleSettings()">&#9881;</button>
             <button title="Fullscreen (f)" @onclick="ToggleFullscreen">&#x2922;</button>
@@ -159,12 +160,6 @@
     /// <summary>Persisted theme key + transition (from the URL), applied once on init.</summary>
     [Parameter] public string? InitialTheme { get; set; }
     [Parameter] public string? InitialTransition { get; set; }
-
-    private static readonly SlideTransition[] TransitionOptions =
-    {
-        SlideTransition.Fade, SlideTransition.Slide, SlideTransition.SlideVertical,
-        SlideTransition.Scale, SlideTransition.None,
-    };
 
     private static IEnumerable<(DeckTheme Theme, int Index)> ThemesFor(bool dark) =>
         DeckThemes.All.Select((theme, i) => (theme, i)).Where(x => x.theme.IsDark == dark);
@@ -221,6 +216,12 @@
     private int _syncedTheme = -1;
     private SlideTransition _syncedTransition = (SlideTransition)(-1);
 
+    // Keep theme/transition out of the URL until they matter: they only appear once
+    // they arrived in the URL or the user actually changed them. Plain slide navigation
+    // stays clean (/slide/3), not /slide/3?theme=...&transition=....
+    private bool _themeInUrl;
+    private bool _transitionInUrl;
+
     // Two-layer transitions: while moving, the slide being left stays mounted as the
     // "outgoing" layer and animates out, so a Slide push slides off the opposite side.
     private int _shownIndex;
@@ -239,6 +240,7 @@
         State.SetDefaultTransition(DefaultTransition);
         if (!string.IsNullOrEmpty(InitialTheme))
         {
+            _themeInUrl = true;
             for (var i = 0; i < DeckThemes.All.Count; i++)
             {
                 if (ThemeKey(DeckThemes.All[i]) == InitialTheme) { State.SetTheme(i); break; }
@@ -247,6 +249,7 @@
         if (!string.IsNullOrEmpty(InitialTransition) &&
             Enum.TryParse<SlideTransition>(InitialTransition, out var tr))
         {
+            _transitionInUrl = true;
             State.SetDefaultTransition(tr);
         }
 
@@ -272,16 +275,22 @@
                        || State.ThemeIndex != _syncedTheme
                        || State.DefaultTransition != _syncedTransition))
         {
+            // A changed setting is now worth persisting, so let it into the URL.
+            if (State.ThemeIndex != _syncedTheme) _themeInUrl = true;
+            if (State.DefaultTransition != _syncedTransition) _transitionInUrl = true;
+
             _syncedIndex = State.Index;
             _syncedTheme = State.ThemeIndex;
             _syncedTransition = State.DefaultTransition;
-            // Slide is a route (/slide/N); theme + transition stay in the query.
+
+            // Slide is a route (/slide/N); theme + transition stay in the query, but
+            // only once they matter — a null value drops the param entirely.
             var target = Nav.GetUriWithQueryParameters(
                 Nav.ToAbsoluteUri($"slide/{State.Index + 1}").AbsoluteUri,
                 new Dictionary<string, object?>
                 {
-                    ["theme"] = ThemeKey(State.Theme),
-                    ["transition"] = State.DefaultTransition.ToString(),
+                    ["theme"] = _themeInUrl ? ThemeKey(State.Theme) : null,
+                    ["transition"] = _transitionInUrl ? State.DefaultTransition.ToString() : null,
                 });
             Nav.NavigateTo(target, replace: true);
         }
@@ -289,10 +298,13 @@
         if (State.Index != _shownIndex)
         {
             // Show the slide we're leaving as the outgoing layer while it animates out.
+            // With no transition there's nothing to animate, so skip the outgoing layer
+            // entirely — otherwise the old slide would sit on top of the new one until the
+            // clear-timer fires. EffectiveTransition already reflects the incoming slide.
             if (_ready)
             {
                 _hasNavigated = true;
-                _outgoing = _shownIndex;
+                _outgoing = EffectiveTransition == SlideTransition.None ? null : _shownIndex;
             }
             _shownIndex = State.Index;
 

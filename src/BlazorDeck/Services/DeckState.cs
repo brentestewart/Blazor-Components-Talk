@@ -81,6 +81,18 @@ public class DeckState
         }
     }
 
+    /// <summary>Advance to the next selectable transition, wrapping around (mirrors <see cref="CycleTheme"/>).</summary>
+    public void CycleTransition()
+    {
+        var options = SlideTransitions.Selectable;
+        var current = -1;
+        for (var i = 0; i < options.Count; i++)
+        {
+            if (options[i] == DefaultTransition) { current = i; break; }
+        }
+        SetDefaultTransition(options[(current + 1) % options.Count]);
+    }
+
     public void ToggleSettings()
     {
         ShowSettings = !ShowSettings;
