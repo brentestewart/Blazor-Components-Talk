@@ -139,9 +139,6 @@
 .slide-anim.t-slide.dir-back { animation: t-slide-back 0.6s cubic-bezier(0.4, 0, 0.2, 1) both; }
 .slide-anim.t-slidev.dir-fwd { animation: t-slidev-fwd 0.6s cubic-bezier(0.4, 0, 0.2, 1) both; }
 .slide-anim.t-slidev.dir-back { animation: t-slidev-back 0.6s cubic-bezier(0.4, 0, 0.2, 1) both; }
-/* MoveIn: incoming travels in (reusing the slide keyframes) over a static outgoing. */
-.slide-anim.t-movein.dir-fwd { animation: t-slide-fwd 0.55s cubic-bezier(0.4, 0, 0.2, 1) both; }
-.slide-anim.t-movein.dir-back { animation: t-slide-back 0.55s cubic-bezier(0.4, 0, 0.2, 1) both; }
 .slide-anim.t-none { animation: none; }
 
 /* Exit — governs the outgoing slide, mirroring the incoming transition. */
@@ -151,8 +148,6 @@
 .slide-anim.t-slide-out.dir-back { animation: t-slide-out-back 0.6s cubic-bezier(0.4, 0, 0.2, 1) both; }
 .slide-anim.t-slidev-out.dir-fwd { animation: t-slidev-out-fwd 0.6s cubic-bezier(0.4, 0, 0.2, 1) both; }
 .slide-anim.t-slidev-out.dir-back { animation: t-slidev-out-back 0.6s cubic-bezier(0.4, 0, 0.2, 1) both; }
-/* MoveIn's outgoing stays put while the incoming slides over it. */
-.slide-anim.t-static { animation: none; }
 
 @keyframes t-fade {
     from { opacity: 0; }

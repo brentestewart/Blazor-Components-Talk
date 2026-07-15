@@ -121,19 +121,16 @@
     private string TransitionClass => EffectiveTransition switch
     {
         SlideTransition.None => "t-none",
-        SlideTransition.MoveIn => "t-movein",
         SlideTransition.Slide => "t-slide",
         SlideTransition.SlideVertical => "t-slidev",
         SlideTransition.Scale => "t-scale",
         _ => "t-fade",
     };
 
-    // The exit animation for the outgoing slide — matches the incoming transition.
-    // MoveIn keeps the outgoing static (the incoming slides over it).
+    // The exit animation for the outgoing slide — mirrors the incoming transition.
     private string OutgoingClass => EffectiveTransition switch
     {
         SlideTransition.None => "t-none",
-        SlideTransition.MoveIn => "t-static",
         SlideTransition.Slide => "t-slide-out",
         SlideTransition.SlideVertical => "t-slidev-out",
         SlideTransition.Scale => "t-scale-out",
