@@ -56,6 +56,39 @@
             </div>
         }
 
+        @if (State.ShowSettings)
+        {
+            <div class="settings" @onclick="() => State.CloseSettings()">
+                <div class="settings-panel" @onclick:stopPropagation="true">
+                    <div class="set-head">Settings <span>Esc to close</span></div>
+
+                    <div class="set-row">
+                        <div class="set-label">Theme</div>
+                        <div class="set-opts">
+                            @for (var i = 0; i < DeckThemes.All.Count; i++)
+                            {
+                                var idx = i;
+                                <button class="set-opt @(State.ThemeIndex == idx ? "active" : "")"
+                                        @onclick="() => State.SetTheme(idx)">@DeckThemes.All[idx].Name</button>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="set-row">
+                        <div class="set-label">Default transition</div>
+                        <div class="set-opts">
+                            @foreach (var tr in TransitionOptions)
+                            {
+                                var trv = tr;
+                                <button class="set-opt @(State.DefaultTransition == trv ? "active" : "")"
+                                        @onclick="() => State.SetDefaultTransition(trv)">@trv</button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
         <footer class="deck-bar">
             <button title="Previous" @onclick="() => State.Prev()">&lsaquo;</button>
             <span class="pos">@(State.Index + 1) / @Slides.Count</span>
@@ -64,6 +97,7 @@
             <button title="Overview (o)" @onclick="() => State.ToggleOverview()">overview</button>
             <button title="Reload — watch Server → WebAssembly (r)" @onclick="Reload">&#x27f3;</button>
             <button title="Cycle theme (t)" @onclick="() => State.CycleTheme()">@State.Theme.Name</button>
+            <button title="Settings (s)" @onclick="() => State.ToggleSettings()">&#9881;</button>
             <button title="Fullscreen (f)" @onclick="ToggleFullscreen">&#x2922;</button>
         </footer>
     </div>
@@ -108,13 +142,19 @@
     /// <summary>Fallback transition for slides that don't set their own.</summary>
     [Parameter] public SlideTransition DefaultTransition { get; set; } = SlideTransition.Fade;
 
+    private static readonly SlideTransition[] TransitionOptions =
+    {
+        SlideTransition.Fade, SlideTransition.Slide, SlideTransition.SlideVertical,
+        SlideTransition.Scale, SlideTransition.None,
+    };
+
     private SlideTransition EffectiveTransition
     {
         get
         {
-            if (Slides.Count == 0) return DefaultTransition;
+            if (Slides.Count == 0) return State.DefaultTransition;
             var t = Slides[State.Index].Transition;
-            return t == SlideTransition.Inherit ? DefaultTransition : t;
+            return t == SlideTransition.Inherit ? State.DefaultTransition : t;
         }
     }
 
@@ -163,6 +203,7 @@
     protected override void OnInitialized()
     {
         State.SetCount(Slides.Count);
+        State.SetDefaultTransition(DefaultTransition);
         State.OnChange += OnStateChanged;
         if (InitialSlide is int slide)
         {
@@ -239,7 +280,8 @@
             case "Home": State.Goto(0); break;
             case "End": State.Goto(Slides.Count - 1); break;
             case "o": State.ToggleOverview(); break;
-            case "Escape": State.CloseOverview(); break;
+            case "s": State.ToggleSettings(); break;
+            case "Escape": State.CloseOverview(); State.CloseSettings(); break;
             case "t": State.CycleTheme(); break;
             case "f": _ = ToggleFullscreen(); break;
             case "r": _ = Reload(); break;

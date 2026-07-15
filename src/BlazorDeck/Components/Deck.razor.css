@@ -311,3 +311,79 @@
 .ov-title {
     font-size: 1.05rem;
 }
+
+.settings {
+    position: absolute;
+    inset: 0;
+    z-index: 7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: color-mix(in srgb, var(--deck-bg) 55%, transparent);
+    backdrop-filter: blur(6px);
+}
+
+.settings-panel {
+    width: min(640px, 88vw);
+    background: var(--deck-surface);
+    border: 1px solid var(--deck-border);
+    border-radius: 16px;
+    padding: 1.75rem 2rem;
+    box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.6);
+}
+
+.set-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+.set-head span {
+    font-size: 0.75rem;
+    font-weight: 400;
+    opacity: 0.5;
+}
+
+.set-row {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 0.75rem 0;
+    border-top: 1px solid var(--deck-border);
+}
+
+.set-label {
+    flex: 0 0 9rem;
+    font-size: 0.95rem;
+    opacity: 0.75;
+}
+
+.set-opts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.set-opt {
+    background: transparent;
+    color: var(--deck-fg);
+    border: 1px solid var(--deck-border);
+    border-radius: 7px;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+}
+
+.set-opt:hover {
+    border-color: var(--accent);
+}
+
+.set-opt.active {
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 16%, transparent);
+    color: var(--accent);
+}
