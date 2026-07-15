@@ -9,7 +9,7 @@ public enum SlideTransition
     Inherit,
     None,
     Fade,
-    Rise,
+    MoveIn,
     Slide,
     SlideVertical,
     Scale,
