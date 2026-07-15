@@ -367,6 +367,26 @@
     gap: 0.4rem;
 }
 
+.set-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.set-group {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+}
+
+.set-group-label {
+    flex: 0 0 3rem;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    opacity: 0.45;
+}
+
 .set-opt {
     background: transparent;
     color: var(--deck-fg);

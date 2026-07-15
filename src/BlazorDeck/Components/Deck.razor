@@ -64,13 +64,27 @@
 
                     <div class="set-row">
                         <div class="set-label">Theme</div>
-                        <div class="set-opts">
-                            @for (var i = 0; i < DeckThemes.All.Count; i++)
-                            {
-                                var idx = i;
-                                <button class="set-opt @(State.ThemeIndex == idx ? "active" : "")"
-                                        @onclick="() => State.SetTheme(idx)">@DeckThemes.All[idx].Name</button>
-                            }
+                        <div class="set-groups">
+                            <div class="set-group">
+                                <span class="set-group-label">Dark</span>
+                                <div class="set-opts">
+                                    @foreach (var (theme, idx) in ThemesFor(dark: true))
+                                    {
+                                        <button class="set-opt @(State.ThemeIndex == idx ? "active" : "")"
+                                                @onclick="() => State.SetTheme(idx)">@theme.AccentName</button>
+                                    }
+                                </div>
+                            </div>
+                            <div class="set-group">
+                                <span class="set-group-label">Light</span>
+                                <div class="set-opts">
+                                    @foreach (var (theme, idx) in ThemesFor(dark: false))
+                                    {
+                                        <button class="set-opt @(State.ThemeIndex == idx ? "active" : "")"
+                                                @onclick="() => State.SetTheme(idx)">@theme.AccentName</button>
+                                    }
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -147,6 +161,9 @@
         SlideTransition.Fade, SlideTransition.Slide, SlideTransition.SlideVertical,
         SlideTransition.Scale, SlideTransition.None,
     };
+
+    private static IEnumerable<(DeckTheme Theme, int Index)> ThemesFor(bool dark) =>
+        DeckThemes.All.Select((theme, i) => (theme, i)).Where(x => x.theme.IsDark == dark);
 
     private SlideTransition EffectiveTransition
     {
