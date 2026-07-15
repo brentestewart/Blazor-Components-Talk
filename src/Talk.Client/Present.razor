@@ -14,13 +14,13 @@
     private static readonly SlideInfo[] Slides =
     {
         // Segment A · Set the stage
-        // Most slides inherit the deck default (Fade); a few set their own transition.
-        new(typeof(A1Title), "Title", SlideTransition.Fade),
+        // All slides inherit the deck default transition (change it in settings — 's').
+        new(typeof(A1Title), "Title"),
         new(typeof(A2Reveal), "It's all components"),
         new(typeof(A3Hello), "Hello"),
-        new(typeof(A4Agenda), "What we'll cover", SlideTransition.Slide),
-        new(typeof(A5RenderModes), "Four render modes", SlideTransition.Slide),
-        new(typeof(A6ModeLive), "Which mode is this slide?", SlideTransition.Scale),
-        new(typeof(A7WhyItMatters), "Why render mode matters", SlideTransition.SlideVertical),
+        new(typeof(A4Agenda), "What we'll cover"),
+        new(typeof(A5RenderModes), "Four render modes"),
+        new(typeof(A6ModeLive), "Which mode is this slide?"),
+        new(typeof(A7WhyItMatters), "Why render mode matters"),
     };
 }
