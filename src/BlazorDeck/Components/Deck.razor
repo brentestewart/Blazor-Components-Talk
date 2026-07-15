@@ -165,6 +165,10 @@
     private static IEnumerable<(DeckTheme Theme, int Index)> ThemesFor(bool dark) =>
         DeckThemes.All.Select((theme, i) => (theme, i)).Where(x => x.theme.IsDark == dark);
 
+    // Stable key for persisting the theme (index would be fragile if themes reorder).
+    private static string ThemeKey(DeckTheme theme) =>
+        $"{(theme.IsDark ? "dark" : "light")}-{theme.AccentName.ToLowerInvariant()}";
+
     private SlideTransition EffectiveTransition
     {
         get
@@ -207,6 +211,8 @@
     private List<OverviewEntry> _indexed = new();
     private bool _ready;
     private int _syncedIndex = -1;
+    private int _lastSavedTheme = -1;
+    private SlideTransition _lastSavedTransition = (SlideTransition)(-1);
 
     // Two-layer transitions: while moving, the slide being left stays mounted as the
     // "outgoing" layer and animates out, so a Slide push slides off the opposite side.
@@ -244,6 +250,16 @@
             Nav.NavigateTo(Nav.GetUriWithQueryParameter("slide", State.Index + 1), replace: true);
         }
 
+        // Persist settings (theme + default transition) so they survive reloads.
+        if (_ready && _module is not null &&
+            (State.ThemeIndex != _lastSavedTheme || State.DefaultTransition != _lastSavedTransition))
+        {
+            _lastSavedTheme = State.ThemeIndex;
+            _lastSavedTransition = State.DefaultTransition;
+            _ = _module.InvokeVoidAsync("saveSetting", "theme", ThemeKey(State.Theme)).AsTask();
+            _ = _module.InvokeVoidAsync("saveSetting", "transition", State.DefaultTransition.ToString()).AsTask();
+        }
+
         if (State.Index != _shownIndex)
         {
             // Show the slide we're leaving as the outgoing layer while it animates out.
@@ -279,10 +295,29 @@
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (!firstRender) return;
-        _syncedIndex = State.Index;
-        _ready = true;
         _module = await JS.InvokeAsync<IJSObjectReference>(
             "import", "./_content/BlazorDeck/deck.js");
+
+        // Restore persisted settings (applied before _ready so this doesn't re-save them).
+        var savedTheme = await _module.InvokeAsync<string?>("loadSetting", "theme");
+        if (savedTheme is not null)
+        {
+            for (var i = 0; i < DeckThemes.All.Count; i++)
+            {
+                if (ThemeKey(DeckThemes.All[i]) == savedTheme) { State.SetTheme(i); break; }
+            }
+        }
+        var savedTransition = await _module.InvokeAsync<string?>("loadSetting", "transition");
+        if (savedTransition is not null && Enum.TryParse<SlideTransition>(savedTransition, out var tr))
+        {
+            State.SetDefaultTransition(tr);
+        }
+
+        _syncedIndex = State.Index;
+        _lastSavedTheme = State.ThemeIndex;
+        _lastSavedTransition = State.DefaultTransition;
+        _ready = true;
+
         _ref = DotNetObjectReference.Create(this);
         await _module.InvokeVoidAsync("registerKeys", _ref);
     }
