@@ -11,5 +11,6 @@ public enum SlideTransition
     Fade,
     Rise,
     Slide,
+    SlideVertical,
     Scale,
 }
