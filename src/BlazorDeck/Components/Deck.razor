@@ -275,12 +275,15 @@
             _syncedIndex = State.Index;
             _syncedTheme = State.ThemeIndex;
             _syncedTransition = State.DefaultTransition;
-            Nav.NavigateTo(Nav.GetUriWithQueryParameters(new Dictionary<string, object?>
-            {
-                ["slide"] = State.Index + 1,
-                ["theme"] = ThemeKey(State.Theme),
-                ["transition"] = State.DefaultTransition.ToString(),
-            }), replace: true);
+            // Slide is a route (/slide/N); theme + transition stay in the query.
+            var target = Nav.GetUriWithQueryParameters(
+                Nav.ToAbsoluteUri($"slide/{State.Index + 1}").AbsoluteUri,
+                new Dictionary<string, object?>
+                {
+                    ["theme"] = ThemeKey(State.Theme),
+                    ["transition"] = State.DefaultTransition.ToString(),
+                });
+            Nav.NavigateTo(target, replace: true);
         }
 
         if (State.Index != _shownIndex)

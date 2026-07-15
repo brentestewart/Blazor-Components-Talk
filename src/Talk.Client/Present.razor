@@ -1,16 +1,18 @@
 @page "/"
+@page "/slide/{Number:int}"
 @rendermode InteractiveAuto
 @layout FullScreenLayout
 
 <PageTitle>BlazorDeck</PageTitle>
 
-<Deck Slides="Slides" InitialSlide="SlideParam" InitialTheme="@ThemeParam"
+<Deck Slides="Slides" InitialSlide="Number" InitialTheme="@ThemeParam"
       InitialTransition="@TransitionParam" DefaultTransition="SlideTransition.Fade" />
 
 @code {
-    [SupplyParameterFromQuery(Name = "slide")]
-    public int? SlideParam { get; set; }
+    // Slide is a route parameter (1-based); null on the bare "/" route (= slide 1).
+    [Parameter] public int? Number { get; set; }
 
+    // Theme + transition are view-state, so they stay in the query string.
     [SupplyParameterFromQuery(Name = "theme")]
     public string? ThemeParam { get; set; }
 
