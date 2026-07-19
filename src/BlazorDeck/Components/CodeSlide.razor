@@ -1,19 +1,21 @@
 @namespace BlazorDeck.Components
 
-@* A slide that showcases a single code file. The code pane — highlighting, JS interop,
-   and lifecycle — lives in the reusable CodeWindow. Shows: CSS isolation (#21),
-   cascading theme (#11). *@
-<div class="code-slide">
-    @if (!string.IsNullOrWhiteSpace(Title))
-    {
-        <h1 class="cs-title">@Title</h1>
-    }
+@* Showcases a single code file full-width, with an optional Footer caption. Composes the base
+   Slide (so title + frame match every other slide); the code pane is the reusable CodeWindow. *@
+<Slide Title="@Title">
     <CodeWindow Code="@Code" Language="@Language" FileName="@FileName" />
-</div>
+    @if (Footer is not null)
+    {
+        <div class="cs-footer">@Footer</div>
+    }
+</Slide>
 
 @code {
     [Parameter] public string? Title { get; set; }
     [Parameter] public string Code { get; set; } = string.Empty;
     [Parameter] public string Language { get; set; } = "csharp";
     [Parameter] public string? FileName { get; set; }
+
+    /// <summary>Optional caption rendered below the code.</summary>
+    [Parameter] public RenderFragment? Footer { get; set; }
 }
