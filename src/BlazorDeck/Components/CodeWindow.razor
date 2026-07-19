@@ -28,14 +28,33 @@
     [Parameter] public string? FileName { get; set; }
     [Parameter] public bool Optional { get; set; }
 
+    /// <summary>Build-step focus regions, indexed by step. Each entry spotlights a 1-based,
+    /// inclusive line range (null = no focus, e.g. the initial step).</summary>
+    [Parameter] public IReadOnlyList<(int From, int To)?>? Focus { get; set; }
+
+    /// <summary>Current build-step; picks the active region from <see cref="Focus"/>.</summary>
+    [Parameter] public int Step { get; set; }
+
     private ElementReference _code;
     private IJSObjectReference? _module;
+    private string? _highlighted;   // the Code we last tokenised, so step changes don't re-highlight
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         _module ??= await JS.InvokeAsync<IJSObjectReference>(
             "import", "./_content/BlazorDeck/deck.js");
-        await _module.InvokeVoidAsync("highlight", _code);
+
+        if (_highlighted != Code)
+        {
+            _highlighted = Code;
+            await _module.InvokeVoidAsync("highlight", _code);
+        }
+
+        if (Focus is not null)
+        {
+            var region = Step >= 0 && Step < Focus.Count ? Focus[Step] : null;
+            await _module.InvokeVoidAsync("setFocus", _code, region?.From ?? 0, region?.To ?? 0);
+        }
     }
 
     public async ValueTask DisposeAsync()

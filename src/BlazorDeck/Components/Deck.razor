@@ -41,7 +41,7 @@
             <div class="slide-anim slide-layer @TransitionClass @DirectionClass" @key="@($"in-{State.Index}")">
                 @if (Slides.Count > 0)
                 {
-                    <DynamicComponent Type="Slides[State.Index].Type" />
+                    <DynamicComponent @ref="_slide" Type="Slides[State.Index].Type" />
                 }
             </div>
         </div>
@@ -215,6 +215,7 @@
 
     private DotNetObjectReference<Deck>? _ref;
     private IJSObjectReference? _module;
+    private DynamicComponent? _slide;   // the current slide instance, for reading its step count
     private List<OverviewEntry> _indexed = new();
     private bool _ready;
     private bool _hasNavigated;
@@ -339,6 +340,10 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        // The slide has rendered, so its instance now exists — report how many build-steps it
+        // has. No-ops (no re-render) when unchanged, so this is safe to run every render.
+        State.SetStepCount((_slide?.Instance as ISteppable)?.StepCount ?? 1);
+
         if (!firstRender) return;
         _syncedIndex = State.Index;
         _syncedTheme = State.ThemeIndex;

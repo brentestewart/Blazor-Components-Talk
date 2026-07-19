@@ -22,6 +22,16 @@ public class DeckState
     /// <summary>Whether the last move advanced (true) or went back (false) — drives directional transitions.</summary>
     public bool LastForward { get; private set; } = true;
 
+    /// <summary>Current build-step within the slide (0-based). Advancing consumes steps before slides.</summary>
+    public int Step { get; private set; }
+
+    /// <summary>How many steps the current slide has (1 == no fragments). Set by the deck per slide.</summary>
+    public int StepCount { get; private set; } = 1;
+
+    // When stepping backward across a slide boundary, land on the new slide's LAST step —
+    // but we only learn its step count once it renders, so remember the intent until then.
+    private bool _landOnLastStep;
+
     public event Action? OnChange;
 
     public void SetCount(int count) => Count = count;
@@ -39,12 +49,14 @@ public class DeckState
 
     public void Next()
     {
-        if (Index < Count - 1) { LastForward = true; Index++; Notify(); }
+        if (Step < StepCount - 1) { Step++; Notify(); return; }   // advance within the slide first
+        if (Index < Count - 1) { LastForward = true; Index++; ResetSteps(); Notify(); }
     }
 
     public void Prev()
     {
-        if (Index > 0) { LastForward = false; Index--; Notify(); }
+        if (Step > 0) { Step--; Notify(); return; }               // step back within the slide first
+        if (Index > 0) { LastForward = false; Index--; ResetSteps(landOnLast: true); Notify(); }
     }
 
     public void Goto(int index)
@@ -53,8 +65,28 @@ public class DeckState
         {
             LastForward = index > Index;
             Index = index;
+            ResetSteps();
             Notify();
         }
+    }
+
+    private void ResetSteps(bool landOnLast = false)
+    {
+        Step = 0;
+        StepCount = 1;                 // until the new slide reports its own count
+        _landOnLastStep = landOnLast;
+    }
+
+    /// <summary>The deck reports the current slide's step count once it has rendered.</summary>
+    public void SetStepCount(int count)
+    {
+        count = count < 1 ? 1 : count;
+        var step = _landOnLastStep ? count - 1 : Math.Min(Step, count - 1);
+        if (count == StepCount && step == Step) return;   // no change — avoid a render loop
+        StepCount = count;
+        Step = step;
+        _landOnLastStep = false;
+        Notify();
     }
 
     public void CycleTheme()

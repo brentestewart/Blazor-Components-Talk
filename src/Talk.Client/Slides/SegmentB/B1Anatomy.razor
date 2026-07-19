@@ -1,8 +1,11 @@
 @namespace Talk.Client.Slides
+@inherits SteppableSlide
 
 @* Concept #3 — component structure, the common/recommended layout: one .razor file,
-   markup plus an inline @code block. This is the real Slide component. *@
-<CodeSlide Title="Anatomy of a component" FileName="Slide.razor" Language="razor" Code="@Source">
+   markup plus an inline @code block. This is the real Slide component. Build-steps spotlight
+   the markup, then the @code block. *@
+<CodeSlide Title="Anatomy of a component" FileName="Slide.razor" Language="razor"
+           Code="@Source" Focus="_focus" Step="Step">
     <Footer>
         <p class="anatomy-note">
             One file, two parts: <strong>markup</strong> (the template) and the
@@ -13,6 +16,16 @@
 </CodeSlide>
 
 @code {
+    public override int StepCount => 3;
+
+    // Focus region per step (1-based, inclusive line ranges): whole file → markup → @code.
+    private static readonly (int From, int To)?[] _focus =
+    {
+        null,       // step 0 — the whole file
+        (1, 4),     // step 1 — the markup
+        (6, 9),     // step 2 — the @code block
+    };
+
     private const string Source = @"<div class=""slide"">
     <h1 class=""slide-title"">@Title</h1>
     <div class=""slide-body"">@ChildContent</div>

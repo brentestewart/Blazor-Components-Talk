@@ -78,12 +78,11 @@ function isTypePosition(src, start, end) {
         || before === "<" || before === "," || before === "[";
 }
 
-// Walk the source once, escaping the gaps between tokens and wrapping each token in a span
+// Tokenise one line, escaping the gaps between tokens and wrapping each token in a span
 // coloured from the --deck-code-* palette (defined per-theme on the .deck element). Building
 // output as we go means we never re-scan the markup we inject. A production deck would vendor
 // a real grammar (Prism/Shiki); this is a compact stand-in tuned for the Razor/C# on screen.
-export function highlight(el) {
-    const src = el.textContent;
+function tokenize(src) {
     let out = "", last = 0, m;
     TOKEN.lastIndex = 0;
     while ((m = TOKEN.exec(src)) !== null) {
@@ -104,5 +103,23 @@ export function highlight(el) {
         if (m[0].length === 0) TOKEN.lastIndex++;
     }
     out += esc(src.slice(last));
-    el.innerHTML = out;
+    return out;
+}
+
+// Highlight, wrapping each source line in its own <span class="cl"> so build-steps can dim
+// lines outside the focused region (see setFocus). Comments/strings never span lines, so
+// tokenising line-by-line is safe.
+export function highlight(el) {
+    el.innerHTML = el.textContent
+        .split("\n")
+        .map(line => `<span class="cl" style="display:block;transition:opacity .25s ease">${tokenize(line) || "​"}</span>`)
+        .join("");
+}
+
+// Spotlight lines [from, to] (1-based, inclusive) by dimming the rest; from <= 0 clears focus.
+export function setFocus(el, from, to) {
+    el.querySelectorAll(".cl").forEach((line, i) => {
+        const n = i + 1;
+        line.style.opacity = (from > 0 && (n < from || n > to)) ? "0.28" : "";
+    });
 }

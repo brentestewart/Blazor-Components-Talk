@@ -3,7 +3,7 @@
 @* Showcases a single code file full-width, with an optional Footer caption. Composes the base
    Slide (so title + frame match every other slide); the code pane is the reusable CodeWindow. *@
 <Slide Title="@Title">
-    <CodeWindow Code="@Code" Language="@Language" FileName="@FileName" />
+    <CodeWindow Code="@Code" Language="@Language" FileName="@FileName" Focus="@Focus" Step="@Step" />
     @if (Footer is not null)
     {
         <div class="cs-footer">@Footer</div>
@@ -18,4 +18,10 @@
 
     /// <summary>Optional caption rendered below the code.</summary>
     [Parameter] public RenderFragment? Footer { get; set; }
+
+    /// <summary>Build-step focus regions forwarded to the code pane (see CodeWindow.Focus).</summary>
+    [Parameter] public IReadOnlyList<(int From, int To)?>? Focus { get; set; }
+
+    /// <summary>Current build-step forwarded to the code pane.</summary>
+    [Parameter] public int Step { get; set; }
 }
