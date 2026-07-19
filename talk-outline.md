@@ -218,7 +218,9 @@ Known content-sizing note: `SplitSlide` code overflows if too wide — keep spli
   - C3 (#11) — cascading params: the real `<CascadingValue Value="State.Theme">` provider + a consumer
   - C4 (#12) — DI: `AddScoped<DeckState>()` in **both** Program.cs (Server + WASM — an InteractiveAuto detail)
   - C5 (#13) — ⭐ `DeckState`: state + `OnChange` event; subscribe in `OnInitialized`, unsubscribe in `Dispose`
-  - C6 (#14) — threading: the transition timer's off-thread continuation → `InvokeAsync(StateHasChanged)`
+  - C6 (#13½) — `StateHasChanged`: introduced here (before it's used off-thread). When Blazor re-renders
+    for you vs. when you must ask; ties back to the container's `State.OnChange += StateHasChanged` line
+  - C7 (#14) — threading: the transition timer's off-thread continuation → `InvokeAsync(StateHasChanged)`
 - [ ] Segments D–G (next: Segment D)
 
 ## Open items

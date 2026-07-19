@@ -1,0 +1,58 @@
+@namespace Talk.Client.Slides
+
+@* Concept #13½ — StateHasChanged, introduced before the off-thread gotcha (C7). Blazor
+   re-renders a component automatically after its own events and lifecycle; when state changes
+   from somewhere it isn't watching, you call StateHasChanged() to ask. This is the missing
+   piece under the state-container subscribe line `State.OnChange += StateHasChanged`. *@
+<Slide Title="StateHasChanged — ask to re-render">
+    <p class="sh-intro">A component re-renders when Blazor <em>knows</em> its state changed.
+        Most of the time it already does — but not always.</p>
+    <div class="sh">
+        <div class="sh-card auto">
+            <div class="sh-head"><span class="sh-mark">✓</span> Blazor re-renders for you</div>
+            <ul>
+                <li>after an <code>@@onclick</code> or other UI event</li>
+                <li>after a <code>[Parameter]</code> changes</li>
+                <li>after its own lifecycle methods</li>
+            </ul>
+        </div>
+        <div class="sh-card manual">
+            <div class="sh-head"><span class="sh-mark">→</span> You call <code>StateHasChanged()</code></div>
+            <ul>
+                <li>a shared service raises an event <span class="sh-eg">← <code>DeckState</code></span></li>
+                <li>a timer or background callback fires</li>
+                <li>you change state after an <code>await</code></li>
+            </ul>
+        </div>
+    </div>
+    <p class="sh-note">That's the piece hiding under the container's subscribe line:
+        <code>State.OnChange += StateHasChanged</code> — the <em>service</em> changed, not this
+        component, so it asks to re-render itself.</p>
+</Slide>
+
+@code {
+}
+
+<style>
+    .sh-intro { margin: 0 0 1.3rem; opacity: 0.8; font-size: 1.15rem; max-width: 68ch; line-height: 1.5; }
+    .sh-intro em { font-style: normal; color: var(--accent); }
+    .sh { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; }
+    .sh-card {
+        padding: 1.2rem 1.3rem 1.1rem; border-radius: 14px; border: 1px solid var(--deck-border);
+        background: color-mix(in srgb, var(--deck-surface) 55%, transparent);
+    }
+    .sh-card.manual {
+        border-color: color-mix(in srgb, var(--accent) 55%, var(--deck-border));
+        background: color-mix(in srgb, var(--accent) 8%, transparent);
+    }
+    .sh-head { display: flex; align-items: center; gap: 0.55rem; font-size: 1.2rem; font-weight: 700; margin-bottom: 0.8rem; }
+    .sh-head code { color: var(--accent); font-weight: 700; }
+    .sh-mark { font-size: 1.15rem; font-weight: 800; opacity: 0.85; }
+    .sh-card.manual .sh-mark { color: var(--accent); }
+    .sh ul { margin: 0; padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.55rem; font-size: 1.04rem; line-height: 1.4; opacity: 0.9; }
+    .sh code { color: var(--accent); }
+    .sh-eg { opacity: 0.7; font-size: 0.9rem; }
+    .sh-note { margin: 1.35rem 0 0; opacity: 0.78; max-width: 78ch; font-size: 1.08rem; line-height: 1.55; }
+    .sh-note em { font-style: normal; color: var(--accent); }
+    .sh-note code { color: var(--accent); }
+</style>
