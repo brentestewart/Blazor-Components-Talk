@@ -1,0 +1,44 @@
+@namespace Talk.Client.Slides
+
+@* Concept #13 — the state container, the ⭐ of the segment. DeckState is a plain DI service
+   that holds the current slide and raises OnChange when it moves. It's driving the nav you're
+   clicking right now. Kept simple here — the real DeckState also holds theme, transition, and
+   overview flags. *@
+<Slide Title="The state container">
+    <div class="sc">
+        <CodeWindow FileName="DeckState.cs" Language="csharp" Code="@Container" />
+        <CodeWindow FileName="Deck.razor" Language="csharp" Code="@Subscriber" />
+    </div>
+    <p class="sc-note">Nav, progress bar, counter, overview — all read the <em>same</em>
+        <code>DeckState</code>. One calls <code>Next()</code>; <code>OnChange</code> fires;
+        everyone re-renders. That's this whole deck.</p>
+</Slide>
+
+@code {
+    // The container: state + an event, no UI.
+    private const string Container = @"public class DeckState
+{
+    public int Index { get; private set; }
+    public event Action? OnChange;
+    public void Next()
+    {
+        Index++;
+        OnChange?.Invoke();
+    }
+}";
+
+    // A component subscribes, and unsubscribes so it can be collected.
+    private const string Subscriber = @"// subscribe in OnInitialized:
+State.OnChange += StateHasChanged;
+
+// unsubscribe in Dispose:
+State.OnChange -= StateHasChanged;";
+}
+
+<style>
+    .sc { display: grid; grid-template-columns: 1.05fr 1fr; gap: 1.4rem; align-items: start; }
+    .sc .cs-pre { padding: 0.55rem 1rem; }
+    .sc .cs-pre code { font-size: clamp(0.62rem, 1vw, 0.82rem); line-height: 1.32; }
+    .sc-note { margin: 1.1rem 0 0; opacity: 0.78; max-width: 76ch; font-size: 1.05rem; line-height: 1.5; }
+    .sc-note code { color: var(--accent); }
+</style>

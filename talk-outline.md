@@ -210,11 +210,19 @@ Known content-sizing note: `SplitSlide` code overflows if too wide — keep spli
     which will reference this lifecycle); `ShouldRender` foreshadows Segment E rendering/#19.
   - Note: deck has no real `@bind`/`EventCallback` usage → B4/B5 are live demos that foreshadow the
     state container (#13, Segment C). A3 bio now filled in (Brent · Alien Arc · GitHub).
-- [ ] Segment C · Communication & DI (next)
-- [ ] Segments D–G
+- [x] Segment C · Communication & DI — **built & verified** (slides 15–20). Concepts #9–14,
+    each dissecting the deck's real state container. Layout guard: keep code windows ≤ ~36 chars
+    wide and short enough that one-line content clears the top (the `.cs-pre` clips, doesn't wrap).
+  - C1 (#9) — communication map: `[Parameter]` down · `EventCallback` up · `DeckState` anywhere
+  - C2 (#10) — `@ref`: the real `CodeWindow` captures its `<code>` ElementReference, hands it to JS
+  - C3 (#11) — cascading params: the real `<CascadingValue Value="State.Theme">` provider + a consumer
+  - C4 (#12) — DI: `AddScoped<DeckState>()` in **both** Program.cs (Server + WASM — an InteractiveAuto detail)
+  - C5 (#13) — ⭐ `DeckState`: state + `OnChange` event; subscribe in `OnInitialized`, unsubscribe in `Dispose`
+  - C6 (#14) — threading: the transition timer's off-thread continuation → `InvokeAsync(StateHasChanged)`
+- [ ] Segments D–G (next: Segment D)
 
 ## Open items
 
-- [ ] Continue Step 3 with Segment C
+- [ ] Continue Step 3 with Segment D
 - [ ] Later: real highlighter (vendor Prism/Shiki to replace the spike's minimal one),
       bUnit tests (#24), PDF-export fallback, `DiagramSlide` if the lifecycle timeline needs it

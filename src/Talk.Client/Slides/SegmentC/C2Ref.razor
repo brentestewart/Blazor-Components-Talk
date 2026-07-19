@@ -1,0 +1,50 @@
+@namespace Talk.Client.Slides
+
+@* Concept #10 — @ref. The real deck grabs a handle to something and calls a method on it.
+   CodeWindow captures its <code> element with @ref, then hands that ElementReference to the
+   JS highlighter. Kept simple: the real file also imports the module and disposes it. *@
+<Slide Title="@RefTitle">
+    <div class="ref">
+        <CodeWindow FileName="CodeWindow.razor" Language="razor" Code="@Source" />
+        <div class="ref-side">
+            <p class="ref-lead">Sometimes a parent needs to <strong>reach in and call</strong> —
+                not just pass a value. <code>@@ref</code> captures a handle.</p>
+            <ul class="ref-kinds">
+                <li><code>ElementReference</code> — a DOM node to hand to JS.
+                    <span class="ref-real">the deck does this ↑</span></li>
+                <li>A <strong>component</strong> instance — to call its public methods
+                    (<code>_child.Refresh()</code>).</li>
+            </ul>
+            <p class="ref-when">Handles are only valid <em>after</em> render — use them in
+                <code>OnAfterRender</code>, never in the markup.</p>
+        </div>
+    </div>
+</Slide>
+
+@code {
+    private const string RefTitle = "@ref — grab a handle";
+
+    private const string Source = @"<code @ref=""_code"">@Code</code>
+
+@code {
+    ElementReference _code;
+
+    // valid only after render — hand to JS
+    protected override void OnAfterRender(bool _)
+        => Highlight(_code);
+}";
+}
+
+<style>
+    .ref { display: grid; grid-template-columns: 1.35fr 1fr; gap: 1.6rem; align-items: start; }
+    .ref .cs-pre code { font-size: clamp(0.66rem, 1.05vw, 0.92rem); line-height: 1.45; }
+    .ref-side { display: flex; flex-direction: column; gap: 1rem; }
+    .ref-lead { margin: 0; font-size: 1.15rem; line-height: 1.5; }
+    .ref-lead code, .ref-kinds code, .ref-when code { color: var(--accent); }
+    .ref-kinds { margin: 0; padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.7rem; font-size: 1.02rem; line-height: 1.45; opacity: 0.9; }
+    .ref-real {
+        display: inline-block; margin-top: 0.15rem; font-size: 0.82rem;
+        opacity: 0.7; font-style: italic;
+    }
+    .ref-when { margin: 0; font-size: 1rem; opacity: 0.75; }
+</style>
