@@ -1,0 +1,13 @@
+@namespace Talk.Client.Slides
+
+@* A real templated component (concept #15): a named Header slot plus the default
+   ChildContent slot. D1 renders this live — what you see there is this component. *@
+<div class="card">
+    <header>@Header</header>
+    <div>@ChildContent</div>
+</div>
+
+@code {
+    [Parameter] public RenderFragment? Header { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

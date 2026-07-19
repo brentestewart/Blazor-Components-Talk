@@ -1,0 +1,48 @@
+@namespace Talk.Client.Slides
+
+@* Concept #17 — DynamicComponent, the deck's real engine. It renders a component chosen at
+   runtime by its Type, with parameters passed as a dictionary. This deck is one
+   <DynamicComponent> that swaps in whichever slide you're on. *@
+<Slide Title="DynamicComponent">
+    <div class="dc">
+        <CodeWindow FileName="Deck.razor" Language="razor" Code="@Source" />
+        <div class="dc-side">
+            <p class="dc-lead">Normally you write a component's tag by name. Sometimes you don't
+                <em>know</em> the type until runtime — <code>DynamicComponent</code> takes a
+                <code>Type</code> instead of a tag.</p>
+            <ul>
+                <li><code>Type</code> — which component to render, chosen at runtime</li>
+                <li><code>Parameters</code> — an optional <code>Dictionary</code> of inputs</li>
+            </ul>
+            <p class="dc-real">This is the deck's engine: a table of slide types, and one
+                <code>&lt;DynamicComponent&gt;</code> rendering <code>Slides[Index]</code>.
+                Every slide you've seen came through this line.</p>
+        </div>
+    </div>
+</Slide>
+
+@code {
+    private const string Source = @"@* the current slide, chosen by index *@
+<DynamicComponent Type=""_slides[_index]"" />
+
+@code {
+    Type[] _slides =
+    {
+        typeof(A1Title),
+        typeof(B1Anatomy),
+        // …every slide, by type
+    };
+    int _index;
+}";
+}
+
+<style>
+    .dc { display: grid; grid-template-columns: 1.2fr 1fr; gap: 1.6rem; align-items: start; }
+    .dc-side { display: flex; flex-direction: column; gap: 1rem; }
+    .dc-lead { margin: 0; font-size: 1.12rem; line-height: 1.5; }
+    .dc-lead em { font-style: normal; color: var(--accent); }
+    .dc-side ul { margin: 0; padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.55rem; font-size: 1.04rem; opacity: 0.9; }
+    .dc-side code { color: var(--accent); }
+    .dc-real { margin: 0; font-size: 1.02rem; opacity: 0.8; line-height: 1.5;
+        padding-top: 0.9rem; border-top: 1px solid var(--deck-border); }
+</style>

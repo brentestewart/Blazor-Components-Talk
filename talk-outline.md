@@ -210,7 +210,7 @@ Known content-sizing note: `SplitSlide` code overflows if too wide — keep spli
     which will reference this lifecycle); `ShouldRender` foreshadows Segment E rendering/#19.
   - Note: deck has no real `@bind`/`EventCallback` usage → B4/B5 are live demos that foreshadow the
     state container (#13, Segment C). A3 bio now filled in (Brent · Alien Arc · GitHub).
-- [x] Segment C · Communication & DI — **built & verified** (slides 15–20). Concepts #9–14,
+- [x] Segment C · Communication & DI — **built & verified** (slides 15–21). Concepts #9–14 (+#13½),
     each dissecting the deck's real state container. Layout guard: keep code windows ≤ ~36 chars
     wide and short enough that one-line content clears the top (the `.cs-pre` clips, doesn't wrap).
   - C1 (#9) — communication map: `[Parameter]` down · `EventCallback` up · `DeckState` anywhere
@@ -221,10 +221,23 @@ Known content-sizing note: `SplitSlide` code overflows if too wide — keep spli
   - C6 (#13½) — `StateHasChanged`: introduced here (before it's used off-thread). When Blazor re-renders
     for you vs. when you must ask; ties back to the container's `State.OnChange += StateHasChanged` line
   - C7 (#14) — threading: the transition timer's off-thread continuation → `InvokeAsync(StateHasChanged)`
-- [ ] Segments D–G (next: Segment D)
+- [x] Segment D · Advanced composition — **built & verified at 1920×1080** (slides 22–25). Concepts #15–18.
+    Design target is 1080p (fonts are capped, height is vh-based, so 720p is the tighter constraint).
+    Live demos are real components, not fakes — what's on screen IS the code shown.
+  - D1 (#15) — templated components: real `Card.razor` (Header + ChildContent slots) + `Page.razor` caller + live `Card`
+  - D2 (#16) — generic components: real `TypedList<TItem>` (`@typeparam`, `RenderFragment<TItem> Row`) + caller + live list; `TItem` inferred
+  - D3 (#17) — `DynamicComponent`: the deck's real engine — a table of slide types rendered by index (Parameters dict for reuse)
+  - D4 (#18) — JS interop: both directions from real deck.js — `IJSObjectReference` (C#→JS) and `DotNetObjectReference`/`[JSInvokable]` (JS→C#)
+  - Razor gotcha: a component tag (`<TypedList>`) written inside a CSS comment in a `<style>` block is parsed as markup — keep angle brackets out of `<style>` comments.
+- [ ] Segments E–G (next: Segment E · Performance — #19 @key, #20 Virtualization; both real deck features)
 
 ## Open items
 
-- [ ] Continue Step 3 with Segment D
+- [ ] Continue Step 3 with Segment E
+- [ ] **Refactor toward original intent** (discuss first): reuse a small set of slide layouts rather than
+      a bespoke type per slide. Unused layout components sitting at 0 uses: `SectionSlide`, `CodeSlide`,
+      `CompareSlide`/`CompareOption`, `DemoSlide`, `PlaygroundSlide` (also `SplitSlide`/`TitleSlide` at 1).
+      `Slide` is used 23/25, `CodeWindow` 15/25 — reuse is real at the base level only. Decide: wire the
+      orphaned layouts in, or delete them.
 - [ ] Later: real highlighter (vendor Prism/Shiki to replace the spike's minimal one),
       bUnit tests (#24), PDF-export fallback, `DiagramSlide` if the lifecycle timeline needs it

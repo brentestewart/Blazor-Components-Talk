@@ -1,0 +1,52 @@
+@namespace Talk.Client.Slides
+
+@* Concept #18 — JS interop, both directions, from the deck's real deck.js. C# → JS: import a
+   module and call its exports. JS → C#: hand JS a DotNetObjectReference and mark the target
+   [JSInvokable]. Timed to OnAfterRender — the element + JS runtime only exist once interactive. *@
+<Slide Title="JavaScript interop">
+    <div class="js">
+        <div class="js-code">
+            <CodeWindow FileName="Deck.razor · C# → JS" Language="csharp" Code="@ToJs" />
+            <CodeWindow FileName="Deck.razor · JS → C#" Language="csharp" Code="@FromJs" />
+        </div>
+        <div class="js-side">
+            <p class="js-lead">C# and JavaScript call <strong>each other</strong> through a
+                module reference.</p>
+            <ul>
+                <li><code>IJSObjectReference</code> — a handle to an imported JS module</li>
+                <li><code>DotNetObjectReference</code> + <code>[JSInvokable]</code> — let JS
+                    call back into C#</li>
+                <li>Only after render — do it in <code>OnAfterRender</code>, when the element
+                    and JS runtime exist</li>
+            </ul>
+            <p class="js-real">The deck does all three: <code>keydown</code> → slide nav,
+                fullscreen, and the code highlighter.</p>
+        </div>
+    </div>
+</Slide>
+
+@code {
+    private const string ToJs = @"// C# → JS: import a module, call its exports
+var module = await JS.InvokeAsync<IJSObjectReference>(
+    ""import"", ""./deck.js"");
+await module.InvokeVoidAsync(""toggleFullscreen"");";
+
+    private const string FromJs = @"// JS → C#: hand JS a reference to this component
+var meRef = DotNetObjectReference.Create(this);
+await module.InvokeVoidAsync(""registerKeys"", meRef);
+
+[JSInvokable]
+public void OnKey(string key) { /* advance slide */ }";
+}
+
+<style>
+    .js { display: grid; grid-template-columns: 1.35fr 1fr; gap: 1.5rem; align-items: start; }
+    .js-code { display: flex; flex-direction: column; gap: 0.9rem; }
+    .js-side { display: flex; flex-direction: column; gap: 0.95rem; }
+    .js-lead { margin: 0; font-size: 1.1rem; line-height: 1.5; }
+    .js-side ul { margin: 0; padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.6rem; font-size: 1.02rem; line-height: 1.4; opacity: 0.9; }
+    .js-side code { color: var(--accent); }
+    .js-real { margin: 0; font-size: 1rem; opacity: 0.8; line-height: 1.5;
+        padding-top: 0.85rem; border-top: 1px solid var(--deck-border); }
+    .js-real code { color: var(--accent); }
+</style>

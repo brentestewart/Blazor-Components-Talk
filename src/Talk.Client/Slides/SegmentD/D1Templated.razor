@@ -1,0 +1,81 @@
+@namespace Talk.Client.Slides
+
+@* Concept #15 — templated components. A RenderFragment parameter is a slot the caller fills
+   with its own markup. ChildContent is the default slot; named slots add more. (Instructional
+   — a Card with a Header slot; the deck's own Slide uses ChildContent the same way.) *@
+<Slide Title="Templated components">
+    <div class="tp">
+        <div class="tp-code">
+            <CodeWindow FileName="Card.razor" Language="razor" Code="@Component" />
+            <CodeWindow FileName="Page.razor" Language="razor" Code="@Caller" />
+        </div>
+        <div class="tp-side">
+            <p><code>RenderFragment</code> is a <strong>slot</strong> — the caller passes
+                markup <em>into</em> your component.</p>
+            <ul>
+                <li><code>ChildContent</code> — the default slot (the content between the tags)</li>
+                <li>Named slots — one per <code>RenderFragment</code> parameter</li>
+                <li><code>RenderFragment&lt;T&gt;</code> — a slot with a <code>@@context</code>
+                    (next slide)</li>
+            </ul>
+            <div class="tp-live">
+                <span class="tp-live-tag">live — this is the component</span>
+                <Card>
+                    <Header><h3>Pricing</h3></Header>
+                    <ChildContent>Everything in Pro, plus…</ChildContent>
+                </Card>
+            </div>
+        </div>
+    </div>
+</Slide>
+
+@code {
+    private const string Component = @"<div class=""card"">
+    <header>@Header</header>
+    <div>@ChildContent</div>
+</div>
+
+@code {
+    [Parameter] public RenderFragment? Header { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}";
+
+    private const string Caller = @"<Card>
+    <Header><h3>Pricing</h3></Header>
+    <ChildContent>Everything in Pro, plus…</ChildContent>
+</Card>";
+}
+
+<style>
+    .tp { display: grid; grid-template-columns: 1.4fr 1fr; gap: 1.6rem; align-items: start; }
+    .tp-code { display: flex; flex-direction: column; gap: 0.9rem; }
+    .tp-side { display: flex; flex-direction: column; gap: 1rem; font-size: 1.1rem; line-height: 1.55; }
+    .tp-side p { margin: 0; }
+    .tp-side em { font-style: normal; color: var(--accent); }
+    .tp-side ul { margin: 0; padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.7rem; opacity: 0.9; }
+    .tp-side code { color: var(--accent); }
+
+    .tp-live {
+        position: relative; margin-top: 0.6rem;
+        border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--deck-border));
+        border-radius: 12px; background: color-mix(in srgb, var(--accent) 6%, transparent);
+        padding: 1.5rem 1.4rem 1.3rem;
+    }
+    .tp-live-tag {
+        position: absolute; top: -0.7rem; left: 1.1rem;
+        font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em;
+        padding: 0.15rem 0.55rem; border-radius: 999px;
+        background: var(--accent); color: var(--deck-bg); font-weight: 700;
+    }
+    /* the rendered Card component */
+    .tp-live .card {
+        border: 1px solid var(--deck-border); border-radius: 10px;
+        background: var(--deck-surface); overflow: hidden;
+    }
+    .tp-live .card header {
+        padding: 0.7rem 1rem; border-bottom: 1px solid var(--deck-border);
+        background: color-mix(in srgb, var(--accent) 10%, transparent);
+    }
+    .tp-live .card header h3 { margin: 0; font-size: 1.15rem; font-weight: 700; color: var(--accent); }
+    .tp-live .card > div { padding: 0.9rem 1rem; color: var(--deck-fg); opacity: 0.9; }
+</style>

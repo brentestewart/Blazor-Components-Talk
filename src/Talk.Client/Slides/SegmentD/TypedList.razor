@@ -1,0 +1,15 @@
+@namespace Talk.Client.Slides
+@typeparam TItem
+
+@* A real generic component (concept #16): TItem is inferred from Items, and each item is
+   rendered through the caller's Row template. D2 renders this live — what you see on that
+   slide is this component. *@
+@foreach (var item in Items)
+{
+    <div>@Row(item)</div>
+}
+
+@code {
+    [Parameter] public IEnumerable<TItem> Items { get; set; } = default!;
+    [Parameter] public RenderFragment<TItem> Row { get; set; } = default!;
+}

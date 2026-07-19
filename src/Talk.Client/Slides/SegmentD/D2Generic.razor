@@ -1,0 +1,72 @@
+@namespace Talk.Client.Slides
+
+@* Concept #16 — generic components. @typeparam makes a component type-parameterized; the
+   compiler infers the type from the data you pass. Pair it with a RenderFragment<TItem> and you
+   get a reusable, type-safe list. (Instructional — a TypedList<TItem>, live on the right.) *@
+<Slide Title="Generic components">
+    <div class="gn">
+        <div class="gn-code">
+            <CodeWindow FileName="TypedList.razor" Language="razor" Code="@Component" />
+            <CodeWindow FileName="Page.razor" Language="razor" Code="@Caller" />
+        </div>
+        <div class="gn-side">
+            <div class="gn-live">
+                <span class="gn-tag">live — this is the component</span>
+                <TypedList Items="_people">
+                    <Row>@context.Name — @context.Role</Row>
+                </TypedList>
+            </div>
+            <p class="gn-note"><code>TItem</code> is inferred as <code>Person</code> from
+                <code>Items</code> — no cast, fully typed inside <code>&lt;Row&gt;</code>.</p>
+        </div>
+    </div>
+</Slide>
+
+@code {
+    private record Person(string Name, string Role);
+
+    private readonly IEnumerable<Person> _people = new Person[]
+    {
+        new("Ada", "Engineer"),
+        new("Grace", "Admiral"),
+        new("Alan", "Theorist"),
+    };
+
+    private const string Component = @"@typeparam TItem
+
+@foreach (var item in Items)
+{
+    <div>@Row(item)</div>
+}
+
+@code {
+    [Parameter] public IEnumerable<TItem> Items { get; set; }
+    [Parameter] public RenderFragment<TItem> Row { get; set; }
+}";
+
+    private const string Caller = @"<TypedList Items=""_people"">
+    <Row>@context.Name — @context.Role</Row>
+</TypedList>";
+}
+
+<style>
+    .gn { display: grid; grid-template-columns: 1.4fr 1fr; gap: 1.6rem; align-items: start; }
+    .gn-code { display: flex; flex-direction: column; gap: 0.9rem; }
+    .gn-side { display: flex; flex-direction: column; gap: 1.2rem; }
+    .gn-live {
+        position: relative; padding: 1.5rem 1.4rem 1.2rem;
+        border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--deck-border));
+        border-radius: 12px; background: color-mix(in srgb, var(--accent) 6%, transparent);
+    }
+    .gn-tag {
+        position: absolute; top: -0.7rem; left: 1.1rem;
+        font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em;
+        padding: 0.15rem 0.55rem; border-radius: 999px;
+        background: var(--accent); color: var(--deck-bg); font-weight: 700;
+    }
+    /* rows rendered by the live TypedList component */
+    .gn-live div { font-size: 1.15rem; padding: 0.5rem 0.2rem; border-bottom: 1px solid var(--deck-border); }
+    .gn-live div:last-child { border-bottom: none; }
+    .gn-note { margin: 0; font-size: 1.05rem; opacity: 0.8; line-height: 1.5; }
+    .gn-note code { color: var(--accent); }
+</style>
