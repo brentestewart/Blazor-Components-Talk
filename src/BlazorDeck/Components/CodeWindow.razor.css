@@ -58,6 +58,10 @@
 }
 
 .cs-pre code {
+    /* Block so the raw text (shown for one frame before highlight() runs) and the
+       highlighted per-line blocks lay out at the same height — otherwise the code
+       block resizes on highlight and the centred slide visibly jumps. */
+    display: block;
     font-family: "Cascadia Code", "JetBrains Mono", ui-monospace, monospace;
     font-size: clamp(0.9rem, 1.7vw, 1.25rem);
     line-height: 1.6;
