@@ -44,15 +44,18 @@
         _module ??= await JS.InvokeAsync<IJSObjectReference>(
             "import", "./_content/BlazorDeck/deck.js");
 
+        var region = Focus is not null && Step >= 0 && Step < Focus.Count ? Focus[Step] : null;
+
         if (_highlighted != Code)
         {
+            // Bake the focus into the (re)highlight so a freshly-mounted focused slide — e.g. the
+            // outgoing layer during a transition — never flashes fully bright before dimming.
             _highlighted = Code;
-            await _module.InvokeVoidAsync("highlight", _code);
+            await _module.InvokeVoidAsync("highlight", _code, region?.From ?? 0, region?.To ?? 0);
         }
-
-        if (Focus is not null)
+        else if (Focus is not null)
         {
-            var region = Step >= 0 && Step < Focus.Count ? Focus[Step] : null;
+            // Same code, different step: animate the dim without re-tokenising.
             await _module.InvokeVoidAsync("setFocus", _code, region?.From ?? 0, region?.To ?? 0);
         }
     }

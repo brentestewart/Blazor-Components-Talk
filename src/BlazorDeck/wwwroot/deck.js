@@ -108,12 +108,19 @@ function tokenize(src) {
 
 // Highlight, wrapping each source line in its own <span class="cl"> so build-steps can dim
 // lines outside the focused region (see setFocus). Comments/strings never span lines, so
-// tokenising line-by-line is safe.
-export function highlight(el) {
+// tokenising line-by-line is safe. If a focus region [from, to] (1-based) is passed, the dim
+// is baked into the initial markup so a freshly-mounted focused slide never flashes un-dimmed.
+export function highlight(el, from = 0, to = 0) {
     el.innerHTML = el.textContent
         .split("\n")
-        .map(line => `<span class="cl" style="display:block;transition:opacity .25s ease">${tokenize(line) || "​"}</span>`)
+        .map((line, i) => {
+            const dim = from > 0 && (i + 1 < from || i + 1 > to) ? ";opacity:.28" : "";
+            return `<span class="cl" style="display:block;transition:opacity .25s ease${dim}">${tokenize(line) || "​"}</span>`;
+        })
         .join("");
+    // Reveal only now — the element is hidden until this runs (see CodeWindow.razor.css), so
+    // the plain pre-highlight text never flashes (bright, or un-dimmed on a focused slide).
+    el.style.opacity = "1";
 }
 
 // Spotlight lines [from, to] (1-based, inclusive) by dimming the rest; from <= 0 clears focus.

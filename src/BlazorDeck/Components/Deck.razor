@@ -35,13 +35,18 @@
             @if (_outgoing is int outIdx)
             {
                 <div class="slide-anim slide-layer @OutgoingClass @DirectionClass" @key="@($"out-{outIdx}")">
-                    <DynamicComponent Type="Slides[outIdx].Type" />
+                    @* Freeze the exiting slide at the step it was on, so it doesn't snap back. *@
+                    <CascadingValue Name="Step" Value="_outgoingStep" IsFixed="true">
+                        <DynamicComponent Type="Slides[outIdx].Type" />
+                    </CascadingValue>
                 </div>
             }
             <div class="slide-anim slide-layer @TransitionClass @DirectionClass" @key="@($"in-{State.Index}")">
                 @if (Slides.Count > 0)
                 {
-                    <DynamicComponent @ref="_slide" Type="Slides[State.Index].Type" />
+                    <CascadingValue Name="Step" Value="State.Step">
+                        <DynamicComponent @ref="_slide" Type="Slides[State.Index].Type" />
+                    </CascadingValue>
                 }
             </div>
         </div>
@@ -216,6 +221,8 @@
     private DotNetObjectReference<Deck>? _ref;
     private IJSObjectReference? _module;
     private DynamicComponent? _slide;   // the current slide instance, for reading its step count
+    private int _shownStep;             // step currently displayed (mirrors State.Step)
+    private int _outgoingStep;          // step the exiting slide is frozen at during a transition
     private List<OverviewEntry> _indexed = new();
     private bool _ready;
     private bool _hasNavigated;
@@ -266,6 +273,7 @@
             State.Goto(slide - 1);
         }
         _shownIndex = State.Index;
+        _shownStep = State.Step;
     }
 
     protected override void OnParametersSet()
@@ -312,8 +320,10 @@
             {
                 _hasNavigated = true;
                 _outgoing = EffectiveTransition == SlideTransition.None ? null : _shownIndex;
+                _outgoingStep = _shownStep;   // freeze the exiting slide at the step it was showing
             }
             _shownIndex = State.Index;
+            _shownStep = State.Step;          // new slide starts at step 0
 
             _outCts?.Cancel();
             var cts = _outCts = new CancellationTokenSource();
@@ -329,6 +339,7 @@
             return;
         }
 
+        _shownStep = State.Step;   // a step change within the current slide
         await InvokeAsync(StateHasChanged);
     }
 

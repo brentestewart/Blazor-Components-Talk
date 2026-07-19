@@ -62,6 +62,8 @@
        highlighted per-line blocks lay out at the same height — otherwise the code
        block resizes on highlight and the centred slide visibly jumps. */
     display: block;
+    /* Hidden until highlight() reveals it, so the plain pre-highlight text never flashes. */
+    opacity: 0;
     font-family: "Cascadia Code", "JetBrains Mono", ui-monospace, monospace;
     font-size: clamp(0.9rem, 1.7vw, 1.25rem);
     line-height: 1.6;
