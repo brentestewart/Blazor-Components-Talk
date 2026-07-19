@@ -4,7 +4,7 @@
     {
       "name": "deck",
       "runtimeExecutable": "dotnet",
-      "runtimeArgs": ["run", "--project", "src/Talk", "--launch-profile", "http"],
+      "runtimeArgs": ["watch", "--non-interactive", "--project", "src/Talk", "run", "--launch-profile", "http"],
       "port": 5028
     }
   ]
