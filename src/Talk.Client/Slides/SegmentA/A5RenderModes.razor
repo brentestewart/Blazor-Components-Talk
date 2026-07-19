@@ -1,21 +1,55 @@
 @namespace Talk.Client.Slides
 
 <Slide Title="Four render modes">
-    <BulletList Items="_modes">
-        <ItemTemplate Context="m">
-            <strong style="color:var(--accent)">@m.Name</strong> — @m.Desc
-        </ItemTemplate>
-    </BulletList>
+    <div class="modes">
+        @foreach (var m in _modes)
+        {
+            <div class="mode-card @(m.IsDeck ? "deck" : null)">
+                @if (m.IsDeck)
+                {
+                    <span class="mode-tag">this deck</span>
+                }
+                <div class="mode-name">@m.Name</div>
+                <div class="mode-desc">@m.Desc</div>
+            </div>
+        }
+    </div>
 </Slide>
 
 @code {
-    private record Mode(string Name, string Desc);
+    private record Mode(string Name, string Desc, bool IsDeck = false);
 
     private static readonly Mode[] _modes =
     {
         new("Static SSR", "HTML rendered on the server, no interactivity"),
         new("Interactive Server", "UI runs on the server over a SignalR circuit"),
         new("Interactive WebAssembly", ".NET runs in the browser"),
-        new("Interactive Auto", "Server first for a fast start, then WebAssembly once it loads"),
+        new("Interactive Auto", "Server first for a fast start, then WebAssembly once it loads", IsDeck: true),
     };
 }
+
+<style>
+    .modes {
+        display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+        max-width: 62rem;
+    }
+    .mode-card {
+        position: relative;
+        padding: 1.6rem 1.7rem; border-radius: 14px;
+        border: 1px solid color-mix(in srgb, var(--deck-border) 55%, var(--deck-fg) 22%);
+        background: color-mix(in srgb, var(--deck-surface) 86%, var(--deck-fg) 9%);
+        box-shadow: 0 16px 40px -28px rgba(0, 0, 0, 0.8);
+    }
+    .mode-card.deck {
+        border-color: color-mix(in srgb, var(--accent) 60%, var(--deck-border));
+        background: color-mix(in srgb, var(--accent) 14%, var(--deck-surface));
+    }
+    .mode-tag {
+        position: absolute; top: -0.7rem; left: 1.2rem;
+        font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em;
+        padding: 0.15rem 0.55rem; border-radius: 999px;
+        background: var(--accent); color: var(--deck-bg); font-weight: 700;
+    }
+    .mode-name { font-size: 1.4rem; font-weight: 700; color: var(--accent); margin-bottom: 0.45rem; }
+    .mode-desc { font-size: 1.05rem; opacity: 0.82; line-height: 1.45; }
+</style>

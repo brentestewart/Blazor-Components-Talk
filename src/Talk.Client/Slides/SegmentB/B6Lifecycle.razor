@@ -18,6 +18,10 @@
             </li>
         }
     </ul>
+    <p class="lc-note"><span class="lc-note-tag">with prerendering</span>
+        the hooks above <code>OnAfterRender</code> run <strong>twice</strong> — once for the static
+        prerender, then again when the component goes interactive. <code>OnAfterRender</code> only
+        fires once interactive, which is why it's the safe place for JS &amp; DOM work.</p>
 </Slide>
 
 @code {
@@ -69,5 +73,16 @@
         font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.09em;
         padding: 0.2rem 0.65rem; border-radius: 999px;
         border: 1px solid var(--deck-border); opacity: 0.7; white-space: nowrap;
+    }
+    .lc-note {
+        margin: 1.6rem 0 0; max-width: 92ch;
+        font-size: 1rem; line-height: 1.5; opacity: 0.82;
+        padding-left: 1rem;
+        border-left: 3px solid color-mix(in srgb, var(--accent) 55%, var(--deck-border));
+    }
+    .lc-note code, .lc-note strong { color: var(--accent); }
+    .lc-note-tag {
+        text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.1em;
+        color: var(--accent); font-weight: 700; margin-right: 0.4rem;
     }
 </style>
