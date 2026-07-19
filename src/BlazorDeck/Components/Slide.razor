@@ -1,7 +1,8 @@
 @namespace BlazorDeck.Components
 
-@* Base slide layout. Shows: component structure (#3), parameters (#4),
-   attribute splatting (#5), cascading parameters (#11), CSS isolation (#21). *@
+@* Base slide layout — the frame around every slide. Single-file component: markup plus an
+   inline @code block. Shows: component structure (#3), parameters (#4),
+   attribute splatting (#5), CSS isolation (#21, in Slide.razor.css). *@
 
 <div class="slide" @attributes="Extra">
     @if (!string.IsNullOrWhiteSpace(Title))

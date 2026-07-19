@@ -1,0 +1,22 @@
+@namespace Talk.Client.Slides
+
+@* A tiny reusable child. It doesn't own any count — it just raises an EventCallback and
+   lets the parent decide what a step means. This is "talking back up." *@
+<div class="stepper">
+    <button @onclick="() => OnStep.InvokeAsync(-1)" aria-label="decrease">–</button>
+    <button @onclick="() => OnStep.InvokeAsync(1)" aria-label="increase">+</button>
+</div>
+
+@code {
+    [Parameter] public EventCallback<int> OnStep { get; set; }
+}
+
+<style>
+    .stepper { display: inline-flex; gap: 0.5rem; }
+    .stepper button {
+        font-size: 1.6rem; width: 3rem; height: 3rem; line-height: 1;
+        border-radius: 10px; cursor: pointer;
+        border: 1px solid var(--deck-border); background: var(--deck-surface); color: var(--deck-fg);
+    }
+    .stepper button:hover { border-color: var(--accent); color: var(--accent); }
+</style>

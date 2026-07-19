@@ -191,12 +191,30 @@ Known content-sizing note: `SplitSlide` code overflows if too wide — keep spli
   - A4 Agenda (bullet list) · A5 Four render modes · A6 Mode-live self-demo (RendererInfo → WebAssembly)
   - A7 Why render mode matters (sets up DI lifetimes + JS interop callbacks)
   - Showcase slides removed (in git history); `Present.razor` now lists Segment A only.
-- [ ] Segment B · Fundamentals
-- [ ] Segments C–G
+- [x] **Segment B · Fundamentals** — built & verified (`src/Talk.Client/Slides/SegmentB/`)
+  - Approach: lean on the deck's own components where it helps, but keep each snippet the
+    **minimal version for the current lesson** (teaching code need not match the real code 1:1).
+    Concept slides = one focused code window per file (two windows when a lesson spans two files).
+  - B1 Anatomy — **two slides**: (1) recommended single-file layout — real `Slide.razor`
+    (markup + inline `@code`); (2) "…or split across files" — same component as `.razor` +
+    `.razor.cs` + `.razor.css`, with `.cs`/`.css` badged **optional**. (Extracted a reusable
+    `CodeWindow` primitive from `CodeSlide`; `Slide` kept single-file to match the recommendation.)
+  - B2 Parameters — two windows: `Slide.razor` (declares `Title`) + `A5RenderModes.razor` (parent passes it)
+  - B3 Attribute splatting — two windows: `Slide.razor` (`CaptureUnmatchedValues` + `@attributes`) + a caller
+  - B4 Data binding — live `@bind` demo **beside its own code** (deck uses a state container, so this is a live toy)
+  - B5 EventCallback — child (`Stepper.razor`) + parent code windows **beside the live `<Stepper>`**
+  - B6 Lifecycle — a **timeline** (not empty code stubs) of all six hooks in order:
+    `SetParametersAsync` (async-only) · `OnInitialized{Async}` · `OnParametersSet{Async}` ·
+    `ShouldRender` (sync-only) · `OnAfterRender{Async}` · `Dispose`/`DisposeAsync`, each with a
+    frequency badge; most pair sync+async, two don't. NO JS interop here (that's Segment D #18,
+    which will reference this lifecycle); `ShouldRender` foreshadows Segment E rendering/#19.
+  - Note: deck has no real `@bind`/`EventCallback` usage → B4/B5 are live demos that foreshadow the
+    state container (#13, Segment C). A3 bio now filled in (Brent · Alien Arc · GitHub).
+- [ ] Segment C · Communication & DI (next)
+- [ ] Segments D–G
 
 ## Open items
 
-- [ ] Fill in A3 speaker bio placeholders (name, role, handles)
-- [ ] Continue Step 3 with Segment B
+- [ ] Continue Step 3 with Segment C
 - [ ] Later: real highlighter (vendor Prism/Shiki to replace the spike's minimal one),
       bUnit tests (#24), PDF-export fallback, `DiagramSlide` if the lifecycle timeline needs it

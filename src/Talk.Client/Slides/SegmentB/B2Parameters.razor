@@ -1,0 +1,31 @@
+@namespace Talk.Client.Slides
+
+@* Concept #4 — parameters. One file declares the [Parameter]; a parent file passes it in.
+   The value flows one way, parent -> child. *@
+<Slide Title="Parameters — inputs from the parent">
+    <div class="two-file">
+        <CodeWindow FileName="Slide.razor" Language="razor" Code="@Declare" />
+        <CodeWindow FileName="A5RenderModes.razor" Language="razor" Code="@Use" />
+        <p class="two-note">A parent passes it in — the value flows one way, parent to child.</p>
+    </div>
+</Slide>
+
+@code {
+    // The component declares the input.
+    private const string Declare = @"<h1 class=""slide-title"">@Title</h1>
+
+@code {
+    [Parameter] public string? Title { get; set; }
+}";
+
+    // A parent sets it.
+    private const string Use = @"<Slide Title=""Four render modes"">
+    ...
+</Slide>";
+}
+
+<style>
+    .two-file { display: flex; flex-direction: column; gap: 1rem; }
+    .two-file .cs-pre code { font-size: clamp(0.85rem, 1.5vw, 1.15rem); }
+    .two-note { margin: 0.5rem 0 0; opacity: 0.8; font-size: 1.1rem; }
+</style>

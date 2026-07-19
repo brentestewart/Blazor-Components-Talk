@@ -1,0 +1,57 @@
+@namespace Talk.Client.Slides
+
+@* Concept #6 — data binding. Show the real @bind code beside the live component it drives —
+   the code on the left is exactly what's running on the right. *@
+<Slide Title="Two-way data binding">
+    <div class="bind">
+        <CodeWindow FileName="Demo.razor" Language="razor" Code="@Source" />
+        <div class="bind-live">
+            <span class="bind-live-tag">live</span>
+            <input class="bind-in" @bind="_text" @bind:event="oninput" placeholder="type here…" />
+            <p class="bind-echo">You typed: <strong>@(_text.Length == 0 ? "—" : _text)</strong></p>
+        </div>
+    </div>
+    <p class="bind-note">
+        <code>@@bind</code> is sugar for a <em>value</em> plus its <code>ValueChanged</code>
+        callback — the <code>EventCallback</code> on the next slide.
+    </p>
+</Slide>
+
+@code {
+    private string _text = string.Empty;
+
+    private const string Source = @"<input @bind=""_text""
+       @bind:event=""oninput"" />
+<p>You typed: @_text</p>
+
+@code {
+    private string _text = """";
+}";
+}
+
+<style>
+    .bind { display: grid; grid-template-columns: 1.5fr 1fr; gap: 1.75rem; align-items: start; }
+    .bind .cs-pre { overflow-x: hidden; }
+    .bind-live {
+        position: relative;
+        display: flex; flex-direction: column; gap: 1.1rem;
+        padding: 1.6rem 1.4rem 1.4rem;
+        border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--deck-border));
+        border-radius: 12px;
+        background: color-mix(in srgb, var(--accent) 6%, transparent);
+    }
+    .bind-live-tag {
+        position: absolute; top: -0.7rem; left: 1.1rem;
+        font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em;
+        padding: 0.15rem 0.55rem; border-radius: 999px;
+        background: var(--accent); color: var(--deck-bg); font-weight: 700;
+    }
+    .bind-in {
+        font-size: 1.3rem; padding: 0.5rem 0.8rem; border-radius: 8px;
+        border: 1px solid var(--deck-border); background: var(--deck-surface);
+        color: var(--deck-fg); width: 100%; box-sizing: border-box;
+    }
+    .bind-echo { font-size: 1.3rem; margin: 0; }
+    .bind-note { margin: 1.5rem 0 0; opacity: 0.75; max-width: 60ch; font-size: 1.1rem; }
+    .bind-note code { color: var(--accent); }
+</style>

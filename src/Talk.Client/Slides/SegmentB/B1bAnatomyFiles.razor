@@ -1,0 +1,38 @@
+@namespace Talk.Client.Slides
+
+@* Concept #3, part two — the same component, reorganized. Logic can move to a code-behind
+   partial class, styles to a scoped stylesheet. Both files are optional; they compile into
+   the one Slide type. *@
+<Slide Title="…or split across files">
+    <div class="anatomy">
+        <CodeWindow FileName="Slide.razor" Language="razor" Code="@Markup" />
+        <CodeWindow FileName="Slide.razor.cs" Language="csharp" Optional="true" Code="@CodeBehind" />
+        <CodeWindow FileName="Slide.razor.css" Language="css" Optional="true" Code="@Styles" />
+    </div>
+</Slide>
+
+@code {
+    // Required: the markup.
+    private const string Markup = @"<div class=""slide"">
+    <h1 class=""slide-title"">@Title</h1>
+    <div class=""slide-body"">@ChildContent</div>
+</div>";
+
+    // Optional: move the logic into a partial class (code-behind).
+    private const string CodeBehind = @"public partial class Slide
+{
+    [Parameter] public string? Title { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}";
+
+    // Optional: scoped styles — CSS isolation, applied only to this component (#21).
+    private const string Styles = @".slide { padding: 7vh 9vw; }
+.slide-title { color: var(--accent); font-weight: 800; }";
+}
+
+<style>
+    .anatomy { display: flex; flex-direction: column; gap: 0.9rem; }
+    /* Tighter type so three windows fit comfortably on one slide. */
+    .anatomy .cs-pre { padding: 0.9rem 1.2rem; }
+    .anatomy .cs-pre code { font-size: clamp(0.72rem, 1.25vw, 1rem); line-height: 1.45; }
+</style>

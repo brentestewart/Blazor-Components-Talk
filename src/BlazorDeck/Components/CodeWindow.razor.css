@@ -1,0 +1,66 @@
+.cs-window {
+    background: var(--deck-surface-2);
+    border: 1px solid var(--deck-border);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 18px 50px -25px color-mix(in srgb, var(--accent) 55%, transparent);
+}
+
+.cs-chrome {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid var(--deck-border);
+}
+
+.cs-dot {
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 50%;
+    background: var(--deck-border);
+}
+
+.cs-file {
+    margin-left: 0.6rem;
+    font-family: "Cascadia Code", "JetBrains Mono", ui-monospace, monospace;
+    font-size: 0.8rem;
+    color: var(--deck-fg);
+    opacity: 0.75;
+}
+
+.cs-opt {
+    margin-left: 0.55rem;
+    font-size: 0.62rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    padding: 0.12rem 0.45rem;
+    border: 1px solid color-mix(in srgb, var(--accent) 55%, var(--deck-border));
+    border-radius: 999px;
+    color: var(--accent);
+    opacity: 0.75;
+}
+
+.cs-lang {
+    margin-left: auto;
+    font-family: "Cascadia Code", "JetBrains Mono", ui-monospace, monospace;
+    font-size: 0.8rem;
+    color: var(--accent);
+    text-transform: lowercase;
+    letter-spacing: 0.03em;
+}
+
+.cs-pre {
+    margin: 0;
+    padding: 1.4rem 1.6rem;
+    overflow: auto;
+}
+
+.cs-pre code {
+    font-family: "Cascadia Code", "JetBrains Mono", ui-monospace, monospace;
+    font-size: clamp(0.9rem, 1.7vw, 1.25rem);
+    line-height: 1.6;
+    white-space: pre;
+    color: var(--deck-fg);
+}

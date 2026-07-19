@@ -1,0 +1,73 @@
+@namespace Talk.Client.Slides
+
+@* Concept #8 — lifecycle. The full ComponentBase hook sequence. Most come in a sync + async
+   form; SetParametersAsync is async-only and ShouldRender is sync-only. A real OnAfterRender
+   use — JS interop — comes later, in Segment D; ShouldRender returns in Segment E. *@
+<Slide Title="The component lifecycle">
+    <p class="lc-intro">Runs top to bottom. Most hooks have a sync and an <code>async</code> form.</p>
+    <ul class="lifecycle">
+        @foreach (var h in _hooks)
+        {
+            <li class="lc-step">
+                <span class="lc-dot"></span>
+                <div class="lc-body">
+                    <code class="lc-name">@h.Name<span class="lc-async">@h.Twin</span></code>
+                    <span class="lc-desc">@h.Desc</span>
+                </div>
+                <span class="lc-when">@h.When</span>
+            </li>
+        }
+    </ul>
+</Slide>
+
+@code {
+    private record Hook(string Name, string Twin, string Desc, string When);
+
+    private static readonly Hook[] _hooks =
+    {
+        new("SetParametersAsync", "(async only)", "raw parameters arrive; the base sets them, then runs the rest", "on set"),
+        new("OnInitialized", "OnInitializedAsync", "the component is created — set up initial state", "once"),
+        new("OnParametersSet", "OnParametersSetAsync", "a parameter is set or changes — react to new inputs", "on change"),
+        new("ShouldRender", "(sync only)", "gate a re-render — return false to skip one", "before render"),
+        new("OnAfterRender", "OnAfterRenderAsync", "it has rendered to the DOM — touch rendered elements", "after render"),
+        new("Dispose", "DisposeAsync", "it goes away — clean up timers and subscriptions", "once"),
+    };
+}
+
+<style>
+    .lc-intro { margin: 0 0 1.3rem; opacity: 0.75; font-size: 1.1rem; }
+    .lc-intro code { color: var(--accent); }
+
+    .lifecycle {
+        list-style: none; margin: 0; padding: 0;
+        display: flex; flex-direction: column; gap: 1.05rem;
+    }
+    .lc-step {
+        display: grid; grid-template-columns: auto 1fr auto;
+        align-items: center; gap: 1.5rem;
+    }
+    .lc-dot {
+        position: relative;
+        width: 0.85rem; height: 0.85rem; border-radius: 50%;
+        background: var(--accent);
+        box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 20%, transparent);
+    }
+    /* Spine connecting each dot to the next. */
+    .lc-step:not(:last-child) .lc-dot::after {
+        content: ""; position: absolute; left: 50%; transform: translateX(-50%);
+        top: calc(100% + 4px); width: 2px; height: 1.35rem;
+        background: color-mix(in srgb, var(--accent) 45%, var(--deck-border));
+    }
+    .lc-body { display: flex; flex-direction: column; gap: 0.15rem; }
+    .lc-name {
+        font-family: "Cascadia Code", "JetBrains Mono", ui-monospace, monospace;
+        font-size: 1.3rem; font-weight: 600; color: var(--accent);
+    }
+    .lc-async { font-size: 0.95rem; opacity: 0.5; margin-left: 0.6rem; }
+    .lc-desc { font-size: 1.02rem; opacity: 0.8; }
+    .lc-when {
+        font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.09em;
+        padding: 0.2rem 0.65rem; border-radius: 999px;
+        border: 1px solid var(--deck-border); opacity: 0.7; white-space: nowrap;
+    }
+</style>
