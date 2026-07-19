@@ -1,11 +1,12 @@
 @namespace BlazorDeck.Components
 
-@* Layout: frames a live, interactive component inline on a slide (the meta moments). *@
+@* Layout: frames a live, interactive component inline on a slide (the meta moments).
+   The frame itself is the reusable LiveFrame, so a full-slide demo and a demo-beside-code
+   (SplitSlide) look identical. *@
 <Slide Title="@Title">
-    <div class="demo-frame">
-        <div class="demo-tag">live component</div>
+    <LiveFrame Label="live component">
         <div class="demo-stage">@ChildContent</div>
-    </div>
+    </LiveFrame>
 </Slide>
 
 @code {

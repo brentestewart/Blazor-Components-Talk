@@ -1,16 +1,26 @@
 @namespace BlazorDeck.Components
 
-@* Layout: two columns (e.g. code + notes). Demonstrates templated components (#15)
-   via two named RenderFragments. *@
+@* Layout: two columns (e.g. code + notes), with an optional Footer caption below the split.
+   Demonstrates templated components (#15) via named RenderFragments. *@
 <Slide Title="@Title">
-    <div class="split">
+    <div class="split @(WideLeft ? "wide-left" : null)">
         <div class="split-left">@Left</div>
         <div class="split-right">@Right</div>
     </div>
+    @if (Footer is not null)
+    {
+        <div class="split-footer">@Footer</div>
+    }
 </Slide>
 
 @code {
     [Parameter] public string? Title { get; set; }
     [Parameter] public RenderFragment? Left { get; set; }
     [Parameter] public RenderFragment? Right { get; set; }
+
+    /// <summary>Optional caption rendered full-width below the two columns.</summary>
+    [Parameter] public RenderFragment? Footer { get; set; }
+
+    /// <summary>Widen the left column (e.g. code-heavy left, notes right).</summary>
+    [Parameter] public bool WideLeft { get; set; }
 }

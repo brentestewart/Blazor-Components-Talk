@@ -1,0 +1,13 @@
+@namespace BlazorDeck.Components
+
+@* A framed stage for a live, interactive component on a slide: an accent "live" tag plus the
+   rendered component. Used beside code inside a SplitSlide, and by DemoSlide. *@
+<div class="live-frame">
+    <span class="live-tag">@Label</span>
+    <div class="live-stage">@ChildContent</div>
+</div>
+
+@code {
+    [Parameter] public string Label { get; set; } = "live";
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

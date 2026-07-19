@@ -2,16 +2,18 @@
 
 @* Concept #3 — component structure, the common/recommended layout: one .razor file,
    markup plus an inline @code block. This is the real Slide component. *@
-<Slide Title="Anatomy of a component">
-    <div class="anatomy-one">
+<SplitSlide Title="Anatomy of a component" WideLeft="true">
+    <Left>
         <CodeWindow FileName="Slide.razor" Language="razor" Code="@Source" />
+    </Left>
+    <Right>
         <p class="anatomy-note">
             One file, two parts: <strong>markup</strong> (the template) and the
             <strong><code>@@code</code></strong> block (logic + <code>[Parameter]</code> inputs).
             The only required file — <span class="tease">splitting it up is next.</span>
         </p>
-    </div>
-</Slide>
+    </Right>
+</SplitSlide>
 
 @code {
     private const string Source = @"<div class=""slide"">
@@ -26,7 +28,6 @@
 }
 
 <style>
-    .anatomy-one { display: flex; flex-direction: column; gap: 1.25rem; }
     .anatomy-note { margin: 0; opacity: 0.8; max-width: 60ch; font-size: 1.15rem; }
     .anatomy-note code { color: var(--accent); }
     .anatomy-note .tease { opacity: 0.6; font-style: italic; }

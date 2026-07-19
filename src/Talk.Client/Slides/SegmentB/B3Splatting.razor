@@ -2,16 +2,20 @@
 
 @* Concept #5 — attribute splatting. The component collects undeclared attributes; a caller
    passes extras that land on the root element. *@
-<Slide Title="Attribute splatting — the pass-through">
-    <div class="two-file">
+<SplitSlide Title="Attribute splatting — the pass-through">
+    <Left>
         <CodeWindow FileName="Slide.razor" Language="razor" Code="@Declare" />
+    </Left>
+    <Right>
         <CodeWindow FileName="Page.razor" Language="razor" Code="@Use" />
+    </Right>
+    <Footer>
         <p class="two-note">
             <code>class</code> and <code>data-track</code> aren't declared parameters, so they're
             collected into <code>Extra</code> and splatted onto the root <code>&lt;div&gt;</code>.
         </p>
-    </div>
-</Slide>
+    </Footer>
+</SplitSlide>
 
 @code {
     // The component collects the leftovers and splats them onto an element.
@@ -27,8 +31,6 @@
 }
 
 <style>
-    .two-file { display: flex; flex-direction: column; gap: 1rem; }
-    .two-file .cs-pre code { font-size: clamp(0.85rem, 1.5vw, 1.15rem); }
-    .two-note { margin: 0.5rem 0 0; opacity: 0.8; max-width: 62ch; font-size: 1.1rem; }
+    .two-note { margin: 0; max-width: 62ch; }
     .two-note code { color: var(--accent); }
 </style>

@@ -3,12 +3,14 @@
 @* Concept #18 — JS interop, both directions, from the deck's real deck.js. C# → JS: import a
    module and call its exports. JS → C#: hand JS a DotNetObjectReference and mark the target
    [JSInvokable]. Timed to OnAfterRender — the element + JS runtime only exist once interactive. *@
-<Slide Title="JavaScript interop">
-    <div class="js">
+<SplitSlide Title="JavaScript interop" WideLeft="true">
+    <Left>
         <div class="js-code">
             <CodeWindow FileName="Deck.razor · C# → JS" Language="csharp" Code="@ToJs" />
             <CodeWindow FileName="Deck.razor · JS → C#" Language="csharp" Code="@FromJs" />
         </div>
+    </Left>
+    <Right>
         <div class="js-side">
             <p class="js-lead">C# and JavaScript call <strong>each other</strong> through a
                 module reference.</p>
@@ -22,8 +24,8 @@
             <p class="js-real">The deck does all three: <code>keydown</code> → slide nav,
                 fullscreen, and the code highlighter.</p>
         </div>
-    </div>
-</Slide>
+    </Right>
+</SplitSlide>
 
 @code {
     private const string ToJs = @"// C# → JS: import a module, call its exports
@@ -40,7 +42,6 @@ public void OnKey(string key) { /* advance slide */ }";
 }
 
 <style>
-    .js { display: grid; grid-template-columns: 1.35fr 1fr; gap: 1.5rem; align-items: start; }
     .js-code { display: flex; flex-direction: column; gap: 0.9rem; }
     .js-side { display: flex; flex-direction: column; gap: 0.95rem; }
     .js-lead { margin: 0; font-size: 1.1rem; line-height: 1.5; }

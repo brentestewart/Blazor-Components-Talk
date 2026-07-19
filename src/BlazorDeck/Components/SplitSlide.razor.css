@@ -5,6 +5,11 @@
     align-items: start;
 }
 
+.split.wide-left {
+    grid-template-columns: 1.35fr 1fr;
+    gap: 1.6rem;
+}
+
 .split-left,
 .split-right {
     min-width: 0;
@@ -13,4 +18,12 @@
 .split-right {
     font-size: clamp(1rem, 2vw, 1.4rem);
     line-height: 1.6;
+}
+
+.split-footer {
+    margin-top: 1.5rem;
+    max-width: 80ch;
+    opacity: 0.78;
+    font-size: 1.1rem;
+    line-height: 1.55;
 }

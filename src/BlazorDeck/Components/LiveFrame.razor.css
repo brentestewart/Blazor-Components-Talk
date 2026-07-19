@@ -1,0 +1,21 @@
+.live-frame {
+    position: relative;
+    border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--deck-border));
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--accent) 6%, transparent);
+    padding: 1.5rem 1.4rem 1.3rem;
+}
+
+.live-tag {
+    position: absolute;
+    top: -0.7rem;
+    left: 1.1rem;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0.15rem 0.55rem;
+    border-radius: 999px;
+    background: var(--accent);
+    color: var(--deck-bg);
+    font-weight: 700;
+}

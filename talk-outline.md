@@ -234,10 +234,17 @@ Known content-sizing note: `SplitSlide` code overflows if too wide — keep spli
 ## Open items
 
 - [ ] Continue Step 3 with Segment E
-- [ ] **Refactor toward original intent** (discuss first): reuse a small set of slide layouts rather than
-      a bespoke type per slide. Unused layout components sitting at 0 uses: `SectionSlide`, `CodeSlide`,
-      `CompareSlide`/`CompareOption`, `DemoSlide`, `PlaygroundSlide` (also `SplitSlide`/`TitleSlide` at 1).
-      `Slide` is used 23/25, `CodeWindow` 15/25 — reuse is real at the base level only. Decide: wire the
-      orphaned layouts in, or delete them.
+- [x] **Refactor toward original intent — done (Option B).** Retrofitted 14 hand-rolled slides (B1–B5,
+      C2–C5, C7, D1–D4) to compose the reusable layouts. Enhancements: `SplitSlide` gained optional
+      `Footer` + `WideLeft`; extracted `LiveFrame` (the "live" tag + framed stage), which `DemoSlide`
+      and the code∣live slides both use. D2 now dissects the **real** `BulletList<T>` (dropped the
+      duplicate `TypedList`). Segment A already composed layouts; bespoke slides kept bespoke: A2, A3,
+      B1b, B6, C1, C6. Verified at 1080p. Razor gotcha hit: a component tag inside a `<style>` CSS
+      comment is parsed as markup.
+- [ ] **Orphaned layouts still at 0 uses** — decide keep-or-delete: `CompareSlide`/`CompareOption`,
+      `CodeSlide`, `PlaygroundSlide`, `SectionSlide`, and `DemoSlide` (now only reused *by* LiveFrame,
+      not rendered anywhere). C6 was left bespoke — `CompareSlide` is "pick one of two"; C6 is a
+      taxonomy (automatic vs manual), a semantic mismatch. `SectionSlide` would fit if we add segment
+      dividers.
 - [ ] Later: real highlighter (vendor Prism/Shiki to replace the spike's minimal one),
       bUnit tests (#24), PDF-export fallback, `DiagramSlide` if the lifecycle timeline needs it

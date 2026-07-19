@@ -3,19 +3,22 @@
 @* Concept #7 — EventCallback. Show the child that raises it and the parent that handles it,
    beside the live <Stepper> those files drive. (The deck's own nav skips EventCallback and
    routes clicks to a state container — Segment C.) *@
-<Slide Title="EventCallback — talking back up">
-    <div class="cb">
+<SplitSlide Title="EventCallback — talking back up" WideLeft="true">
+    <Left>
         <div class="cb-code">
             <CodeWindow FileName="Stepper.razor" Language="razor" Code="@Child" />
             <CodeWindow FileName="Parent.razor" Language="razor" Code="@Parent" />
         </div>
-        <div class="cb-live">
-            <span class="cb-live-tag">live</span>
-            <div class="cb-count">@_count</div>
-            <Stepper OnStep="Step" />
-        </div>
-    </div>
-</Slide>
+    </Left>
+    <Right>
+        <LiveFrame>
+            <div class="cb-body">
+                <div class="cb-count">@_count</div>
+                <Stepper OnStep="Step" />
+            </div>
+        </LiveFrame>
+    </Right>
+</SplitSlide>
 
 @code {
     private int _count;
@@ -38,25 +41,8 @@
 }
 
 <style>
-    .cb { display: grid; grid-template-columns: 1.5fr 1fr; gap: 1.5rem; align-items: center; }
-    .cb-code { display: flex; flex-direction: column; gap: 0.7rem; }
-    .cb-code .cs-pre { padding: 0.7rem 1rem; }
-    .cb-code .cs-pre code { font-size: clamp(0.66rem, 1.05vw, 0.9rem); line-height: 1.4; }
-
-    .cb-live {
-        position: relative;
-        display: flex; flex-direction: column; gap: 1rem; align-items: center;
-        padding: 1.5rem 1.4rem 1.3rem;
-        border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--deck-border));
-        border-radius: 12px;
-        background: color-mix(in srgb, var(--accent) 6%, transparent);
-    }
-    .cb-live-tag {
-        position: absolute; top: -0.7rem; left: 1.1rem;
-        font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em;
-        padding: 0.15rem 0.55rem; border-radius: 999px;
-        background: var(--accent); color: var(--deck-bg); font-weight: 700;
-    }
+    .cb-code { display: flex; flex-direction: column; gap: 0.9rem; }
+    .cb-body { display: flex; flex-direction: column; gap: 1rem; align-items: center; }
     .cb-count {
         font-size: 3.4rem; font-weight: 800; line-height: 1;
         color: var(--accent); font-variant-numeric: tabular-nums;

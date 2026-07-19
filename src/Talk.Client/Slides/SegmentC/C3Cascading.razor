@@ -3,15 +3,19 @@
 @* Concept #11 — cascading parameters. One provider high in the tree; every descendant that
    asks can read it, no matter how deep — without threading it through each layer. The real
    deck wraps the whole stage in <CascadingValue Value="State.Theme">. *@
-<Slide Title="Cascading parameters — push to all descendants">
-    <div class="cas">
+<SplitSlide Title="Cascading parameters — push to all descendants">
+    <Left>
         <CodeWindow FileName="Deck.razor" Language="razor" Code="@Provider" />
+    </Left>
+    <Right>
         <CodeWindow FileName="AnySlide.razor" Language="razor" Code="@Consumer" />
-    </div>
-    <p class="cas-note">The deck cascades the current <code>theme</code> once at the top.
-        A slide ten levels deep can grab it — no <code>Theme="…"</code> passed hand to hand
-        through every parent in between.</p>
-</Slide>
+    </Right>
+    <Footer>
+        <p class="cas-note">The deck cascades the current <code>theme</code> once at the top.
+            A slide ten levels deep can grab it — no <code>Theme="…"</code> passed hand to hand
+            through every parent in between.</p>
+    </Footer>
+</SplitSlide>
 
 @code {
     // Real provider — the stage is wrapped in this.
@@ -29,7 +33,6 @@
 }
 
 <style>
-    .cas { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; align-items: start; }
-    .cas-note { margin: 1.5rem 0 0; opacity: 0.78; max-width: 74ch; font-size: 1.12rem; line-height: 1.55; }
+    .cas-note { margin: 0; max-width: 74ch; }
     .cas-note code { color: var(--accent); }
 </style>

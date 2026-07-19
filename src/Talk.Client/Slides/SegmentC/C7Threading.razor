@@ -4,9 +4,11 @@
    triggered off the renderer's sync context — a timer, a background thread — you must marshal
    with InvokeAsync(StateHasChanged). The real deck hits this in its transition timer: after
    `await Task.Delay(650)` clears the outgoing slide layer, the continuation is off-thread. *@
-<Slide Title="StateHasChanged off-thread — use InvokeAsync">
-    <div class="th">
+<SplitSlide Title="StateHasChanged off-thread — use InvokeAsync" WideLeft="true">
+    <Left>
         <CodeWindow FileName="Deck.razor" Language="csharp" Code="@Source" />
+    </Left>
+    <Right>
         <div class="th-side">
             <div class="th-rule th-bad">
                 <span class="th-mark">✗</span>
@@ -21,8 +23,8 @@
                 <code>Task.Delay</code>, a <code>System.Timers.Timer</code>, or a service event
                 raised off-thread.</p>
         </div>
-    </div>
-</Slide>
+    </Right>
+</SplitSlide>
 
 @code {
     // The transition timer: after the delay, we're on a thread-pool thread, not the renderer's.
@@ -36,7 +38,6 @@ await InvokeAsync(StateHasChanged);";
 }
 
 <style>
-    .th { display: grid; grid-template-columns: 1.15fr 1fr; gap: 1.5rem; align-items: start; }
     .th-side { display: flex; flex-direction: column; gap: 1rem; }
     .th-rule {
         display: grid; grid-template-columns: auto 1fr; gap: 0.8rem; align-items: start;

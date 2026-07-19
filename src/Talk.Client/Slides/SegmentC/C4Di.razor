@@ -4,15 +4,19 @@
    @inject. Placed here because the state container (next slide) is a DI service. Real detail:
    an InteractiveAuto app registers it in BOTH Program.cs files — Server and WebAssembly each
    have their own container. *@
-<Slide Title="Dependency injection — register once, inject anywhere">
-    <div class="di">
+<SplitSlide Title="Dependency injection — register once, inject anywhere">
+    <Left>
         <CodeWindow FileName="Program.cs" Language="csharp" Code="@Register" />
+    </Left>
+    <Right>
         <CodeWindow FileName="Deck.razor" Language="razor" Code="@Inject" />
-    </div>
-    <p class="di-note">This deck is <strong>InteractiveAuto</strong> — a component might run on
-        the Server circuit or in the WebAssembly runtime. Each has its own DI container, so
-        <code>DeckState</code> is registered in <em>both</em> <code>Program.cs</code> files.</p>
-</Slide>
+    </Right>
+    <Footer>
+        <p class="di-note">This deck is <strong>InteractiveAuto</strong> — a component might run on
+            the Server circuit or in the WebAssembly runtime. Each has its own DI container, so
+            <code>DeckState</code> is registered in <em>both</em> <code>Program.cs</code> files.</p>
+    </Footer>
+</SplitSlide>
 
 @code {
     private const string Register = @"// same line lives in Talk/Program.cs
@@ -26,7 +30,6 @@ builder.Services.AddScoped<DeckState>();";
 }
 
 <style>
-    .di { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; align-items: start; }
-    .di-note { margin: 1.5rem 0 0; opacity: 0.78; max-width: 74ch; font-size: 1.12rem; line-height: 1.55; }
+    .di-note { margin: 0; }
     .di-note code { color: var(--accent); }
 </style>

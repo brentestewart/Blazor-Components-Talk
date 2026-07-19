@@ -1,23 +1,4 @@
-.demo-frame {
-    position: relative;
-    border: 1px dashed var(--deck-border);
-    border-radius: 12px;
-    padding: 2rem;
-    background: var(--deck-surface);
-}
-
-.demo-tag {
-    position: absolute;
-    top: -0.7rem;
-    left: 1.25rem;
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--accent);
-    background: var(--deck-bg);
-    padding: 0 0.5rem;
-}
-
+/* The frame + tag now come from LiveFrame; DemoSlide only centers its stage content. */
 .demo-stage {
     min-height: 6rem;
     display: flex;
