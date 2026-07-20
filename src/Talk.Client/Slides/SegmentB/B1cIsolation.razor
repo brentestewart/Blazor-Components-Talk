@@ -41,10 +41,10 @@
     private static readonly Row[] _rows =
     {
         new("scoped", ".badge { }", ".badge", "[b-a1]", " { }", true,
-            "your own elements — no leaks, no collisions"),
+            "only the elements you rendered"),
         new("boundary", "button { }", "button", "[b-a1]", " { }", false,
-            "the child renders the button — different tag, no match"),
+            "nothing — that button belongs to the child"),
         new("::deep", ".box ::deep button { }", ".box", "[b-a1]", " button { }", true,
-            "any button under your .box — the child's included"),
+            "any button under your .box — the child's too"),
     };
 }
