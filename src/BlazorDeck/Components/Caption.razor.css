@@ -1,0 +1,17 @@
+.caption {
+    margin: 0;
+    max-width: 80ch;
+    font-size: 1.1rem;
+    line-height: 1.55;
+    color: color-mix(in srgb, var(--deck-fg) 82%, transparent);
+}
+
+/* When the caption follows a block with no gap above it (e.g. right under a card grid). */
+.caption.spaced {
+    margin-top: 1.5rem;
+}
+
+/* Inline emphasis lives in the slide-authored child content, so reach it with ::deep. */
+.caption ::deep code { color: var(--accent); }
+.caption ::deep strong { color: var(--accent); font-weight: 700; }
+.caption ::deep em { font-style: italic; }

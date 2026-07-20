@@ -11,9 +11,9 @@
         <CodeWindow FileName="AnySlide.razor" Language="razor" Code="@Consumer" />
     </Right>
     <Footer>
-        <p class="cas-note">The deck cascades the current <code>theme</code> once at the top.
+        <Caption>The deck cascades the current <code>theme</code> once at the top.
             A slide ten levels deep can grab it — no <code>Theme="…"</code> passed hand to hand
-            through every parent in between.</p>
+            through every parent in between.</Caption>
     </Footer>
 </SplitSlide>
 
@@ -31,8 +31,3 @@
     DeckTheme Theme { get; set; }
 }";
 }
-
-<style>
-    .cas-note { margin: 0; max-width: 74ch; }
-    .cas-note code { color: var(--accent); }
-</style>

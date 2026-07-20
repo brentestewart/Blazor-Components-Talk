@@ -6,12 +6,12 @@
     <div class="splat">
         <CodeWindow FileName="Slide.razor" Language="razor" Code="@Declare" />
         <CodeWindow FileName="Page.razor" Language="razor" Code="@Use" />
-        <p class="splat-note">
+        <Caption>
             <code>class</code> and <code>data-track</code> aren't declared parameters, so they're
             collected into <code>Extra</code> and splatted onto the root <code>&lt;div&gt;</code>.
             Without it, an undeclared attribute is a <strong>runtime error</strong> — a component
             rejects what it didn't expect.
-        </p>
+        </Caption>
     </div>
 </Slide>
 
@@ -30,7 +30,4 @@
 
 <style>
     .splat { display: flex; flex-direction: column; gap: 0.9rem; }
-    .splat-note { margin: 0.2rem 0 0; max-width: 62ch; font-size: 1.05rem; line-height: 1.5; }
-    .splat-note code { color: var(--accent); }
-    .splat-note strong { color: var(--accent); font-weight: 700; }
 </style>

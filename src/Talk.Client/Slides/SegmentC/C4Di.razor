@@ -12,9 +12,9 @@
         <CodeWindow FileName="Deck.razor" Language="razor" Code="@Inject" />
     </Right>
     <Footer>
-        <p class="di-note">This deck is <strong>InteractiveAuto</strong> — a component might run on
+        <Caption>This deck is <strong>InteractiveAuto</strong> — a component might run on
             the Server circuit or in the WebAssembly runtime. Each has its own DI container, so
-            <code>DeckState</code> is registered in <em>both</em> <code>Program.cs</code> files.</p>
+            <code>DeckState</code> is registered in <em>both</em> <code>Program.cs</code> files.</Caption>
     </Footer>
 </SplitSlide>
 
@@ -28,8 +28,3 @@ builder.Services.AddScoped<DeckState>();";
 @* available anywhere below *@
 <span>@(State.Index + 1)</span>";
 }
-
-<style>
-    .di-note { margin: 0; }
-    .di-note code { color: var(--accent); }
-</style>

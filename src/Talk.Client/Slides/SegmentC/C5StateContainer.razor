@@ -12,9 +12,9 @@
         <CodeWindow FileName="Deck.razor" Language="csharp" Code="@Subscriber" />
     </Right>
     <Footer>
-        <p class="sc-note">Nav, progress bar, counter, overview — all read the <em>same</em>
+        <Caption>Nav, progress bar, counter, overview — all read the <em>same</em>
             <code>DeckState</code>. One calls <code>Next()</code>; <code>OnChange</code> fires;
-            everyone re-renders. That's this whole deck.</p>
+            everyone re-renders. That's this whole deck.</Caption>
     </Footer>
 </SplitSlide>
 
@@ -38,8 +38,3 @@ State.OnChange += StateHasChanged;
 // unsubscribe in Dispose:
 State.OnChange -= StateHasChanged;";
 }
-
-<style>
-    .sc-note { margin: 0; max-width: 76ch; }
-    .sc-note code { color: var(--accent); }
-</style>

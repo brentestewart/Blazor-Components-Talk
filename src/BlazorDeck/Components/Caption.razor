@@ -1,0 +1,14 @@
+@namespace BlazorDeck.Components
+
+@* The single prose caption under a slide's code or visual. One measure (80ch), size, and
+   colour, defined once, so every slide reads the same. Inline <code>/<strong>/<em> in the
+   slide-authored child content are styled here too, via ::deep. Set Spaced when the caption
+   follows a block directly (no flex gap or footer already providing the space above it). *@
+<p class="caption@(Spaced ? " spaced" : "")">@ChildContent</p>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Add a top margin when the caption sits right under a block with no gap above it.</summary>
+    [Parameter] public bool Spaced { get; set; }
+}

@@ -6,10 +6,10 @@
     <div class="params">
         <CodeWindow FileName="Slide.razor" Language="razor" Code="@Declare" />
         <CodeWindow FileName="A5RenderModes.razor" Language="razor" Code="@Use" />
-        <p class="params-note">The component <strong>declares</strong> the input; a parent
+        <Caption>The component <strong>declares</strong> the input; a parent
             <strong>passes</strong> it in — the value flows one way, parent to child. A parameter
             can be <strong>any .NET type</strong> — a primitive, object, collection, even a
-            <code>RenderFragment</code> or a callback.</p>
+            <code>RenderFragment</code> or a callback.</Caption>
     </div>
 </Slide>
 
@@ -29,7 +29,4 @@
 
 <style>
     .params { display: flex; flex-direction: column; gap: 0.9rem; }
-    .params-note { margin: 0.2rem 0 0; font-size: 1.05rem; line-height: 1.5; }
-    .params-note strong { color: var(--accent); font-weight: 700; }
-    .params-note code { color: var(--accent); }
 </style>

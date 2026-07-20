@@ -7,11 +7,11 @@
 <CodeSlide Title="Anatomy of a component" FileName="Slide.razor" Language="razor"
            Code="@Source" Focus="_focus" Step="Step">
     <Footer>
-        <p class="anatomy-note">
+        <Caption>
             One file, two parts: <strong>markup</strong> (the template) and the
             <strong><code>@@code</code></strong> block (logic + <code>[Parameter]</code> inputs).
             The only required file — <span class="tease">splitting it up is next.</span>
-        </p>
+        </Caption>
     </Footer>
 </CodeSlide>
 
@@ -38,7 +38,5 @@
 }
 
 <style>
-    .anatomy-note { margin: 0; }
-    .anatomy-note code { color: var(--accent); }
-    .anatomy-note .tease { opacity: 0.6; font-style: italic; }
+    .tease { opacity: 0.6; font-style: italic; }
 </style>

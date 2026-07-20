@@ -20,10 +20,7 @@
     line-height: 1.6;
 }
 
+/* Spacing only — the Caption inside owns the measure, size, and colour. */
 .split-footer {
     margin-top: 1.5rem;
-    max-width: 80ch;
-    opacity: 0.78;
-    font-size: 1.1rem;
-    line-height: 1.55;
 }
