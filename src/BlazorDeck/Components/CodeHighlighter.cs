@@ -35,15 +35,149 @@ public static partial class CodeHighlighter
     [GeneratedRegex(Pattern)]
     private static partial Regex Token();
 
-    /// <summary>Tokenise each line of <paramref name="code"/> into coloured tokens.</summary>
-    public static IReadOnlyList<IReadOnlyList<CodeToken>> Tokenize(string code)
+    /// <summary>Tokenise each line of <paramref name="code"/> into coloured tokens. CSS has its
+    /// own grammar (selectors/properties/values), so it takes a separate path; everything else
+    /// uses the C#/Razor tokenizer.</summary>
+    public static IReadOnlyList<IReadOnlyList<CodeToken>> Tokenize(string code, string language = "razor")
     {
+        if (string.Equals(language, "css", StringComparison.OrdinalIgnoreCase))
+        {
+            return TokenizeCss(code);
+        }
+
         var lines = new List<IReadOnlyList<CodeToken>>();
         foreach (var line in code.ReplaceLineEndings("\n").Split('\n'))   // normalise CRLF/CR first
         {
             lines.Add(TokenizeLine(line));
         }
         return lines;
+    }
+
+    // A small CSS tokenizer. Context matters — the same identifier is a selector, a property, or a
+    // value depending on where it sits — so this tracks brace depth and the ':' inside a rule
+    // rather than using one stateless regex. Tuned for the snippets on screen, not a full grammar.
+    private static IReadOnlyList<IReadOnlyList<CodeToken>> TokenizeCss(string code)
+    {
+        var result = new List<IReadOnlyList<CodeToken>>();
+        var depth = 0;          // 0 = selector context; >0 = inside a { } declaration block
+        var inValue = false;    // inside a declaration, past the ':' (so: a value, not a property)
+        var inComment = false;  // a /* */ comment left open on a previous line
+
+        foreach (var line in code.ReplaceLineEndings("\n").Split('\n'))
+        {
+            var toks = new List<CodeToken>();
+            var i = 0;
+            while (i < line.Length)
+            {
+                var c = line[i];
+
+                if (inComment || (c == '/' && i + 1 < line.Length && line[i + 1] == '*'))
+                {
+                    var from = inComment ? i : i + 2;
+                    var end = line.IndexOf("*/", from, StringComparison.Ordinal);
+                    var stop = end < 0 ? line.Length : end + 2;
+                    toks.Add(new CodeToken(line[i..stop], "comment"));
+                    inComment = end < 0;
+                    i = stop;
+                    continue;
+                }
+
+                if (c is '"' or '\'')
+                {
+                    var j = i + 1;
+                    while (j < line.Length && line[j] != c) j++;
+                    if (j < line.Length) j++;   // include the closing quote
+                    toks.Add(new CodeToken(line[i..j], "string"));
+                    i = j;
+                    continue;
+                }
+
+                if (char.IsWhiteSpace(c))
+                {
+                    var j = i;
+                    while (j < line.Length && char.IsWhiteSpace(line[j])) j++;
+                    toks.Add(new CodeToken(line[i..j], null));
+                    i = j;
+                    continue;
+                }
+
+                switch (c)
+                {
+                    case '{': depth++; inValue = false; toks.Add(new CodeToken("{", null)); i++; continue;
+                    case '}': if (depth > 0) depth--; inValue = false; toks.Add(new CodeToken("}", null)); i++; continue;
+                    case ';': inValue = false; toks.Add(new CodeToken(";", null)); i++; continue;
+                }
+
+                if (c == ':')
+                {
+                    if (depth > 0)   // property : value separator
+                    {
+                        inValue = true;
+                        toks.Add(new CodeToken(":", null));
+                        i++;
+                        continue;
+                    }
+                    var j = i;       // a pseudo in selector context — ::deep, :hover
+                    while (j < line.Length && line[j] == ':') j++;
+                    while (j < line.Length && (char.IsLetterOrDigit(line[j]) || line[j] is '-' or '_')) j++;
+                    toks.Add(new CodeToken(line[i..j], "directive"));
+                    i = j;
+                    continue;
+                }
+
+                if (c == '@')   // at-rule: @media, @keyframes
+                {
+                    var j = i + 1;
+                    while (j < line.Length && (char.IsLetterOrDigit(line[j]) || line[j] == '-')) j++;
+                    toks.Add(new CodeToken(line[i..j], "directive"));
+                    i = j;
+                    continue;
+                }
+
+                if (c == '#')   // #id selector, or a #hex colour value
+                {
+                    var j = i + 1;
+                    while (j < line.Length && Uri.IsHexDigit(line[j])) j++;
+                    toks.Add(new CodeToken(line[i..j], depth == 0 ? "tag" : "number"));
+                    i = j;
+                    continue;
+                }
+
+                if (char.IsDigit(c) || (c == '.' && i + 1 < line.Length && char.IsDigit(line[i + 1])))
+                {
+                    var j = i;      // number with an optional unit (1rem, 100%, 0.9)
+                    while (j < line.Length && (char.IsLetterOrDigit(line[j]) || line[j] is '.' or '%')) j++;
+                    toks.Add(new CodeToken(line[i..j], "number"));
+                    i = j;
+                    continue;
+                }
+
+                if (c == '.' && depth == 0)   // .class selector
+                {
+                    var j = i + 1;
+                    while (j < line.Length && (char.IsLetterOrDigit(line[j]) || line[j] is '-' or '_')) j++;
+                    toks.Add(new CodeToken(line[i..j], "tag"));
+                    i = j;
+                    continue;
+                }
+
+                if (char.IsLetter(c) || c is '-' or '_')
+                {
+                    var j = i;
+                    while (j < line.Length && (char.IsLetterOrDigit(line[j]) || line[j] is '-' or '_')) j++;
+                    // Same word, different job by position: selector element / property / value.
+                    var kind = depth == 0 ? "tag" : inValue ? "type" : "keyword";
+                    toks.Add(new CodeToken(line[i..j], kind));
+                    i = j;
+                    continue;
+                }
+
+                toks.Add(new CodeToken(c.ToString(), null));   // punctuation: > + ~ , ( ) *
+                i++;
+            }
+            result.Add(toks);
+        }
+        return result;
     }
 
     private static List<CodeToken> TokenizeLine(string src)

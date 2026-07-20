@@ -48,7 +48,7 @@
         if (_tokenized != Code)
         {
             _tokenized = Code;
-            _lines = CodeHighlighter.Tokenize(Code);
+            _lines = CodeHighlighter.Tokenize(Code, Language);
         }
         _region = Focus is not null && Step >= 0 && Step < Focus.Count ? Focus[Step] : null;
     }
