@@ -13,11 +13,10 @@
             <CodeWindow FileName="Review.razor.css" Language="css" Code="@Styles" />
         </div>
     </div>
-    <Caption>Styles for <code>Review.razor</code> live in a co-located <code>Review.razor.css</code>.
-        The build tags every element <code>Review</code> renders with a unique <code>b-…</code> and
-        rewrites each selector to match only those — so <code>button</code> never reaches
-        <code>&lt;Stars&gt;</code>'s markup. <strong>::deep</strong>, anchored to your own
-        <code>.box</code>, is the one way through.</Caption>
+    <Caption>The build tags every element <code>Review</code> renders with a unique
+        <code>b-…</code> and rewrites each selector to match only those — so <code>button</code>
+        never reaches <code>&lt;Stars&gt;</code>'s markup. <strong>::deep</strong>, anchored to your
+        own <code>.box</code>, is the one way through.</Caption>
 </Slide>
 
 @code {
