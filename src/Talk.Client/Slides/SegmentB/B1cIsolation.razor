@@ -1,10 +1,9 @@
 @namespace Talk.Client.Slides
 @inherits SteppableSlide
 
-@* Concept #21 — CSS isolation, following slide 9's .razor.css. Anchored to concrete code: a
-   <Rating> child renders the <button>s; your component drops it inside a .box. The three
-   build-steps then show scoped, the child boundary, and the ::deep escape hatch against THAT
-   code, so every selector points at something on screen. *@
+@* Concept #21 — CSS isolation, following slide 9's .razor.css. Left: the two components (Stars
+   renders the buttons; Review drops it in a .box). Right: Review.razor.css itself — three
+   selectors annotated with whether they hit. Build-steps spotlight one selector at a time. *@
 <Slide Title="Scoped CSS — and the ::deep escape hatch">
     <div class="iso">
         <div class="iso-left">
@@ -12,32 +11,23 @@
             <CodeWindow FileName="Review.razor" Language="razor" Code="@Parent" />
         </div>
         <div class="iso-right">
-            <div class="iso-file">Review.razor.css <span class="hint">— write your styles here</span></div>
-            @for (var i = 0; i < _rows.Length; i++)
-            {
-                var r = _rows[i];
-                <div class="iso-row @(Step >= i ? "on" : "") @(r.Ok ? "ok" : "no")">
-                    <div class="iso-line">
-                        <code class="iso-code">@r.Write</code>
-                        <span class="iso-arrow">→</span>
-                        <code class="iso-code ships">@r.Pre<span class="tag">@r.Tag</span>@r.Post</code>
-                    </div>
-                    <div class="iso-reach"><span class="mark">@(r.Ok ? "✓" : "✗")</span> @r.Reach</div>
-                </div>
-            }
+            <CodeWindow FileName="Review.razor.css" Language="css" Code="@Styles" Focus="_focus" Step="Step" />
         </div>
     </div>
-    <Caption>Styles for <code>Review.razor</code> go in a co-located <code>Review.razor.css</code>.
+    <Caption>Styles for <code>Review.razor</code> live in a co-located <code>Review.razor.css</code>.
         The build tags every element <code>Review</code> renders with a unique <code>b-…</code> and
-        rewrites each selector to match only those — so plain names can't leak or collide.
-        <code>&lt;Stars&gt;</code>'s buttons carry <em>its</em> tag, not yours, so the scope stops
-        there. <strong>::deep</strong> moves your tag onto <code>.box</code> to reach in.</Caption>
+        rewrites each selector to match only those — so <code>button</code> never reaches
+        <code>&lt;Stars&gt;</code>'s markup. <strong>::deep</strong>, anchored to your own
+        <code>.box</code>, is the one way through.</Caption>
 </Slide>
 
 @code {
     public override int StepCount => 3;
 
-    // The child component — it owns (renders) the buttons.
+    // Spotlight one more selector per step (1-based, inclusive; cumulative so earlier ones stay lit).
+    private static readonly (int From, int To)?[] _focus = { (1, 2), (1, 5), (1, 8) };
+
+    // The child component — it renders the buttons.
     private const string Child = @"<button>★</button>
 <button>★</button>";
 
@@ -47,15 +37,13 @@
     <Stars />
 </div>";
 
-    private record Row(string Write, string Pre, string Tag, string Post, bool Ok, string Reach);
+    // The scoped stylesheet — the same three selectors we've been discussing, and whether they hit.
+    private const string Styles = @"/* ✓ your own <h2> */
+h2 { color: indigo; }
 
-    private static readonly Row[] _rows =
-    {
-        new("h2 { }", "h2", "[b-a1]", " { }", true,
-            "your own <h2>"),
-        new("button { }", "button", "[b-a1]", " { }", false,
-            "nothing — the buttons live inside Stars"),
-        new(".box ::deep button { }", ".box", "[b-a1]", " button { }", true,
-            "Stars' buttons, reached"),
-    };
+/* ✗ nothing — the buttons live in <Stars> */
+button { color: gold; }
+
+/* ✓ reaches into <Stars> */
+.box ::deep button { color: gold; }";
 }

@@ -1,51 +1,14 @@
 .iso {
     display: grid;
-    grid-template-columns: 0.9fr 1.1fr;
+    grid-template-columns: 0.95fr 1.05fr;
     gap: 1.6rem;
     align-items: start;
     margin-top: 0.3rem;
 }
 
 .iso-left { display: flex; flex-direction: column; gap: 0.8rem; }
-/* .cs-pre is CodeWindow's element — reach it with ::deep to size these compact. */
+
+/* .cs-pre is CodeWindow's element — ::deep to size these code panes from the slide. */
 .iso-left ::deep .cs-pre { padding: 0.75rem 1rem; }
 .iso-left ::deep .cs-pre code { font-size: clamp(0.8rem, 1.2vw, 1.05rem); line-height: 1.5; }
-
-.iso-right { display: flex; flex-direction: column; gap: 0.7rem; }
-
-.iso-file {
-    font-family: "Cascadia Code", "JetBrains Mono", ui-monospace, monospace;
-    font-size: 0.95rem; font-weight: 600; color: var(--accent);
-    padding: 0 0.3rem 0.55rem;
-    border-bottom: 1px solid var(--deck-border);
-    margin-bottom: 0.35rem;
-}
-.iso-file .hint { color: var(--deck-fg); opacity: 0.5; font-weight: 400; }
-
-.iso-row {
-    display: flex; flex-direction: column; gap: 0.4rem;
-    padding: 0.85rem 1.05rem;
-    border: 1px solid var(--deck-border);
-    border-radius: 12px;
-    background: color-mix(in srgb, var(--deck-surface) 55%, transparent);
-    /* Hidden until its build-step; keeps its space so nothing reflows on reveal. */
-    opacity: 0;
-    transform: translateY(8px);
-    transition: opacity 0.35s ease, transform 0.35s ease;
-}
-.iso-row.on { opacity: 1; transform: none; }
-
-.iso-line { display: flex; align-items: center; gap: 0.7rem; }
-
-.iso-code {
-    font-family: "Cascadia Code", "JetBrains Mono", ui-monospace, monospace;
-    font-size: 1.05rem; color: var(--deck-fg); white-space: nowrap;
-}
-.iso-code.ships { opacity: 0.85; }
-.iso-code .tag { color: var(--accent); font-weight: 600; }
-.iso-arrow { opacity: 0.4; }
-
-.iso-reach { font-size: 1.02rem; opacity: 0.85; }
-.iso-reach .mark { font-weight: 800; margin-right: 0.35rem; }
-.iso-row.ok .mark { color: #46b45e; }
-.iso-row.no .mark { color: #e0605e; }
+.iso-right ::deep .cs-pre code { font-size: clamp(0.82rem, 1.2vw, 1.08rem); line-height: 1.75; }

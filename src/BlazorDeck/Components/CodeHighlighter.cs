@@ -27,9 +27,10 @@ public static partial class CodeHighlighter
 
     // Token types, tried left-to-right at each position. The (?<!\w) before a tag's "<" keeps
     // generics (IEnumerable<TItem>) from being read as tags. Comment/string come first so
-    // keywords inside them aren't separately coloured.
+    // keywords inside them aren't separately coloured. Comments cover both // (C#/Razor) and
+    // single-line /* */ (CSS) — tokenising is per line, so block comments don't span lines here.
     private const string Pattern =
-        $@"(//[^\n]*)|(""[^""]*""|'[^']*')|(@(?:{Directives})\b)|(@)|((?<!\w)</?[A-Za-z][\w.-]*)|\b(?:{Keywords})\b|\b[A-Z][A-Za-z0-9_]*\b|\b\d[\w.]*\b";
+        $@"(//[^\n]*|/\*.*?\*/)|(""[^""]*""|'[^']*')|(@(?:{Directives})\b)|(@)|((?<!\w)</?[A-Za-z][\w.-]*)|\b(?:{Keywords})\b|\b[A-Z][A-Za-z0-9_]*\b|\b\d[\w.]*\b";
 
     [GeneratedRegex(Pattern)]
     private static partial Regex Token();
