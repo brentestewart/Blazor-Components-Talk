@@ -58,15 +58,32 @@
 }
 
 .cs-pre code {
-    /* Block so the raw text (shown for one frame before highlight() runs) and the
-       highlighted per-line blocks lay out at the same height — otherwise the code
-       block resizes on highlight and the centred slide visibly jumps. */
     display: block;
-    /* Hidden until highlight() reveals it, so the plain pre-highlight text never flashes. */
-    opacity: 0;
+    /* Normal (not pre) so whitespace between the block lines below collapses; each line keeps
+       its own indentation via white-space: pre on .cl. */
+    white-space: normal;
     font-family: "Cascadia Code", "JetBrains Mono", ui-monospace, monospace;
     font-size: clamp(0.9rem, 1.7vw, 1.25rem);
     line-height: 1.6;
-    white-space: pre;
     color: var(--deck-fg);
 }
+
+/* One block per source line, so a build-step can dim the lines outside its focus. */
+.cl {
+    display: block;
+    white-space: pre;
+    transition: opacity 0.25s ease;
+}
+
+.cl.dim {
+    opacity: 0.28;
+}
+
+/* Token colours — set per light/dark theme on .deck as --deck-code-* (see Deck.razor). */
+.tk-comment { color: var(--deck-code-comment); }
+.tk-string { color: var(--deck-code-string); }
+.tk-keyword { color: var(--deck-code-keyword); }
+.tk-type { color: var(--deck-code-type); }
+.tk-directive { color: var(--deck-code-directive); }
+.tk-tag { color: var(--deck-code-tag); }
+.tk-number { color: var(--deck-code-number); }

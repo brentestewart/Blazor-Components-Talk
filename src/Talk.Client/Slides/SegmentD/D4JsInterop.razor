@@ -21,8 +21,9 @@
                 <li>Only after render — do it in <code>OnAfterRender</code>, when the element
                     and JS runtime exist</li>
             </ul>
-            <p class="js-real">The deck does all three: <code>keydown</code> → slide nav,
-                fullscreen, and the code highlighter.</p>
+            <p class="js-real">The deck uses it for the two things that truly need the browser:
+                <code>keydown</code> → slide nav, and fullscreen. (Syntax highlighting runs in C#
+                — no interop needed.)</p>
         </div>
     </Right>
 </SplitSlide>
