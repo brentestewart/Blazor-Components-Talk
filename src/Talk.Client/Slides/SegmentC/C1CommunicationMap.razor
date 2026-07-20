@@ -27,26 +27,3 @@
 
 @code {
 }
-
-<style>
-    .cm { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.25rem; margin-top: 0.5rem; }
-    .cm-lane {
-        display: flex; flex-direction: column; gap: 0.6rem;
-        padding: 1.3rem 1.2rem; border-radius: 14px;
-        border: 1px solid var(--deck-border);
-        background: color-mix(in srgb, var(--deck-surface) 60%, transparent);
-    }
-    .cm-lane.any {
-        border-color: color-mix(in srgb, var(--accent) 55%, var(--deck-border));
-        background: color-mix(in srgb, var(--accent) 8%, transparent);
-    }
-    .cm-arrow {
-        font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em;
-        opacity: 0.7; font-weight: 700;
-    }
-    .cm-what { font-size: 1.35rem; }
-    .cm-what code { color: var(--accent); font-weight: 600; }
-    .cm-desc { font-size: 1rem; line-height: 1.5; opacity: 0.85; }
-    .cm-eg { opacity: 0.7; font-size: 0.9rem; }
-    .cm-eg code, .cm-desc code { color: var(--accent); }
-</style>

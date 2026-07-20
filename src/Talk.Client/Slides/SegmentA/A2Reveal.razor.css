@@ -1,0 +1,6 @@
+.reveal { display: flex; flex-direction: column; gap: 1.5rem; max-width: 46ch; }
+.r-lead { font-size: clamp(1.8rem, 4.5vw, 3rem); font-weight: 700; line-height: 1.15; margin: 0; }
+.r-lead .hl { color: var(--accent); }
+.r-body { margin: 0; opacity: 0.85; max-width: 40ch; }
+.r-hint { margin: 1rem 0 0; opacity: 0.55; font-size: 1rem; }
+.r-hint kbd { background: var(--deck-surface); border: 1px solid var(--deck-border); border-radius: 4px; padding: .05em .45em; }

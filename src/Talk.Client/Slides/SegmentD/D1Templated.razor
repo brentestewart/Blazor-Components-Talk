@@ -18,12 +18,14 @@
             <li>Named slots — one per <code>RenderFragment</code> parameter</li>
             <li><code>RenderFragment&lt;T&gt;</code> — a slot with a <code>@@context</code> (next slide)</li>
         </ul>
-        <LiveFrame Label="live — this is the component">
-            <Card>
-                <Header><h3>Pricing</h3></Header>
-                <ChildContent>Everything in Pro, plus…</ChildContent>
-            </Card>
-        </LiveFrame>
+        <div class="tp-live">
+            <LiveFrame Label="live — this is the component">
+                <Card>
+                    <Header><h3>Pricing</h3></Header>
+                    <ChildContent>Everything in Pro, plus…</ChildContent>
+                </Card>
+            </LiveFrame>
+        </div>
     </Right>
 </SplitSlide>
 
@@ -43,17 +45,3 @@
     <ChildContent>Everything in Pro, plus…</ChildContent>
 </Card>";
 }
-
-<style>
-    .stack { display: flex; flex-direction: column; gap: 0.9rem; }
-    .tp-lead { margin: 0 0 1rem; font-size: 1.1rem; line-height: 1.5; }
-    .tp-lead em { font-style: normal; color: var(--accent); }
-    .tp-list { margin: 0 0 1.3rem; padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.55rem; font-size: 1.02rem; }
-    .tp-lead code, .tp-list code { color: var(--accent); }
-
-    /* the rendered Card component inside the LiveFrame */
-    .live-stage .card { border: 1px solid var(--deck-border); border-radius: 10px; background: var(--deck-surface); overflow: hidden; }
-    .live-stage .card header { padding: 0.7rem 1rem; border-bottom: 1px solid var(--deck-border); background: color-mix(in srgb, var(--accent) 10%, transparent); }
-    .live-stage .card header h3 { margin: 0; font-size: 1.15rem; font-weight: 700; color: var(--accent); }
-    .live-stage .card > div { padding: 0.9rem 1rem; color: var(--deck-fg); opacity: 0.9; }
-</style>

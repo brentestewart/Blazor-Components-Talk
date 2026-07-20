@@ -1,0 +1,7 @@
+.bind-body { display: flex; flex-direction: column; gap: 1.1rem; }
+.bind-in {
+    font-size: 1.3rem; padding: 0.5rem 0.8rem; border-radius: 8px;
+    border: 1px solid var(--deck-border); background: var(--deck-surface);
+    color: var(--deck-fg); width: 100%; box-sizing: border-box;
+}
+.bind-echo { font-size: 1.3rem; margin: 0; }

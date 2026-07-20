@@ -10,32 +10,3 @@
         </a>
     </div>
 </Slide>
-
-<style>
-    .hello {
-        display: flex; flex-direction: column; align-items: flex-start; gap: 1.5rem;
-        border-left: 3px solid var(--accent);
-        padding-left: 1.9rem;
-    }
-    .hello .role {
-        margin: 0; font-size: 0.85rem; font-weight: 600;
-        text-transform: uppercase; letter-spacing: 0.16em;
-        color: var(--accent);
-    }
-    .hello .why {
-        margin: 0; max-width: 22ch;
-        font-size: clamp(1.8rem, 3.6vw, 2.8rem); font-weight: 700; line-height: 1.15;
-        letter-spacing: -0.01em;
-    }
-    .hello .why .hl { color: var(--accent); }
-    .hello .gh {
-        display: inline-flex; align-items: center; gap: 0.45rem;
-        font-family: "Cascadia Code", "JetBrains Mono", ui-monospace, monospace;
-        font-size: 1.02rem; color: var(--deck-fg); text-decoration: none;
-        padding: 0.5rem 1rem; border-radius: 999px;
-        border: 1px solid var(--deck-border); background: var(--deck-surface);
-        transition: border-color 140ms ease, color 140ms ease;
-    }
-    .hello .gh:hover { border-color: var(--accent); color: var(--accent); }
-    .hello .gh .gh-arrow { opacity: 0.55; font-size: 0.9em; }
-</style>

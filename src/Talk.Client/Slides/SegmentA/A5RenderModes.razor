@@ -27,29 +27,3 @@
         new("Interactive Auto", "Server first for a fast start, then WebAssembly once it loads", IsDeck: true),
     };
 }
-
-<style>
-    .modes {
-        display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
-        max-width: 62rem;
-    }
-    .mode-card {
-        position: relative;
-        padding: 1.6rem 1.7rem; border-radius: 14px;
-        border: 1px solid color-mix(in srgb, var(--deck-border) 55%, var(--deck-fg) 22%);
-        background: color-mix(in srgb, var(--deck-surface) 86%, var(--deck-fg) 9%);
-        box-shadow: 0 16px 40px -28px rgba(0, 0, 0, 0.8);
-    }
-    .mode-card.deck {
-        border-color: color-mix(in srgb, var(--accent) 60%, var(--deck-border));
-        background: color-mix(in srgb, var(--accent) 14%, var(--deck-surface));
-    }
-    .mode-tag {
-        position: absolute; top: -0.7rem; left: 1.2rem;
-        font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em;
-        padding: 0.15rem 0.55rem; border-radius: 999px;
-        background: var(--accent); color: var(--deck-bg); font-weight: 700;
-    }
-    .mode-name { font-size: 1.4rem; font-weight: 700; color: var(--accent); margin-bottom: 0.45rem; }
-    .mode-desc { font-size: 1.05rem; opacity: 0.82; line-height: 1.45; }
-</style>

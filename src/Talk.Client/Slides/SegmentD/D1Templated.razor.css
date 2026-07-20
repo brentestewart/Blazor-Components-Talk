@@ -1,0 +1,12 @@
+.stack { display: flex; flex-direction: column; gap: 0.9rem; }
+.tp-lead { margin: 0 0 1rem; font-size: 1.1rem; line-height: 1.5; }
+.tp-lead em { font-style: normal; color: var(--accent); }
+.tp-list { margin: 0 0 1.3rem; padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.55rem; font-size: 1.02rem; }
+.tp-lead code, .tp-list code { color: var(--accent); }
+
+/* The Card is rendered by the Card component (and wrapped by LiveFrame), so reach it with
+   ::deep from the slide-authored .tp-live wrapper. */
+.tp-live ::deep .card { border: 1px solid var(--deck-border); border-radius: 10px; background: var(--deck-surface); overflow: hidden; }
+.tp-live ::deep .card header { padding: 0.7rem 1rem; border-bottom: 1px solid var(--deck-border); background: color-mix(in srgb, var(--accent) 10%, transparent); }
+.tp-live ::deep .card header h3 { margin: 0; font-size: 1.15rem; font-weight: 700; color: var(--accent); }
+.tp-live ::deep .card > div { padding: 0.9rem 1rem; color: var(--deck-fg); opacity: 0.9; }

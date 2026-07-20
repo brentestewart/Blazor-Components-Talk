@@ -1,0 +1,18 @@
+.sh-intro { margin: 0 0 1.3rem; opacity: 0.8; font-size: 1.15rem; max-width: 68ch; line-height: 1.5; }
+.sh-intro em { font-style: normal; color: var(--accent); }
+.sh { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; }
+.sh-card {
+    padding: 1.2rem 1.3rem 1.1rem; border-radius: 14px; border: 1px solid var(--deck-border);
+    background: color-mix(in srgb, var(--deck-surface) 55%, transparent);
+}
+.sh-card.manual {
+    border-color: color-mix(in srgb, var(--accent) 55%, var(--deck-border));
+    background: color-mix(in srgb, var(--accent) 8%, transparent);
+}
+.sh-head { display: flex; align-items: center; gap: 0.55rem; font-size: 1.2rem; font-weight: 700; margin-bottom: 0.8rem; }
+.sh-head code { color: var(--accent); font-weight: 700; }
+.sh-mark { font-size: 1.15rem; font-weight: 800; opacity: 0.85; }
+.sh-card.manual .sh-mark { color: var(--accent); }
+.sh ul { margin: 0; padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.55rem; font-size: 1.04rem; line-height: 1.4; opacity: 0.9; }
+.sh code { color: var(--accent); }
+.sh-eg { opacity: 0.7; font-size: 0.9rem; }
