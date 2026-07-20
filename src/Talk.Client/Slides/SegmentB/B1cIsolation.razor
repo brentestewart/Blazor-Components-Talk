@@ -1,25 +1,51 @@
 @namespace Talk.Client.Slides
+@inherits SteppableSlide
 
-@* Concept #21 — CSS isolation, following slide 9's .razor.css. Left: the two components (Stars
-   renders the buttons; Review drops it in a .box). Right: Review.razor.css itself — three
-   selectors annotated with whether they hit. *@
+@* Concept #21 — CSS isolation. Step 1: the source — the two components and the scoped stylesheet.
+   Step 2: drop Stars (it's served its purpose) and show Review's rendered DOM beside the generated
+   CSS, so the b-a1 rewrite — and why the child's buttons dodge it — is visible. *@
 <Slide Title="Scoped CSS — and the ::deep escape hatch">
     <div class="iso">
         <div class="iso-left">
-            <CodeWindow FileName="Stars.razor" Language="razor" Code="@Child" />
-            <CodeWindow FileName="Review.razor" Language="razor" Code="@Parent" />
+            @if (Step == 0)
+            {
+                <CodeWindow FileName="Stars.razor" Language="razor" Code="@Child" />
+                <CodeWindow FileName="Review.razor" Language="razor" Code="@Parent" />
+            }
+            else
+            {
+                <CodeWindow FileName="Review — rendered DOM" Language="razor" Code="@ParentRendered" />
+            }
         </div>
         <div class="iso-right">
-            <CodeWindow FileName="Review.razor.css" Language="css" Code="@Styles" />
+            @if (Step == 0)
+            {
+                <CodeWindow FileName="Review.razor.css" Language="css" Code="@Styles" />
+            }
+            else
+            {
+                <CodeWindow FileName="Review.razor.css — generated" Language="css" Code="@StylesGen" />
+            }
         </div>
     </div>
-    <Caption>The build tags every element <code>Review</code> renders with a unique
-        <code>b-…</code> and rewrites each selector to match only those — so <code>button</code>
-        never reaches <code>&lt;Stars&gt;</code>'s markup. <strong>::deep</strong>, anchored to your
-        own <code>.box</code>, is the one way through.</Caption>
+    @if (Step == 0)
+    {
+        <Caption>The build tags every element <code>Review</code> renders with a unique
+            <code>b-…</code> and rewrites each selector to match only those. So which of these three
+            actually hit? <span class="tease">Advance to see what the build generates. →</span></Caption>
+    }
+    else
+    {
+        <Caption><code>Review</code> has a stylesheet, so its <code>.box</code> and <code>&lt;h2&gt;</code>
+            get <code>b-a1</code> — but the buttons came from <code>&lt;Stars&gt;</code>, so they don't.
+            <code>button[b-a1]</code> matches none of them; <strong>::deep</strong> moves the tag onto
+            <code>.box</code>, so <code>.box[b-a1] button</code> reaches them regardless.</Caption>
+    }
 </Slide>
 
 @code {
+    public override int StepCount => 2;
+
     // The child component — it renders the buttons.
     private const string Child = @"<button>★</button>
 <button>★</button>";
@@ -30,7 +56,14 @@
     <Stars />
 </div>";
 
-    // The scoped stylesheet — the same three selectors we've been discussing, and whether they hit.
+    // What Review actually renders: its own elements carry b-a1; the buttons (from Stars) don't.
+    private const string ParentRendered = @"<div class=""box"" b-a1>
+    <h2 b-a1>Rate it</h2>
+    <button>★</button>
+    <button>★</button>
+</div>";
+
+    // The scoped stylesheet you write.
     private const string Styles = @"/* ✓ your own <h2> */
 h2 { color: indigo; }
 
@@ -39,4 +72,9 @@ button { color: gold; }
 
 /* ✓ reaches into <Stars> */
 .box ::deep button { color: gold; }";
+
+    // What the build generates — your tag appended to each selector.
+    private const string StylesGen = @"h2[b-a1]           { color: indigo; }  /* ✓ */
+button[b-a1]       { color: gold; }    /* ✗ the buttons have no b-a1 */
+.box[b-a1] button  { color: gold; }    /* ✓ any button under .box */";
 }
