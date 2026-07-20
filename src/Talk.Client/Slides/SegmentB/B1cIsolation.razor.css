@@ -1,38 +1,38 @@
-.iso { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 0.5rem; }
-
-/* Shared column track so the header labels line up with every row. */
-.iso-head,
-.iso-row {
+.iso {
     display: grid;
-    grid-template-columns: 7rem 16rem 1.6rem 16rem 1fr;
-    align-items: center;
-    gap: 1.1rem;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 1.6rem;
+    align-items: start;
+    margin-top: 0.3rem;
 }
 
-.iso-head { padding: 0 1.2rem; }
-.iso-head .lbl {
-    font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.09em;
-    opacity: 0.5; font-weight: 700;
-}
+.iso-left { display: flex; flex-direction: column; gap: 0.8rem; }
+/* .cs-pre is CodeWindow's element — reach it with ::deep to size these compact. */
+.iso-left ::deep .cs-pre { padding: 0.75rem 1rem; }
+.iso-left ::deep .cs-pre code { font-size: clamp(0.8rem, 1.2vw, 1.05rem); line-height: 1.5; }
+
+.iso-right { display: flex; flex-direction: column; gap: 0.7rem; }
 
 .iso-row {
-    padding: 0.95rem 1.2rem;
+    display: flex; flex-direction: column; gap: 0.4rem;
+    padding: 0.85rem 1.05rem;
     border: 1px solid var(--deck-border);
     border-radius: 12px;
     background: color-mix(in srgb, var(--deck-surface) 55%, transparent);
-    /* Hidden until its build-step; still occupies space, so nothing reflows on reveal. */
+    /* Hidden until its build-step; keeps its space so nothing reflows on reveal. */
     opacity: 0;
     transform: translateY(8px);
     transition: opacity 0.35s ease, transform 0.35s ease;
 }
 .iso-row.on { opacity: 1; transform: none; }
 
+.iso-line { display: flex; align-items: center; gap: 0.7rem; }
+
 .iso-stage {
     font-family: "Cascadia Code", "JetBrains Mono", ui-monospace, monospace;
-    font-size: 0.78rem; letter-spacing: 0.02em; font-weight: 600;
-    padding: 0.22rem 0.55rem; border-radius: 999px;
-    border: 1px solid var(--deck-border);
-    color: var(--deck-fg); opacity: 0.75; text-align: center;
+    font-size: 0.72rem; font-weight: 600; white-space: nowrap;
+    padding: 0.2rem 0.55rem; border-radius: 999px;
+    border: 1px solid var(--deck-border); color: var(--deck-fg); opacity: 0.75;
 }
 .iso-row:last-child .iso-stage {
     color: var(--accent); opacity: 1;
@@ -41,14 +41,13 @@
 
 .iso-code {
     font-family: "Cascadia Code", "JetBrains Mono", ui-monospace, monospace;
-    font-size: 1.15rem; color: var(--deck-fg); white-space: nowrap;
+    font-size: 1.05rem; color: var(--deck-fg); white-space: nowrap;
 }
-.iso-code.ships { opacity: 0.9; }
+.iso-code.ships { opacity: 0.85; }
 .iso-code .tag { color: var(--accent); font-weight: 600; }
+.iso-arrow { opacity: 0.4; }
 
-.iso-arrow { text-align: center; opacity: 0.4; font-size: 1.1rem; }
-
-.iso-reach { font-size: 1.05rem; opacity: 0.85; }
+.iso-reach { font-size: 1.02rem; opacity: 0.85; }
 .iso-reach .mark { font-weight: 800; margin-right: 0.35rem; }
 .iso-row.ok .mark { color: #46b45e; }
 .iso-row.no .mark { color: #e0605e; }
