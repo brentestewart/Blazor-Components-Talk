@@ -23,17 +23,17 @@
     {
         // Segment A · Set the stage
         // All slides inherit the deck default transition (change it in settings — 's').
-        new(typeof(A1Title), "Title"),
-        new(typeof(A2Reveal), "It's all components"),
-        new(typeof(A3Hello), "Hello"),
-        new(typeof(A4Agenda), "What we'll cover"),
-        new(typeof(A5RenderModes), "Four render modes"),
-        new(typeof(A6ModeLive), "Which mode is this slide?"),
-        new(typeof(A7WhyItMatters), "Why render mode matters"),
+        new(typeof(A1Title), "Title") { Tag = "Title" },
+        new(typeof(A2Reveal), "It's all components") { Tag = "Reveal" },
+        new(typeof(A3Hello), "Hello") { Tag = "Hello" },
+        new(typeof(A4Agenda), "What we'll cover") { Tag = "Agenda" },
+        new(typeof(A5RenderModes), "Four render modes") { Tag = "RenderModes" },
+        new(typeof(A6ModeLive), "Which mode is this slide?") { Tag = "RenderMode" },
+        new(typeof(A7WhyItMatters), "Why render mode matters") { Tag = "WhyItMatters" },
 
         // Segment B · Fundamentals — each slide dissects a real deck component.
-        new(typeof(B1Anatomy), "Anatomy — one file"),
-        new(typeof(B1bAnatomyFiles), "Anatomy — separate files"),
+        new(typeof(B1Anatomy), "Anatomy — one file") { Tag = "ComponentAnatomy" },
+        new(typeof(B1bAnatomyFiles), "Anatomy — separate files") { Tag = "ComponentFiles" },
         new(typeof(B2Parameters), "Parameters"),
         new(typeof(B3Splatting), "Attribute splatting"),
         new(typeof(B4Binding), "Data binding"),

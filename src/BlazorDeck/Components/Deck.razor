@@ -216,7 +216,7 @@
         Slides.Count == 0 ? 0 : (int)Math.Round((State.Index + 1) * 100.0 / Slides.Count);
 
     private string ComponentName =>
-        Slides.Count == 0 ? "" : Slides[State.Index].Type.Name;
+        Slides.Count == 0 ? "" : (Slides[State.Index].Tag ?? Slides[State.Index].Type.Name);
 
     private DotNetObjectReference<Deck>? _ref;
     private IJSObjectReference? _module;

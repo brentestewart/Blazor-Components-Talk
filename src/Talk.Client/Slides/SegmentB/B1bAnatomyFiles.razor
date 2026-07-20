@@ -8,6 +8,11 @@
         <CodeWindow FileName="Slide.razor" Language="razor" Code="@Markup" />
         <CodeWindow FileName="Slide.razor.cs" Language="csharp" Optional="true" Code="@CodeBehind" />
         <CodeWindow FileName="Slide.razor.css" Language="css" Optional="true" Code="@Styles" />
+        <p class="files-note">
+            Logic can move to a <strong>code-behind</strong> partial class; styles to a
+            <strong>scoped</strong> stylesheet (<span class="tease">CSS isolation</span>). Both files
+            optional — all three compile into the <strong>one</strong> component type.
+        </p>
     </div>
 </Slide>
 
@@ -35,4 +40,7 @@
     /* Tighter type so three windows fit comfortably on one slide. */
     .anatomy .cs-pre { padding: 0.9rem 1.2rem; }
     .anatomy .cs-pre code { font-size: clamp(0.72rem, 1.25vw, 1rem); line-height: 1.45; }
+    .files-note { margin: 0.2rem 0 0; font-size: 1.05rem; line-height: 1.5; }
+    .files-note strong { color: var(--accent); font-weight: 700; }
+    .files-note .tease { opacity: 0.6; font-style: italic; }
 </style>
