@@ -8,8 +8,8 @@
 <Slide Title="Scoped CSS — and the ::deep escape hatch">
     <div class="iso">
         <div class="iso-left">
-            <CodeWindow FileName="Rating.razor" Language="razor" Code="@Child" />
-            <CodeWindow FileName="Ratings.razor" Language="razor" Code="@Parent" />
+            <CodeWindow FileName="Stars.razor" Language="razor" Code="@Child" />
+            <CodeWindow FileName="Review.razor" Language="razor" Code="@Parent" />
         </div>
         <div class="iso-right">
             @for (var i = 0; i < _rows.Length; i++)
@@ -17,7 +17,6 @@
                 var r = _rows[i];
                 <div class="iso-row @(Step >= i ? "on" : "") @(r.Ok ? "ok" : "no")">
                     <div class="iso-line">
-                        <span class="iso-stage">@r.Stage</span>
                         <code class="iso-code">@r.Write</code>
                         <span class="iso-arrow">→</span>
                         <code class="iso-code ships">@r.Pre<span class="tag">@r.Tag</span>@r.Post</code>
@@ -29,7 +28,7 @@
     </div>
     <Caption>The build tags every element <em>your</em> component renders with a unique
         <code>b-…</code> and rewrites each selector to match only those — so plain names can't leak
-        or collide. <code>&lt;Rating&gt;</code>'s buttons carry <em>its</em> tag, not yours, so the
+        or collide. <code>&lt;Stars&gt;</code>'s buttons carry <em>its</em> tag, not yours, so the
         scope stops there. <strong>::deep</strong> moves your tag onto <code>.box</code>, freeing the
         rest of the selector to reach in.</Caption>
 </Slide>
@@ -41,21 +40,21 @@
     private const string Child = @"<button>★</button>
 <button>★</button>";
 
-    // Your component — it drops <Rating> inside a .box it owns.
+    // Your component — it drops <Stars> inside a .box it owns.
     private const string Parent = @"<div class=""box"">
     <h2>Rate it</h2>
-    <Rating />
+    <Stars />
 </div>";
 
-    private record Row(string Stage, string Write, string Pre, string Tag, string Post, bool Ok, string Reach);
+    private record Row(string Write, string Pre, string Tag, string Post, bool Ok, string Reach);
 
     private static readonly Row[] _rows =
     {
-        new("scoped", "h2 { }", "h2", "[b-a1]", " { }", true,
+        new("h2 { }", "h2", "[b-a1]", " { }", true,
             "your own <h2>"),
-        new("boundary", "button { }", "button", "[b-a1]", " { }", false,
-            "nothing — the buttons live inside Rating"),
-        new("::deep", ".box ::deep button { }", ".box", "[b-a1]", " button { }", true,
-            "Rating's buttons, reached"),
+        new("button { }", "button", "[b-a1]", " { }", false,
+            "nothing — the buttons live inside Stars"),
+        new(".box ::deep button { }", ".box", "[b-a1]", " button { }", true,
+            "Stars' buttons, reached"),
     };
 }

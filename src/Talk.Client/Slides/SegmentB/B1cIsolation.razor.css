@@ -28,17 +28,6 @@
 
 .iso-line { display: flex; align-items: center; gap: 0.7rem; }
 
-.iso-stage {
-    font-family: "Cascadia Code", "JetBrains Mono", ui-monospace, monospace;
-    font-size: 0.72rem; font-weight: 600; white-space: nowrap;
-    padding: 0.2rem 0.55rem; border-radius: 999px;
-    border: 1px solid var(--deck-border); color: var(--deck-fg); opacity: 0.75;
-}
-.iso-row:last-child .iso-stage {
-    color: var(--accent); opacity: 1;
-    border-color: color-mix(in srgb, var(--accent) 55%, var(--deck-border));
-}
-
 .iso-code {
     font-family: "Cascadia Code", "JetBrains Mono", ui-monospace, monospace;
     font-size: 1.05rem; color: var(--deck-fg); white-space: nowrap;
