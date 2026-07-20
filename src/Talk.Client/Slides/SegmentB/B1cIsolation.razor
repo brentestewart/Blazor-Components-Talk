@@ -1,0 +1,50 @@
+@namespace Talk.Client.Slides
+@inherits SteppableSlide
+
+@* Concept #21 — CSS isolation, following on from slide 9's .razor.css. What that file actually
+   does: each selector is rewritten to match only this component's elements (scoped), the scope
+   stops at child components (the boundary), and ::deep is the escape hatch. Three build-steps
+   reveal one row at a time — dogfooding the deck's own step feature. *@
+<Slide Title="Scoped CSS — and the ::deep escape hatch">
+    <div class="iso">
+        <div class="iso-head">
+            <span></span>
+            <span class="lbl">you write</span>
+            <span></span>
+            <span class="lbl">the build rewrites it to</span>
+            <span class="lbl">what it can style</span>
+        </div>
+        @for (var i = 0; i < _rows.Length; i++)
+        {
+            var r = _rows[i];
+            <div class="iso-row @(Step >= i ? "on" : "") @(r.Ok ? "ok" : "no")">
+                <span class="iso-stage">@r.Stage</span>
+                <code class="iso-code">@r.Write</code>
+                <span class="iso-arrow">→</span>
+                <code class="iso-code ships">@r.Pre<span class="tag">@r.Tag</span>@r.Post</code>
+                <span class="iso-reach"><span class="mark">@(r.Ok ? "✓" : "✗")</span> @r.Reach</span>
+            </div>
+        }
+    </div>
+    <Caption>Put styles in <code>Slide.razor.css</code> and the build tags every element this
+        component renders with a unique <code>b-…</code>, then rewrites each selector to match only
+        those — so plain names can't leak out or collide. The scope stops at child components;
+        <strong>::deep</strong> is the one deliberate way through. This deck styles the very code
+        windows you're looking at with it.</Caption>
+</Slide>
+
+@code {
+    public override int StepCount => 3;
+
+    private record Row(string Stage, string Write, string Pre, string Tag, string Post, bool Ok, string Reach);
+
+    private static readonly Row[] _rows =
+    {
+        new("scoped", ".badge { }", ".badge", "[b-a1]", " { }", true,
+            "your own elements — no leaks, no collisions"),
+        new("boundary", "button { }", "button", "[b-a1]", " { }", false,
+            "the child renders the button — different tag, no match"),
+        new("::deep", ".box ::deep button { }", ".box", "[b-a1]", " button { }", true,
+            "any button under your .box — the child's included"),
+    };
+}

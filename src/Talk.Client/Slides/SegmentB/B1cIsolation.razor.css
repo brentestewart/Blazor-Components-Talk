@@ -1,0 +1,54 @@
+.iso { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 0.5rem; }
+
+/* Shared column track so the header labels line up with every row. */
+.iso-head,
+.iso-row {
+    display: grid;
+    grid-template-columns: 7rem 16rem 1.6rem 16rem 1fr;
+    align-items: center;
+    gap: 1.1rem;
+}
+
+.iso-head { padding: 0 1.2rem; }
+.iso-head .lbl {
+    font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.09em;
+    opacity: 0.5; font-weight: 700;
+}
+
+.iso-row {
+    padding: 0.95rem 1.2rem;
+    border: 1px solid var(--deck-border);
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--deck-surface) 55%, transparent);
+    /* Hidden until its build-step; still occupies space, so nothing reflows on reveal. */
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+}
+.iso-row.on { opacity: 1; transform: none; }
+
+.iso-stage {
+    font-family: "Cascadia Code", "JetBrains Mono", ui-monospace, monospace;
+    font-size: 0.78rem; letter-spacing: 0.02em; font-weight: 600;
+    padding: 0.22rem 0.55rem; border-radius: 999px;
+    border: 1px solid var(--deck-border);
+    color: var(--deck-fg); opacity: 0.75; text-align: center;
+}
+.iso-row:last-child .iso-stage {
+    color: var(--accent); opacity: 1;
+    border-color: color-mix(in srgb, var(--accent) 55%, var(--deck-border));
+}
+
+.iso-code {
+    font-family: "Cascadia Code", "JetBrains Mono", ui-monospace, monospace;
+    font-size: 1.15rem; color: var(--deck-fg); white-space: nowrap;
+}
+.iso-code.ships { opacity: 0.9; }
+.iso-code .tag { color: var(--accent); font-weight: 600; }
+
+.iso-arrow { text-align: center; opacity: 0.4; font-size: 1.1rem; }
+
+.iso-reach { font-size: 1.05rem; opacity: 0.85; }
+.iso-reach .mark { font-weight: 800; margin-right: 0.35rem; }
+.iso-row.ok .mark { color: #46b45e; }
+.iso-row.no .mark { color: #e0605e; }
