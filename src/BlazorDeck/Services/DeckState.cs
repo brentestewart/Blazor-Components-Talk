@@ -82,10 +82,10 @@ public class DeckState
     {
         count = count < 1 ? 1 : count;
         var step = _landOnLastStep ? count - 1 : Math.Min(Step, count - 1);
+        _landOnLastStep = false;   // intent consumed, whether or not anything changed below
         if (count == StepCount && step == Step) return;   // no change — avoid a render loop
         StepCount = count;
         Step = step;
-        _landOnLastStep = false;
         Notify();
     }
 
