@@ -13,6 +13,15 @@
 
 .iso-right { display: flex; flex-direction: column; gap: 0.7rem; }
 
+.iso-file {
+    font-family: "Cascadia Code", "JetBrains Mono", ui-monospace, monospace;
+    font-size: 0.95rem; font-weight: 600; color: var(--accent);
+    padding: 0 0.3rem 0.55rem;
+    border-bottom: 1px solid var(--deck-border);
+    margin-bottom: 0.35rem;
+}
+.iso-file .hint { color: var(--deck-fg); opacity: 0.5; font-weight: 400; }
+
 .iso-row {
     display: flex; flex-direction: column; gap: 0.4rem;
     padding: 0.85rem 1.05rem;

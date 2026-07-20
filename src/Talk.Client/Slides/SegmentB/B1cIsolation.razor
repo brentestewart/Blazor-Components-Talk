@@ -12,6 +12,7 @@
             <CodeWindow FileName="Review.razor" Language="razor" Code="@Parent" />
         </div>
         <div class="iso-right">
+            <div class="iso-file">Review.razor.css <span class="hint">— write your styles here</span></div>
             @for (var i = 0; i < _rows.Length; i++)
             {
                 var r = _rows[i];
@@ -26,11 +27,11 @@
             }
         </div>
     </div>
-    <Caption>The build tags every element <em>your</em> component renders with a unique
-        <code>b-…</code> and rewrites each selector to match only those — so plain names can't leak
-        or collide. <code>&lt;Stars&gt;</code>'s buttons carry <em>its</em> tag, not yours, so the
-        scope stops there. <strong>::deep</strong> moves your tag onto <code>.box</code>, freeing the
-        rest of the selector to reach in.</Caption>
+    <Caption>Styles for <code>Review.razor</code> go in a co-located <code>Review.razor.css</code>.
+        The build tags every element <code>Review</code> renders with a unique <code>b-…</code> and
+        rewrites each selector to match only those — so plain names can't leak or collide.
+        <code>&lt;Stars&gt;</code>'s buttons carry <em>its</em> tag, not yours, so the scope stops
+        there. <strong>::deep</strong> moves your tag onto <code>.box</code> to reach in.</Caption>
 </Slide>
 
 @code {
