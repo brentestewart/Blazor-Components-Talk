@@ -41,6 +41,7 @@
 
     private IReadOnlyList<IReadOnlyList<CodeToken>> _lines = Array.Empty<IReadOnlyList<CodeToken>>();
     private string? _tokenized;
+    private (int From, int To)? _region;   // the current step's focus region, computed once per render
 
     protected override void OnParametersSet()
     {
@@ -49,12 +50,12 @@
             _tokenized = Code;
             _lines = CodeHighlighter.Tokenize(Code);
         }
+        _region = Focus is not null && Step >= 0 && Step < Focus.Count ? Focus[Step] : null;
     }
 
     private bool IsDimmed(int lineIndex)
     {
-        var region = Focus is not null && Step >= 0 && Step < Focus.Count ? Focus[Step] : null;
-        if (region is not { } r) return false;
+        if (_region is not { } r) return false;
         var n = lineIndex + 1;   // 1-based line number
         return n < r.From || n > r.To;
     }

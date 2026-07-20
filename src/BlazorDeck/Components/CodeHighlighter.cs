@@ -12,7 +12,7 @@ public readonly record struct CodeToken(string Text, string? Kind);
 /// Not a full grammar; a stand-in tuned for the snippets on screen. A production app would use a
 /// real grammar (and Razor's mix of HTML + C# + @ is exactly the part off-the-shelf ones miss).
 /// </summary>
-public static class CodeHighlighter
+public static partial class CodeHighlighter
 {
     private const string Keywords =
         "public|private|protected|internal|class|record|struct|interface|void|async|await|new|" +
@@ -28,15 +28,17 @@ public static class CodeHighlighter
     // Token types, tried left-to-right at each position. The (?<!\w) before a tag's "<" keeps
     // generics (IEnumerable<TItem>) from being read as tags. Comment/string come first so
     // keywords inside them aren't separately coloured.
-    private static readonly Regex Token = new(
-        $@"(//[^\n]*)|(""[^""]*""|'[^']*')|(@(?:{Directives})\b)|(@)|((?<!\w)</?[A-Za-z][\w.-]*)|\b(?:{Keywords})\b|\b[A-Z][A-Za-z0-9_]*\b|\b\d[\w.]*\b",
-        RegexOptions.Compiled);
+    private const string Pattern =
+        $@"(//[^\n]*)|(""[^""]*""|'[^']*')|(@(?:{Directives})\b)|(@)|((?<!\w)</?[A-Za-z][\w.-]*)|\b(?:{Keywords})\b|\b[A-Z][A-Za-z0-9_]*\b|\b\d[\w.]*\b";
+
+    [GeneratedRegex(Pattern)]
+    private static partial Regex Token();
 
     /// <summary>Tokenise each line of <paramref name="code"/> into coloured tokens.</summary>
     public static IReadOnlyList<IReadOnlyList<CodeToken>> Tokenize(string code)
     {
         var lines = new List<IReadOnlyList<CodeToken>>();
-        foreach (var line in code.Split('\n'))
+        foreach (var line in code.ReplaceLineEndings("\n").Split('\n'))   // normalise CRLF/CR first
         {
             lines.Add(TokenizeLine(line));
         }
@@ -47,7 +49,7 @@ public static class CodeHighlighter
     {
         var tokens = new List<CodeToken>();
         var last = 0;
-        foreach (Match m in Token.Matches(src))
+        foreach (Match m in Token().Matches(src))
         {
             if (m.Index > last)
             {
