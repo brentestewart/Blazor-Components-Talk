@@ -13,8 +13,8 @@
     font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em;
     opacity: 0.7; font-weight: 700;
 }
-.cm-what { font-size: 1.35rem; }
-.cm-what code { color: var(--accent); font-weight: 600; }
+.cm-what { font-size: 1.35rem; color: var(--accent); font-weight: 600; }
+.cm-what code { color: var(--accent); }   /* beat the global inline-code color */
 .cm-desc { font-size: 1rem; line-height: 1.5; opacity: 0.85; }
 .cm-eg { opacity: 0.7; font-size: 0.9rem; }
 .cm-eg code, .cm-desc code { color: var(--accent); }
