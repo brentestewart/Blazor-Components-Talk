@@ -1,8 +1,8 @@
 @namespace Talk.Client.Slides
 
-@* Concept #16 — generic components. @typeparam makes a component type-parameterized; the
+@* Concept #16: generic components. @typeparam makes a component type-parameterized; the
    compiler infers the type from the data you pass. This dissects the deck's real BulletList<T>
-   — the same component A4/A5/A7 use — rendered live on the right. *@
+   (the same component A4/A5/A7 use), rendered live on the right. *@
 <SplitSlide Title="Generic components" WideLeft="true">
     <Left>
         <div class="stack">
@@ -11,7 +11,7 @@
         </div>
     </Left>
     <Right>
-        <LiveFrame Label="live — this is the component">
+        <LiveFrame Label="live: this is the component">
             <BulletList Items="_people">
                 <ItemTemplate Context="p">@p.Name — @p.Role</ItemTemplate>
             </BulletList>
@@ -19,7 +19,7 @@
     </Right>
     <Footer>
         <Caption><code>TItem</code> is inferred as <code>Person</code> from
-            <code>Items</code> — no cast, fully typed inside <code>&lt;ItemTemplate&gt;</code>.</Caption>
+            <code>Items</code>, with no cast, fully typed inside <code>&lt;ItemTemplate&gt;</code>.</Caption>
     </Footer>
 </SplitSlide>
 

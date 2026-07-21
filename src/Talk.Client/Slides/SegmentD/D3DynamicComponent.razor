@@ -1,6 +1,6 @@
 @namespace Talk.Client.Slides
 
-@* Concept #17 — DynamicComponent, the deck's real engine. It renders a component chosen at
+@* Concept #17: DynamicComponent, the deck's real engine. It renders a component chosen at
    runtime by its Type, with parameters passed as a dictionary. This deck is one
    <DynamicComponent> that swaps in whichever slide you're on. *@
 <SplitSlide Title="DynamicComponent" WideLeft="true">
@@ -9,11 +9,11 @@
     </Left>
     <Right>
         <p class="dc-lead">Normally you write a component's tag by name. Sometimes you don't
-            <em>know</em> the type until runtime — <code>DynamicComponent</code> takes a
+            <em>know</em> the type until runtime, so <code>DynamicComponent</code> takes a
             <code>Type</code> instead of a tag.</p>
         <ul class="dc-list">
-            <li><code>Type</code> — which component to render, chosen at runtime</li>
-            <li><code>Parameters</code> — an optional <code>Dictionary</code> of inputs</li>
+            <li><code>Type</code>: which component to render, chosen at runtime</li>
+            <li><code>Parameters</code>: an optional <code>Dictionary</code> of inputs</li>
         </ul>
         <p class="dc-real">This is the deck's engine: a table of slide types, and one
             <code>&lt;DynamicComponent&gt;</code> rendering <code>Slides[Index]</code>.

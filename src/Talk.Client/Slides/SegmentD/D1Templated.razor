@@ -1,8 +1,8 @@
 @namespace Talk.Client.Slides
 
-@* Concept #15 — templated components. A RenderFragment parameter is a slot the caller fills
-   with its own markup. ChildContent is the default slot; named slots add more. (Instructional
-   — a Card with a Header slot; the deck's own Slide uses ChildContent the same way.) *@
+@* Concept #15: templated components. A RenderFragment parameter is a slot the caller fills
+   with its own markup. ChildContent is the default slot; named slots add more. (Instructional:
+   a Card with a Header slot; the deck's own Slide uses ChildContent the same way.) *@
 <SplitSlide Title="Templated components" WideLeft="true">
     <Left>
         <div class="stack">
@@ -11,15 +11,15 @@
         </div>
     </Left>
     <Right>
-        <p class="tp-lead"><code>RenderFragment</code> is a <strong>slot</strong> — the caller
+        <p class="tp-lead"><code>RenderFragment</code> is a <strong>slot</strong>: the caller
             passes markup <em>into</em> your component.</p>
         <ul class="tp-list">
-            <li><code>ChildContent</code> — the default slot (between the tags)</li>
-            <li>Named slots — one per <code>RenderFragment</code> parameter</li>
-            <li><code>RenderFragment&lt;T&gt;</code> — a slot with a <code>@@context</code> (next slide)</li>
+            <li><code>ChildContent</code>: the default slot (between the tags)</li>
+            <li>Named slots, one per <code>RenderFragment</code> parameter</li>
+            <li><code>RenderFragment&lt;T&gt;</code>: a slot with a <code>@@context</code> (next slide)</li>
         </ul>
         <div class="tp-live">
-            <LiveFrame Label="live — this is the component">
+            <LiveFrame Label="live: this is the component">
                 <Card>
                     <Header><h3>Pricing</h3></Header>
                     <ChildContent>Everything in Pro, plus…</ChildContent>

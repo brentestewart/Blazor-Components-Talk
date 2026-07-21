@@ -1,8 +1,8 @@
 @namespace Talk.Client.Slides
 
-@* Concept #8 — lifecycle. The full ComponentBase hook sequence. Most come in a sync + async
+@* Concept #8: lifecycle. The full ComponentBase hook sequence. Most come in a sync + async
    form; SetParametersAsync is async-only and ShouldRender is sync-only. A real OnAfterRender
-   use — JS interop — comes later, in Segment D; ShouldRender returns in Segment E. *@
+   use (JS interop) comes later, in Segment D; ShouldRender returns in Segment E. *@
 <Slide Title="The component lifecycle">
     <p class="lc-intro">Runs top to bottom. Most hooks have a sync and an <code>async</code> form.</p>
     <ul class="lifecycle">
@@ -19,7 +19,7 @@
         }
     </ul>
     <p class="lc-note"><span class="lc-note-tag">with prerendering</span>
-        the hooks above <code>OnAfterRender</code> run <strong>twice</strong> — once for the static
+        the hooks above <code>OnAfterRender</code> run <strong>twice</strong>: once for the static
         prerender, then again when the component goes interactive. <code>OnAfterRender</code> only
         fires once interactive, which is why it's the safe place for JS &amp; DOM work.</p>
 </Slide>
@@ -30,10 +30,10 @@
     private static readonly Hook[] _hooks =
     {
         new("SetParametersAsync", "(async only)", "raw parameters arrive; the base sets them, then runs the rest", "on set"),
-        new("OnInitialized", "OnInitializedAsync", "the component is created — set up initial state", "once"),
-        new("OnParametersSet", "OnParametersSetAsync", "a parameter is set or changes — react to new inputs", "on change"),
-        new("ShouldRender", "(sync only)", "gate a re-render — return false to skip one", "before render"),
-        new("OnAfterRender", "OnAfterRenderAsync", "it has rendered to the DOM — touch rendered elements", "after render"),
-        new("Dispose", "DisposeAsync", "it goes away — clean up timers and subscriptions", "once"),
+        new("OnInitialized", "OnInitializedAsync", "the component is created; set up initial state", "once"),
+        new("OnParametersSet", "OnParametersSetAsync", "a parameter is set or changes; react to new inputs", "on change"),
+        new("ShouldRender", "(sync only)", "gate a re-render; return false to skip one", "before render"),
+        new("OnAfterRender", "OnAfterRenderAsync", "it has rendered to the DOM; touch rendered elements", "after render"),
+        new("Dispose", "DisposeAsync", "it goes away; clean up timers and subscriptions", "once"),
     };
 }

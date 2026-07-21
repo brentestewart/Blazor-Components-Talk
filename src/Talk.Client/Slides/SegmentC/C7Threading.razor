@@ -1,7 +1,7 @@
 @namespace Talk.Client.Slides
 
-@* Concept #14 — the threading gotcha, placed right where it bites. When a re-render is
-   triggered off the renderer's sync context — a timer, a background thread — you must marshal
+@* Concept #14: the threading gotcha, placed right where it bites. When a re-render is
+   triggered off the renderer's sync context (a timer, a background thread), you must marshal
    with InvokeAsync(StateHasChanged). The real deck hits this in its transition timer: after
    `await Task.Delay(650)` clears the outgoing slide layer, the continuation is off-thread. *@
 <SplitSlide Title="StateHasChanged off-thread" Subtitle="Use InvokeAsync" WideLeft="true">
@@ -18,8 +18,8 @@
                 <span class="th-mark">✓</span>
                 <div><code>await InvokeAsync(StateHasChanged)</code><span>marshals back onto the renderer's thread</span></div>
             </div>
-            <p class="th-when">Event handlers and lifecycle methods already run on that thread —
-                you only need <code>InvokeAsync</code> when <em>you</em> leave it: after a
+            <p class="th-when">Event handlers and lifecycle methods already run on that thread,
+                so you only need <code>InvokeAsync</code> when <em>you</em> leave it: after a
                 <code>Task.Delay</code>, a <code>System.Timers.Timer</code>, or a service event
                 raised off-thread.</p>
         </div>
@@ -32,7 +32,7 @@
 await Task.Delay(TransitionMs);
 _outgoing = null;
 
-// continuation is off-thread now —
+// continuation is off-thread now.
 // marshal back before touching UI
 await InvokeAsync(StateHasChanged);";
 }

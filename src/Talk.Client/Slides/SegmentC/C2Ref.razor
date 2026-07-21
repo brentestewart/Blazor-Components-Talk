@@ -1,6 +1,6 @@
 @namespace Talk.Client.Slides
 
-@* Concept #10 — @ref. The real deck grabs a handle to something and calls a method on it.
+@* Concept #10: @ref. The real deck grabs a handle to something and calls a method on it.
    CodeWindow captures its <code> element with @ref, then hands that ElementReference to the
    JS highlighter. Kept simple: the real file also imports the module and disposes it. *@
 <SplitSlide Title="@RefTitle" WideLeft="true">
@@ -9,29 +9,29 @@
     </Left>
     <Right>
         <div class="ref-side">
-            <p class="ref-lead">Sometimes a parent needs to <strong>reach in and call</strong> —
+            <p class="ref-lead">Sometimes a parent needs to <strong>reach in and call</strong>,
                 not just pass a value. <code>@@ref</code> captures a handle.</p>
             <ul class="ref-kinds">
-                <li><code>ElementReference</code> — a DOM node to hand to JS.
+                <li><code>ElementReference</code>: a DOM node to hand to JS.
                     <span class="ref-real">the deck does this ↑</span></li>
-                <li>A <strong>component</strong> instance — to call its public methods
+                <li>A <strong>component</strong> instance, to call its public methods
                     (<code>_child.Refresh()</code>).</li>
             </ul>
-            <p class="ref-when">Handles are only valid <em>after</em> render — use them in
+            <p class="ref-when">Handles are only valid <em>after</em> render, so use them in
                 <code>OnAfterRender</code>, never in the markup.</p>
         </div>
     </Right>
 </SplitSlide>
 
 @code {
-    private const string RefTitle = "@ref — grab a handle";
+    private const string RefTitle = "@ref: grab a handle";
 
     private const string Source = @"<code @ref=""_code"">@Code</code>
 
 @code {
     ElementReference _code;
 
-    // valid only after render — hand to JS
+    // valid only after render, hand to JS
     protected override void OnAfterRender(bool _)
         => Highlight(_code);
 }";

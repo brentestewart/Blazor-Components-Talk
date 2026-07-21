@@ -1,6 +1,6 @@
 @namespace Talk.Client.Slides
 
-@* A tiny reusable child. It doesn't own any count — it just raises an EventCallback and
+@* A tiny reusable child. It doesn't own any count; it just raises an EventCallback and
    lets the parent decide what a step means. This is "talking back up." *@
 <div class="stepper">
     <button @onclick="() => OnStep.InvokeAsync(-1)" aria-label="decrease">–</button>

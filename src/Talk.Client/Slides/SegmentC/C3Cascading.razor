@@ -1,7 +1,7 @@
 @namespace Talk.Client.Slides
 
-@* Concept #11 — cascading parameters. One provider high in the tree; every descendant that
-   asks can read it, no matter how deep — without threading it through each layer. The real
+@* Concept #11: cascading parameters. One provider high in the tree; every descendant that
+   asks can read it, no matter how deep, without threading it through each layer. The real
    deck wraps the whole stage in <CascadingValue Value="State.Theme">. *@
 <SplitSlide Title="Cascading parameters" Subtitle="Push to all descendants">
     <Left>
@@ -12,13 +12,13 @@
     </Right>
     <Footer>
         <Caption>The deck cascades the current <code>theme</code> once at the top.
-            A slide ten levels deep can grab it — no <code>Theme="…"</code> passed hand to hand
+            A slide ten levels deep can grab it, with no <code>Theme="…"</code> passed hand to hand
             through every parent in between.</Caption>
     </Footer>
 </SplitSlide>
 
 @code {
-    // Real provider — the stage is wrapped in this.
+    // Real provider: the stage is wrapped in this.
     private const string Provider = @"<CascadingValue Value=""State.Theme"">
     <div class=""stage"">
         @* slides render here *@

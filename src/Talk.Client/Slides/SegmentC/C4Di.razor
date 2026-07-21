@@ -1,8 +1,8 @@
 @namespace Talk.Client.Slides
 
-@* Concept #12 — dependency injection. Register a service once; inject it anywhere with
+@* Concept #12: dependency injection. Register a service once; inject it anywhere with
    @inject. Placed here because the state container (next slide) is a DI service. Real detail:
-   an InteractiveAuto app registers it in BOTH Program.cs files — Server and WebAssembly each
+   an InteractiveAuto app registers it in BOTH Program.cs files, since Server and WebAssembly each
    have their own container. *@
 <SplitSlide Title="Dependency injection" Subtitle="Register once, inject anywhere">
     <Left>
@@ -12,7 +12,7 @@
         <CodeWindow FileName="Deck.razor" Language="razor" Code="@Inject" />
     </Right>
     <Footer>
-        <Caption>This deck is <strong>InteractiveAuto</strong> — a component might run on
+        <Caption>This deck is <strong>InteractiveAuto</strong>, so a component might run on
             the Server circuit or in the WebAssembly runtime. Each has its own DI container, so
             <code>DeckState</code> is registered in <em>both</em> <code>Program.cs</code> files.</Caption>
     </Footer>

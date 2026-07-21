@@ -1,8 +1,8 @@
 @namespace Talk.Client.Slides
 
-@* Concept #18 — JS interop, both directions, from the deck's real deck.js. C# → JS: import a
+@* Concept #18: JS interop, both directions, from the deck's real deck.js. C# → JS: import a
    module and call its exports. JS → C#: hand JS a DotNetObjectReference and mark the target
-   [JSInvokable]. Timed to OnAfterRender — the element + JS runtime only exist once interactive. *@
+   [JSInvokable]. Timed to OnAfterRender, since the element + JS runtime only exist once interactive. *@
 <SplitSlide Title="JavaScript interop" WideLeft="true">
     <Left>
         <div class="js-code">
@@ -15,15 +15,15 @@
             <p class="js-lead">C# and JavaScript call <strong>each other</strong> through a
                 module reference.</p>
             <ul>
-                <li><code>IJSObjectReference</code> — a handle to an imported JS module</li>
-                <li><code>DotNetObjectReference</code> + <code>[JSInvokable]</code> — let JS
+                <li><code>IJSObjectReference</code>: a handle to an imported JS module</li>
+                <li><code>DotNetObjectReference</code> + <code>[JSInvokable]</code> let JS
                     call back into C#</li>
-                <li>Only after render — do it in <code>OnAfterRender</code>, when the element
+                <li>Only after render: do it in <code>OnAfterRender</code>, when the element
                     and JS runtime exist</li>
             </ul>
             <p class="js-real">The deck uses it for the two things that truly need the browser:
-                <code>keydown</code> → slide nav, and fullscreen. (Syntax highlighting runs in C#
-                — no interop needed.)</p>
+                <code>keydown</code> → slide nav, and fullscreen. (Syntax highlighting runs in C#,
+                no interop needed.)</p>
         </div>
     </Right>
 </SplitSlide>

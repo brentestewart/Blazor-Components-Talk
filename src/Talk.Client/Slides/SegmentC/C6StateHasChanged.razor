@@ -1,12 +1,12 @@
 @namespace Talk.Client.Slides
 
-@* Concept #13½ — StateHasChanged, introduced before the off-thread gotcha (C7). Blazor
+@* Concept #13½: StateHasChanged, introduced before the off-thread gotcha (C7). Blazor
    re-renders a component automatically after its own events and lifecycle; when state changes
    from somewhere it isn't watching, you call StateHasChanged() to ask. This is the missing
    piece under the state-container subscribe line `State.OnChange += StateHasChanged`. *@
 <Slide Title="StateHasChanged" Subtitle="Ask to re-render">
     <p class="sh-intro">A component re-renders when Blazor <em>knows</em> its state changed.
-        Most of the time it already does — but not always.</p>
+        Most of the time it already does, but not always.</p>
     <div class="sh">
         <div class="sh-card auto">
             <div class="sh-head"><span class="sh-mark">✓</span> Blazor re-renders for you</div>
@@ -26,7 +26,7 @@
         </div>
     </div>
     <Caption Spaced>That's the piece hiding under the container's subscribe line:
-        <code>State.OnChange += StateHasChanged</code> — the <em>service</em> changed, not this
+        <code>State.OnChange += StateHasChanged</code>. The <em>service</em> changed, not this
         component, so it asks to re-render itself.</Caption>
 </Slide>
 

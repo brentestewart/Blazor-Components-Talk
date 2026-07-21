@@ -1,6 +1,6 @@
 @namespace Talk.Client.Slides
 
-@* Concept #3, part two — the same component, reorganized. Logic can move to a code-behind
+@* Concept #3, part two: the same component, reorganized. Logic can move to a code-behind
    partial class, styles to a scoped stylesheet. Both files are optional; they compile into
    the one Slide type. *@
 <Slide Title="…or split across files">
@@ -11,7 +11,7 @@
         <Caption>
             Logic can move to a <strong>code-behind</strong> partial class; styles to a
             <strong>scoped</strong> stylesheet (<span class="tease">CSS isolation</span>). Both files
-            optional — all three compile into the <strong>one</strong> component type.
+            optional; all three compile into the <strong>one</strong> component type.
         </Caption>
     </div>
 </Slide>
@@ -30,7 +30,7 @@
     [Parameter] public RenderFragment? ChildContent { get; set; }
 }";
 
-    // Optional: scoped styles — CSS isolation, applied only to this component (#21).
+    // Optional: scoped styles (CSS isolation), applied only to this component (#21).
     private const string Styles = @".slide { padding: 7vh 9vw; }
 .slide-title { color: var(--accent); font-weight: 800; }";
 }

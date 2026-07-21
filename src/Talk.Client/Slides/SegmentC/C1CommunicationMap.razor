@@ -1,24 +1,24 @@
 @namespace Talk.Client.Slides
 
-@* Concept #9 — how components talk. A map that frames the whole segment: params flow
-   down, EventCallback flows up, and shared state (a DI service) reaches anywhere — the
+@* Concept #9: how components talk. A map that frames the whole segment: params flow
+   down, EventCallback flows up, and shared state (a DI service) reaches anywhere. These are the
    three mechanisms the rest of Segment C dissects in the real deck. *@
 <Slide Title="How components talk to each other">
     <div class="cm">
         <div class="cm-lane down">
             <div class="cm-arrow">↓ down</div>
             <div class="cm-what"><code>[Parameter]</code></div>
-            <div class="cm-desc">Parent hands values <em>down</em> to a child.<br /><span class="cm-eg">Segment B — <code>&lt;Slide Title="…"&gt;</code></span></div>
+            <div class="cm-desc">Parent hands values <em>down</em> to a child.<br /><span class="cm-eg">Segment B: <code>&lt;Slide Title="…"&gt;</code></span></div>
         </div>
         <div class="cm-lane up">
             <div class="cm-arrow">↑ up</div>
             <div class="cm-what"><code>EventCallback</code></div>
-            <div class="cm-desc">Child raises an event back <em>up</em> to its parent.<br /><span class="cm-eg">Segment B — <code>&lt;Stepper OnStep="…"&gt;</code></span></div>
+            <div class="cm-desc">Child raises an event back <em>up</em> to its parent.<br /><span class="cm-eg">Segment B: <code>&lt;Stepper OnStep="…"&gt;</code></span></div>
         </div>
         <div class="cm-lane any">
             <div class="cm-arrow">↔ anywhere</div>
             <div class="cm-what"><code>DeckState</code></div>
-            <div class="cm-desc">A shared service any component can read &amp; change — no parent link needed.<br /><span class="cm-eg">the rest of this segment ↓</span></div>
+            <div class="cm-desc">A shared service any component can read &amp; change, with no parent link needed.<br /><span class="cm-eg">the rest of this segment ↓</span></div>
         </div>
     </div>
     <Caption Spaced>Down and up need a parent–child wire. When two far-apart components

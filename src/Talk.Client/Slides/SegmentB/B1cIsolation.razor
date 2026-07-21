@@ -1,9 +1,9 @@
 @namespace Talk.Client.Slides
 @inherits SteppableSlide
 
-@* Concept #21 — CSS isolation. Step 1: the source — the two components and the scoped stylesheet.
+@* Concept #21: CSS isolation. Step 1: the source, the two components and the scoped stylesheet.
    Step 2: drop Stars (it's served its purpose) and show Review's rendered DOM beside the generated
-   CSS, so the b-a1 rewrite — and why the child's buttons dodge it — is visible. *@
+   CSS, so the b-a1 rewrite, and why the child's buttons dodge it, is visible. *@
 <Slide Title="CSS isolation" Subtitle="…and the ::deep escape hatch">
     <div class="iso-frame">
     <div class="iso">
@@ -38,7 +38,7 @@
         else
         {
             <Caption><code>Review</code> has a stylesheet, so its <code>.box</code> and <code>&lt;h2&gt;</code>
-                get <code>b-a1</code> — but the buttons came from <code>&lt;Stars&gt;</code>, so they don't.
+                get <code>b-a1</code>, but the buttons came from <code>&lt;Stars&gt;</code>, so they don't.
                 <code>button[b-a1]</code> matches none of them; <strong>::deep</strong> moves the tag onto
                 <code>.box</code>, so <code>.box[b-a1] button</code> reaches them regardless.</Caption>
         }
@@ -48,11 +48,11 @@
 @code {
     public override int StepCount => 2;
 
-    // The child component — it renders the buttons.
+    // The child component: it renders the buttons.
     private const string Child = @"<button>★</button>
 <button>★</button>";
 
-    // Your component — it drops <Stars> inside a .box it owns.
+    // Your component: it drops <Stars> inside a .box it owns.
     private const string Parent = @"<div class=""box"">
     <h2>Rate it</h2>
     <Stars />
@@ -69,13 +69,13 @@
     private const string Styles = @"/* ✓ your own <h2> */
 h2 { color: indigo; }
 
-/* ✗ nothing — the buttons live in <Stars> */
+/* ✗ nothing, the buttons live in <Stars> */
 button { color: gold; }
 
 /* ✓ reaches into <Stars> */
 .box ::deep button { color: gold; }";
 
-    // What the build generates — your tag appended to each selector.
+    // What the build generates: your tag appended to each selector.
     private const string StylesGen = @"h2[b-a1]           { color: indigo; }  /* ✓ */
 button[b-a1]       { color: gold; }    /* ✗ the buttons have no b-a1 */
 .box[b-a1] button  { color: gold; }    /* ✓ any button under .box */";

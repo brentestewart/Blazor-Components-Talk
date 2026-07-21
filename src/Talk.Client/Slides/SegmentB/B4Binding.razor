@@ -1,7 +1,7 @@
 @namespace Talk.Client.Slides
 
-@* Concept #6 — data binding. Show the real @bind code beside the live component it drives —
-   the code on the left is exactly what's running on the right. *@
+@* Concept #6: data binding. Show the real @bind code beside the live component it drives.
+   The code on the left is exactly what's running on the right. *@
 <SplitSlide Title="Two-way data binding" WideLeft="true">
     <Left>
         <CodeWindow FileName="Demo.razor" Language="razor" Code="@Source" />
@@ -17,8 +17,8 @@
     </Right>
     <Footer>
         <Caption>
-            Type and the model updates; <strong>Clear</strong> resets the model and the box follows —
-            that's the two-way. <code>@@bind</code> is sugar for a <em>value</em> plus its
+            Type and the model updates; <strong>Clear</strong> resets the model and the box follows.
+            That's the two-way. <code>@@bind</code> is sugar for a <em>value</em> plus its
             <code>ValueChanged</code> callback (the <code>EventCallback</code> on the next slide).
         </Caption>
     </Footer>
