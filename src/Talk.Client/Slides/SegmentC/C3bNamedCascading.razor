@@ -1,0 +1,36 @@
+@namespace Talk.Client.Slides
+
+@* Concept #11b: named cascading. When two cascading values share a type, by-type matching is
+   ambiguous, so give each a Name and have the consumer request one by Name. The property name is
+   independent of the cascade Name. (Illustrative: the deck cascades one theme; two is fictional.) *@
+<SplitSlide Title="Named cascading parameters" Subtitle="Two of a kind? Name them">
+    <Left>
+        <CodeWindow FileName="MainLayout.razor" Language="razor" Code="@Provider" />
+    </Left>
+    <Right>
+        <CodeWindow FileName="DialogButton.razor" Language="razor" Code="@Consumer" />
+    </Right>
+    <Footer>
+        <Caption>By type can't tell two <code>DeckTheme</code>s apart, so give each cascade a
+            <strong>Name</strong>. A consumer asks for the one it wants by that Name. The property
+            name stays free, only the <code>Name</code> has to match.</Caption>
+    </Footer>
+</SplitSlide>
+
+@code {
+    // Two DeckThemes in scope, told apart by Name.
+    private const string Provider = @"<CascadingValue Name=""Page"" Value=""_page"">
+    <CascadingValue Name=""Dialog"" Value=""_dialog"">
+        @Body
+    </CascadingValue>
+</CascadingValue>";
+
+    // Grabs the Dialog one by Name; the property can be called anything.
+    private const string Consumer = @"<button style=""background: @Theme.Accent"">Save</button>
+
+@code {
+    // property name is free; only Name matches
+    [CascadingParameter(Name = ""Dialog"")]
+    DeckTheme Theme { get; set; }
+}";
+}
