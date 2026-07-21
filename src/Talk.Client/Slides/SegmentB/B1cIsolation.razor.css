@@ -4,7 +4,12 @@
     gap: 1.6rem;
     align-items: start;
     margin-top: 0.3rem;
+    /* Both steps reserve the taller step's height, so swapping windows doesn't reflow the
+       slide (the body is centred, so any height change would move the title + caption). */
+    min-height: 21rem;
 }
+
+.iso-cap { min-height: 5.25rem; }
 
 .iso-left { display: flex; flex-direction: column; gap: 0.8rem; }
 

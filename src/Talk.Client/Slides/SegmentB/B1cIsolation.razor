@@ -28,19 +28,21 @@
             }
         </div>
     </div>
-    @if (Step == 0)
-    {
-        <Caption>The build tags every element <code>Review</code> renders with a unique
-            <code>b-…</code> and rewrites each selector to match only those. So which of these three
-            actually hit? <span class="tease">Advance to see what the build generates. →</span></Caption>
-    }
-    else
-    {
-        <Caption><code>Review</code> has a stylesheet, so its <code>.box</code> and <code>&lt;h2&gt;</code>
-            get <code>b-a1</code> — but the buttons came from <code>&lt;Stars&gt;</code>, so they don't.
-            <code>button[b-a1]</code> matches none of them; <strong>::deep</strong> moves the tag onto
-            <code>.box</code>, so <code>.box[b-a1] button</code> reaches them regardless.</Caption>
-    }
+    <div class="iso-cap">
+        @if (Step == 0)
+        {
+            <Caption>The build tags every element <code>Review</code> renders with a unique
+                <code>b-…</code> and rewrites each selector to match only those. So which of these
+                three actually hit? <span class="tease">Advance to see what the build generates. →</span></Caption>
+        }
+        else
+        {
+            <Caption><code>Review</code> has a stylesheet, so its <code>.box</code> and <code>&lt;h2&gt;</code>
+                get <code>b-a1</code> — but the buttons came from <code>&lt;Stars&gt;</code>, so they don't.
+                <code>button[b-a1]</code> matches none of them; <strong>::deep</strong> moves the tag onto
+                <code>.box</code>, so <code>.box[b-a1] button</code> reaches them regardless.</Caption>
+        }
+    </div>
 </Slide>
 
 @code {
