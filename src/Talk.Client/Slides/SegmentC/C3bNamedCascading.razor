@@ -3,20 +3,16 @@
 @* Concept #11b: named cascading. When two cascading values share a type, by-type matching is
    ambiguous, so give each a Name and have the consumer request one by Name. The property name is
    independent of the cascade Name. (Illustrative: the deck cascades one theme; two is fictional.) *@
-<SplitSlide Title="Named cascading parameters" Subtitle="Two of a kind? Name them">
-    <Left>
+<Slide Title="Named cascading parameters" Subtitle="Two of a kind? Name them">
+    <div class="cascade-stack">
         <CodeWindow FileName="MainLayout.razor" Language="razor" Code="@Provider" />
-    </Left>
-    <Right>
         <CodeWindow FileName="DialogButton.razor" Language="razor" Code="@Consumer" />
-    </Right>
-    <Footer>
         <Caption>By type can't tell two <code>DeckTheme</code>s apart, so give each cascade a
             <strong>Name</strong>. A consumer asks for the one it wants by that Name; the property
             name stays free. Named and unnamed don't cross-match: a plain <code>[CascadingParameter]</code>
             won't pick up a named value, or the reverse.</Caption>
-    </Footer>
-</SplitSlide>
+    </div>
+</Slide>
 
 @code {
     // Two DeckThemes in scope, told apart by Name.
