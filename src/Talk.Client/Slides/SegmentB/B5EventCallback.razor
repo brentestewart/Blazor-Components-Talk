@@ -17,6 +17,10 @@
                 <Stepper OnStep="Step" />
             </div>
         </LiveFrame>
+        <Caption Spaced>Why <code>EventCallback&lt;int&gt;</code> instead of a plain
+            <code>Action&lt;int&gt;</code>? Invoking it re-renders the component that supplied the
+            handler — the <strong>parent</strong> — so the count updates on its own. A raw delegate
+            wouldn't; you'd call <code>StateHasChanged</code> yourself. It also awaits async handlers.</Caption>
     </Right>
 </SplitSlide>
 
