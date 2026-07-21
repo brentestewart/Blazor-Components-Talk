@@ -29,10 +29,13 @@
                 <span class="pcs-mark">2&times;</span>
                 <div><code>OnInitializedAsync</code><span>fires on the server prerender <em>and</em> again on the client &mdash; so the fetch runs twice, and the list flickers on hydrate</span></div>
             </div>
-            <div class="pcs-rule pcs-good">
-                <span class="pcs-mark">1&times;</span>
-                <div><code>[PersistentState]</code><span>persists the result after prerender; the client finds it already set and skips the refetch &mdash; the <code>??=</code> is the whole trick</span></div>
-            </div>
+            @if (Step == 1)
+            {
+                <div class="pcs-rule pcs-good">
+                    <span class="pcs-mark">1&times;</span>
+                    <div><code>[PersistentState]</code><span>persists the result after prerender; the client finds it already set and skips the refetch &mdash; the <code>??=</code> is the whole trick</span></div>
+                </div>
+            }
             <p class="pcs-when">Only matters under <strong>prerendering</strong> &mdash; Interactive
                 Server, WebAssembly, or Auto. No prerender, no double run.</p>
         </div>
