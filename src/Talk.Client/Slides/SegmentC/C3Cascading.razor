@@ -23,7 +23,7 @@
 </CascadingValue>";
 
     // A descendant opts in by type (no Name), so the property name is arbitrary, here 'Current'.
-    private const string Consumer = @"<h2 style=""color: @Current.Accent"">Deep slide</h2>
+    private const string Consumer = @"<h2>Deep slide (@Current.AccentName)</h2>
 
 @code {
     [CascadingParameter]

@@ -21,8 +21,9 @@
             </LiveFrame>
             <p class="lead">A library hands you a themed toolkit, buttons, dialogs, data grids, so
                 you're not hand-rolling every control.</p>
-            <p class="real">These are real MudBlazor components. The deck feeds its accent into
-                MudBlazor's <code>MudTheme</code>, so they match the slide with no extra styling.</p>
+            <p class="real">These are real MudBlazor components. Each deck theme <em>is</em> a
+                <code>MudTheme</code>, so they share its palette and match the slide with no extra
+                styling.</p>
         </div>
     </Right>
 </SplitSlide>
@@ -31,6 +32,6 @@
     private const string Setup = @"// Program.cs: register MudBlazor's services once
 builder.Services.AddMudServices();";
 
-    private const string Theme = @"@* one provider drives MudBlazor's whole palette *@
-<MudThemeProvider Theme=""_mudTheme"" IsDarkMode=""IsDark"" />";
+    private const string Theme = @"@* the preset's own MudTheme drives MudBlazor; IsDarkMode picks the mode *@
+<MudThemeProvider Theme=""@theme.Mud"" IsDarkMode=""theme.IsDark"" />";
 }

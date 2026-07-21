@@ -10,10 +10,8 @@
 
 @{
     var t = State.Theme;
-    _mudTheme.PaletteLight.Primary = t.Accent;
-    _mudTheme.PaletteDark.Primary = t.Accent;
 }
-<MudThemeProvider Theme="_mudTheme" IsDarkMode="t.IsDark" />
+<MudThemeProvider Theme="@t.Mud" IsDarkMode="t.IsDark" />
 <CascadingValue Value="State.Theme">
     @* dark/light gates the syntax palette; all colour values live in Deck.razor.css. *@
     <div class="deck @(t.IsDark ? "dark" : "light")">
@@ -126,35 +124,6 @@
 @code {
     [Parameter, EditorRequired]
     public IReadOnlyList<SlideInfo> Slides { get; set; } = Array.Empty<SlideInfo>();
-
-    // MudBlazor theme: surfaces/text/borders come from here (per light/dark palette),
-    // and Primary is set each render from the current preset's accent. The deck maps
-    // these to its --deck-* variables so custom slides and MudBlazor components match.
-    private readonly MudTheme _mudTheme = new()
-    {
-        PaletteLight = new PaletteLight
-        {
-            Background = "#f6f7f9",
-            Surface = "#ffffff",
-            BackgroundGray = "#eef1f4",
-            TextPrimary = "#1b1d23",
-            TextSecondary = "#5b616b",
-            LinesDefault = "#dce1e8",
-            AppbarBackground = "#ffffff",
-            DrawerBackground = "#ffffff",
-        },
-        PaletteDark = new PaletteDark
-        {
-            Background = "#0f1115",
-            Surface = "#12141a",
-            BackgroundGray = "#0b0c10",
-            TextPrimary = "#e8e8ea",
-            TextSecondary = "#9aa0ac",
-            LinesDefault = "#23262f",
-            AppbarBackground = "#0a0b0e",
-            DrawerBackground = "#12141a",
-        },
-    };
 
     /// <summary>1-based slide to open on (from the ?slide= query). Applied once on init.</summary>
     [Parameter] public int? InitialSlide { get; set; }
