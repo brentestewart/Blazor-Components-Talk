@@ -14,18 +14,22 @@ public readonly record struct CodeToken(string Text, string? Kind);
 /// </summary>
 public static partial class CodeHighlighter
 {
-    private const string Keywords =
+    // C#/Razor keywords (the csharp + razor windows).
+    private const string CSharpKeywords =
         "public|private|protected|internal|class|record|struct|interface|void|async|await|new|" +
         "return|if|else|for|foreach|while|in|var|string|int|bool|double|null|true|false|namespace|" +
-        "using|get|set|static|readonly|event|partial|override|virtual|abstract|this|typeof|nameof|" +
-        // JS keywords, for the deck.js windows. None of these appear in the C#/Razor snippets, so
-        // they only ever light up JavaScript.
-        "function|export|const|let";
+        "using|get|set|static|readonly|event|partial|override|virtual|abstract|this|typeof|nameof";
 
-    // Built-in browser objects worth colouring in the deck.js windows. They're lowercase, so the
-    // capitalised-identifier rule below never catches them; we match them explicitly and colour
-    // them as "type" (the built-in accent), not as control keywords.
-    private const string Globals = "document|window|console|navigator";
+    // JavaScript keywords (the deck.js windows). A separate set, selected by language, so C# words
+    // never colour JS and JS words never colour C#.
+    private const string JsKeywords =
+        "function|const|let|var|return|if|else|for|while|do|switch|case|break|continue|in|of|new|" +
+        "delete|typeof|instanceof|await|async|yield|class|extends|export|import|from|null|true|false|" +
+        "undefined|this|void|throw|try|catch|finally";
+
+    // Built-in browser objects, coloured as types (the built-in accent) in the JS path only. They're
+    // lowercase, so the capitalised-identifier rule never catches them; we match them explicitly.
+    private const string JsGlobals = "document|window|console|navigator";
     private static readonly HashSet<string> GlobalSet =
         new(StringComparer.Ordinal) { "document", "window", "console", "navigator" };
 
@@ -40,11 +44,20 @@ public static partial class CodeHighlighter
     // and always match, even glued to text (Deep slide</h2>). Comment/string come first so
     // keywords inside them aren't separately coloured. Comments cover // (C#/Razor), single-line
     // /* */ (CSS), and @* *@ (Razor) — tokenising is per line, so block comments don't span lines.
-    private const string Pattern =
-        $@"(//[^\n]*|/\*.*?\*/|@\*.*?\*@)|(""[^""]*""|'[^']*')|(@(?:{Directives})\b)|(@)|(</[A-Za-z][\w.-]*|(?<!\w)<[A-Za-z][\w.-]*)|\b(?:{Globals})\b|\b(?:{Keywords})\b|\b[A-Z][A-Za-z0-9_]*\b|\b\d[\w.]*\b";
+    // Both patterns share the same five capturing groups (comment, string, @directive, @, tag), so
+    // the group handling in TokenizeLine/Classify is identical; only the keyword alternation differs.
+    // The JS pattern keeps the razor @/tag groups too (they simply never match plain JavaScript).
+    private const string CSharpPattern =
+        $@"(//[^\n]*|/\*.*?\*/|@\*.*?\*@)|(""[^""]*""|'[^']*')|(@(?:{Directives})\b)|(@)|(</[A-Za-z][\w.-]*|(?<!\w)<[A-Za-z][\w.-]*)|\b(?:{CSharpKeywords})\b|\b[A-Z][A-Za-z0-9_]*\b|\b\d[\w.]*\b";
 
-    [GeneratedRegex(Pattern)]
-    private static partial Regex Token();
+    private const string JsPattern =
+        $@"(//[^\n]*|/\*.*?\*/|@\*.*?\*@)|(""[^""]*""|'[^']*')|(@(?:{Directives})\b)|(@)|(</[A-Za-z][\w.-]*|(?<!\w)<[A-Za-z][\w.-]*)|\b(?:{JsGlobals})\b|\b(?:{JsKeywords})\b|\b[A-Z][A-Za-z0-9_]*\b|\b\d[\w.]*\b";
+
+    [GeneratedRegex(CSharpPattern)]
+    private static partial Regex CSharpToken();
+
+    [GeneratedRegex(JsPattern)]
+    private static partial Regex JsToken();
 
     /// <summary>Tokenise each line of <paramref name="code"/> into coloured tokens. CSS has its
     /// own grammar (selectors/properties/values), so it takes a separate path; everything else
@@ -56,13 +69,19 @@ public static partial class CodeHighlighter
             return TokenizeCss(code);
         }
 
+        // Pick the keyword set by language: JS for the deck.js windows, C#/Razor for everything else.
+        var token = IsJavaScript(language) ? JsToken() : CSharpToken();
         var lines = new List<IReadOnlyList<CodeToken>>();
         foreach (var line in code.ReplaceLineEndings("\n").Split('\n'))   // normalise CRLF/CR first
         {
-            lines.Add(TokenizeLine(line));
+            lines.Add(TokenizeLine(line, token));
         }
         return lines;
     }
+
+    private static bool IsJavaScript(string language) =>
+        string.Equals(language, "javascript", StringComparison.OrdinalIgnoreCase) ||
+        string.Equals(language, "js", StringComparison.OrdinalIgnoreCase);
 
     // A small CSS tokenizer. Context matters — the same identifier is a selector, a property, or a
     // value depending on where it sits — so this tracks brace depth and the ':' inside a rule
@@ -191,11 +210,11 @@ public static partial class CodeHighlighter
         return result;
     }
 
-    private static List<CodeToken> TokenizeLine(string src)
+    private static List<CodeToken> TokenizeLine(string src, Regex token)
     {
         var tokens = new List<CodeToken>();
         var last = 0;
-        foreach (Match m in Token().Matches(src))
+        foreach (Match m in token.Matches(src))
         {
             if (m.Index > last)
             {
