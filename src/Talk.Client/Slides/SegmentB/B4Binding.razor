@@ -10,7 +10,7 @@
         <LiveFrame>
             <div class="bind-body">
                 <input class="bind-in" @bind="_text" @bind:event="oninput" placeholder="type here…" />
-                <p class="bind-echo">You typed: <strong>@(_text.Length == 0 ? "—" : _text)</strong></p>
+                <p class="bind-echo">You typed: @_text</p>
                 <button class="bind-clear" @onclick="Clear">Clear</button>
             </div>
         </LiveFrame>
@@ -29,9 +29,10 @@
 
     private void Clear() => _text = string.Empty;
 
-    private const string Source = @"<input @bind=""_text"" @bind:event=""oninput"" />
-<button @onclick=""Clear"">Clear</button>
+    private const string Source = @"<input @bind=""_text"" @bind:event=""oninput""
+       placeholder=""type here…"" />
 <p>You typed: @_text</p>
+<button @onclick=""Clear"">Clear</button>
 
 @code {
     private string _text = """";
