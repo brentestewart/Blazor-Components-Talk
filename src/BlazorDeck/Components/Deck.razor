@@ -62,9 +62,11 @@
             </div>
         </div>
 
-        @if (State.ShowOverview)
+        @* Kept mounted through _overviewClosing so the exit animation can play before the heavy
+           thumbnail grid unmounts (same delayed-unmount idea as the outgoing slide layer). *@
+        @if (State.ShowOverview || _overviewClosing)
         {
-            <div class="overview">
+            <div class="overview @(_overviewClosing ? "closing" : null)">
                 <div class="ov-head">Overview — click to jump (Esc to close)</div>
                 <div class="ov-grid">
                     @foreach (var entry in _indexed)
@@ -74,9 +76,12 @@
                            deck rendering all of itself — "it's all components," taken literally. The
                            stage is pointer-events:none (look, don't touch) and wrapped in an
                            ErrorBoundary so one bad thumbnail can't take the overview down. *@
+                        @* Stagger the entrance; the modulo keeps the cascade short and looping so
+                           whatever cards are on screen animate in over ~0.3s, not 41 × delay. *@
                         <button class="ov-card @(entry.Index == State.Index ? "cur" : "")"
                                 @key="entry.Index" @onclick="() => Jump(entry.Index)"
-                                title="@($"{entry.Index + 1} · {entry.Info.Title}")">
+                                title="@($"{entry.Index + 1} · {entry.Info.Title}")"
+                                style="animation-delay: @(entry.Index % 8 * 40)ms">
                             <div class="ov-thumb">
                                 <div class="ov-stage">
                                     <ErrorBoundary>
@@ -251,6 +256,13 @@
     private CancellationTokenSource? _outCts;
     private const int TransitionMs = 650;
 
+    // Overview open/close animation: on close, keep it mounted and flagged .closing for the exit
+    // animation, then unmount. _ovCts cancels the pending unmount if it's reopened mid-exit.
+    private bool _overviewShown;
+    private bool _overviewClosing;
+    private CancellationTokenSource? _ovCts;
+    private const int OverviewExitMs = 200;
+
     private record OverviewEntry(int Index, SlideInfo Info);
 
     protected override void OnInitialized()
@@ -299,6 +311,32 @@
     {
         try
         {
+            // Overview opened or closed. On close, play the exit animation before unmounting the
+            // (heavy) thumbnail grid; on (re)open, cancel any in-flight exit.
+            if (State.ShowOverview != _overviewShown)
+            {
+                _overviewShown = State.ShowOverview;
+                if (State.ShowOverview)
+                {
+                    _overviewClosing = false;
+                    _ovCts?.Cancel();
+                }
+                else
+                {
+                    _overviewClosing = true;
+                    _overviewScaled = false;   // re-scale + re-scroll on the next open
+                    _ovCts?.Cancel();
+                    _ovCts?.Dispose();
+                    var ovCts = _ovCts = new CancellationTokenSource();
+                    await InvokeAsync(StateHasChanged);
+                    try { await Task.Delay(OverviewExitMs, ovCts.Token); }
+                    catch (TaskCanceledException) { return; }   // reopened mid-exit — leave it mounted
+                    _overviewClosing = false;
+                    await InvokeAsync(StateHasChanged);
+                    return;
+                }
+            }
+
             // Keep slide + settings (theme, transition) in the URL so a reload restores them
             // with no flash — they're read back at init, even during prerender.
             if (_ready && (State.Index != _syncedIndex
@@ -455,6 +493,8 @@
         State.OnChange -= OnStateChanged;
         _outCts?.Cancel();
         _outCts?.Dispose();
+        _ovCts?.Cancel();
+        _ovCts?.Dispose();
         if (_module is not null)
         {
             try

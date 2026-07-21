@@ -296,6 +296,25 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    transform-origin: center;
+    animation: ov-in 0.28s ease both;
+}
+
+/* Exit: the whole panel fades + settles back a touch, then the grid unmounts (kept mounted through
+   the animation by _overviewClosing). Quick, and no reverse card stagger — that reads as sluggish. */
+.overview.closing {
+    animation: ov-out 0.2s ease both;
+    pointer-events: none;
+}
+
+@keyframes ov-in {
+    from { opacity: 0; transform: scale(0.97); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes ov-out {
+    from { opacity: 1; transform: scale(1); }
+    to { opacity: 0; transform: scale(0.98); }
 }
 
 .ov-head {
@@ -343,6 +362,14 @@
     overflow: hidden;
     box-shadow: 0 8px 24px -16px rgba(0, 0, 0, 0.9);
     transition: transform 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
+    /* Staggered entrance (delay set inline per card). 'backwards' fill keeps each card hidden until
+       its turn, then hands control back to the hover transition above once it lands. */
+    animation: ov-card-in 0.34s ease backwards;
+}
+
+@keyframes ov-card-in {
+    from { opacity: 0; transform: translateY(14px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .ov-card:hover {
