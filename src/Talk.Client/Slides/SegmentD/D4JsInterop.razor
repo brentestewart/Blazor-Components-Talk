@@ -29,7 +29,9 @@
 </SplitSlide>
 
 @code {
-    private const string ToJs = @"// C# → JS: import a module, call its exports
+    private const string ToJs = @"@inject IJSRuntime JS
+
+// C# → JS: import a module, call its exports
 var module = await JS.InvokeAsync<IJSObjectReference>(
     ""import"", ""./deck.js"");
 await module.InvokeVoidAsync(""toggleFullscreen"");";
