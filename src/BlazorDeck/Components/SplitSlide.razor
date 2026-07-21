@@ -3,7 +3,7 @@
 @* Layout: two columns (e.g. code + notes), with an optional Footer caption below the split.
    Demonstrates templated components (#15) via named RenderFragments. *@
 <Slide Title="@Title" Subtitle="@Subtitle">
-    <div class="split @(WideLeft ? "wide-left" : null)">
+    <div class="split @(WideLeft ? "wide-left" : null)" style="@RatioStyle">
         <div class="split-left">@Left</div>
         <div class="split-right">@Right</div>
     </div>
@@ -24,4 +24,12 @@
 
     /// <summary>Widen the left column (e.g. code-heavy left, notes right).</summary>
     [Parameter] public bool WideLeft { get; set; }
+
+    /// <summary>Per-slide left:right column ratio (left fraction, right is 1fr). Overrides
+    /// <see cref="WideLeft"/>'s default width when set, e.g. 1.7 for a code-heavy left column.</summary>
+    [Parameter] public double? LeftRatio { get; set; }
+
+    private string? RatioStyle => LeftRatio is { } r
+        ? $"grid-template-columns: {r.ToString(System.Globalization.CultureInfo.InvariantCulture)}fr 1fr;"
+        : null;
 }
