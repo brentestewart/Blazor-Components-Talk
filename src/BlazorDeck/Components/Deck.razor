@@ -246,65 +246,77 @@
         _indexed = Slides.Select((info, i) => new OverviewEntry(i, info)).ToList();
     }
 
-    private async void OnStateChanged()
+    // DeckState.OnChange is an Action, so this handler returns void. Rather than `async void`
+    // (whose exceptions are unobservable), it starts a named task; the one fault we expect is a
+    // transition cancelled by a newer navigation, which the catch below swallows.
+    private void OnStateChanged() => _ = ReactToStateChangeAsync();
+
+    private async Task ReactToStateChangeAsync()
     {
-        // Keep slide + settings (theme, transition) in the URL so a reload restores them
-        // with no flash — they're read back at init, even during prerender.
-        if (_ready && (State.Index != _syncedIndex
-                       || State.ThemeIndex != _syncedTheme
-                       || State.DefaultTransition != _syncedTransition))
+        try
         {
-            // A changed setting is now worth persisting, so let it into the URL.
-            if (State.ThemeIndex != _syncedTheme) _themeInUrl = true;
-            if (State.DefaultTransition != _syncedTransition) _transitionInUrl = true;
+            // Keep slide + settings (theme, transition) in the URL so a reload restores them
+            // with no flash — they're read back at init, even during prerender.
+            if (_ready && (State.Index != _syncedIndex
+                           || State.ThemeIndex != _syncedTheme
+                           || State.DefaultTransition != _syncedTransition))
+            {
+                // A changed setting is now worth persisting, so let it into the URL.
+                if (State.ThemeIndex != _syncedTheme) _themeInUrl = true;
+                if (State.DefaultTransition != _syncedTransition) _transitionInUrl = true;
 
-            _syncedIndex = State.Index;
-            _syncedTheme = State.ThemeIndex;
-            _syncedTransition = State.DefaultTransition;
+                _syncedIndex = State.Index;
+                _syncedTheme = State.ThemeIndex;
+                _syncedTransition = State.DefaultTransition;
 
-            // Slide is a route (/slide/N); theme + transition stay in the query, but
-            // only once they matter — a null value drops the param entirely.
-            var target = Nav.GetUriWithQueryParameters(
-                Nav.ToAbsoluteUri($"slide/{State.Index + 1}").AbsoluteUri,
-                new Dictionary<string, object?>
+                // Slide is a route (/slide/N); theme + transition stay in the query, but
+                // only once they matter — a null value drops the param entirely.
+                var target = Nav.GetUriWithQueryParameters(
+                    Nav.ToAbsoluteUri($"slide/{State.Index + 1}").AbsoluteUri,
+                    new Dictionary<string, object?>
+                    {
+                        ["theme"] = _themeInUrl ? ThemeKey(State.Theme) : null,
+                        ["transition"] = _transitionInUrl ? State.DefaultTransition.ToString() : null,
+                    });
+                Nav.NavigateTo(target, replace: true);
+            }
+
+            if (State.Index != _shownIndex)
+            {
+                // Show the slide we're leaving as the outgoing layer while it animates out.
+                // With no transition there's nothing to animate, so skip the outgoing layer
+                // entirely — otherwise the old slide would sit on top of the new one until the
+                // clear-timer fires. EffectiveTransition already reflects the incoming slide.
+                if (_ready)
                 {
-                    ["theme"] = _themeInUrl ? ThemeKey(State.Theme) : null,
-                    ["transition"] = _transitionInUrl ? State.DefaultTransition.ToString() : null,
-                });
-            Nav.NavigateTo(target, replace: true);
-        }
+                    _hasNavigated = true;
+                    _outgoing = EffectiveTransition == SlideTransition.None ? null : _shownIndex;
+                    _outgoingStep = _shownStep;   // freeze the exiting slide at the step it was showing
+                }
+                _shownIndex = State.Index;
+                _shownStep = State.Step;          // new slide starts at step 0
 
-        if (State.Index != _shownIndex)
-        {
-            // Show the slide we're leaving as the outgoing layer while it animates out.
-            // With no transition there's nothing to animate, so skip the outgoing layer
-            // entirely — otherwise the old slide would sit on top of the new one until the
-            // clear-timer fires. EffectiveTransition already reflects the incoming slide.
-            if (_ready)
-            {
-                _hasNavigated = true;
-                _outgoing = EffectiveTransition == SlideTransition.None ? null : _shownIndex;
-                _outgoingStep = _shownStep;   // freeze the exiting slide at the step it was showing
-            }
-            _shownIndex = State.Index;
-            _shownStep = State.Step;          // new slide starts at step 0
-
-            _outCts?.Cancel();
-            var cts = _outCts = new CancellationTokenSource();
-            await InvokeAsync(StateHasChanged);
-
-            if (_outgoing is not null)
-            {
-                try { await Task.Delay(TransitionMs, cts.Token); }
-                catch (TaskCanceledException) { return; }
-                _outgoing = null;
+                _outCts?.Cancel();
+                _outCts?.Dispose();   // cancel + dispose the previous transition's source before replacing it
+                var cts = _outCts = new CancellationTokenSource();
                 await InvokeAsync(StateHasChanged);
-            }
-            return;
-        }
 
-        _shownStep = State.Step;   // a step change within the current slide
-        await InvokeAsync(StateHasChanged);
+                if (_outgoing is not null)
+                {
+                    await Task.Delay(TransitionMs, cts.Token);   // cancelled if a newer navigation starts
+                    _outgoing = null;
+                    await InvokeAsync(StateHasChanged);
+                }
+                return;
+            }
+
+            _shownStep = State.Step;   // a step change within the current slide
+            await InvokeAsync(StateHasChanged);
+        }
+        catch (TaskCanceledException)
+        {
+            // A newer navigation cancelled this transition's delay — expected; the new one owns the UI.
+        }
     }
 
     private void Jump(int index)
@@ -377,6 +389,8 @@
     public async ValueTask DisposeAsync()
     {
         State.OnChange -= OnStateChanged;
+        _outCts?.Cancel();
+        _outCts?.Dispose();
         if (_module is not null)
         {
             try
