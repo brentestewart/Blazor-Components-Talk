@@ -33,7 +33,8 @@
 }";
 
     // The parent: it handles the callback and owns the count.
-    private const string Parent = @"<Stepper OnStep=""Step"" />
+    private const string Parent = @"<p>@_count</p>
+<Stepper OnStep=""Step"" />
 @code {
     private int _count;
     void Step(int delta) => _count += delta;
