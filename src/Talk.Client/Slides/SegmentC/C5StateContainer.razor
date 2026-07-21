@@ -18,8 +18,8 @@
                 everyone re-renders. That's this whole deck.</Caption>
             <p class="sc-caveat"><span class="sc-caveat-tag">per runtime</span>
                 That sharing holds within one runtime. Under Auto, crossing the Server ↔ WASM
-                boundary starts a fresh instance, so put durable state (the current slide) in the
-                URL or <code>PersistentComponentState</code>; the container keeps the live copy.</p>
+                boundary starts a fresh instance, so durable state (the current slide) lives in the
+                URL; the container just holds the live copy.</p>
         </div>
     </Footer>
 </SplitSlide>
