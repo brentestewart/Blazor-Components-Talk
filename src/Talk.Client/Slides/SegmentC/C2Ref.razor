@@ -1,19 +1,18 @@
 @namespace Talk.Client.Slides
 
-@* Concept #10: @ref. The real deck grabs a handle to something and calls a method on it.
-   CodeWindow captures its <code> element with @ref, then hands that ElementReference to the
-   JS highlighter. Kept simple: the real file also imports the module and disposes it. *@
+@* Concept #10: @ref. An illustrative example, not deck code: capture an <input> and call
+   FocusAsync after the first render. (Highlighting moved to C#, so CodeWindow no longer uses
+   @ref; the deck's only real @ref is the DynamicComponent in Deck.razor, too niche to teach.) *@
 <SplitSlide Title="@RefTitle" WideLeft="true">
     <Left>
-        <CodeWindow FileName="CodeWindow.razor" Language="razor" Code="@Source" />
+        <CodeWindow FileName="SearchBox.razor" Language="razor" Code="@Source" />
     </Left>
     <Right>
         <div class="ref-side">
             <p class="ref-lead">Sometimes a parent needs to <strong>reach in and call</strong>,
                 not just pass a value. <code>@@ref</code> captures a handle.</p>
             <ul class="ref-kinds">
-                <li><code>ElementReference</code>: a DOM node to hand to JS.
-                    <span class="ref-real">the deck does this ↑</span></li>
+                <li><code>ElementReference</code>: a DOM node to focus, measure, or hand to JS.</li>
                 <li>A <strong>component</strong> instance, to call its public methods
                     (<code>_child.Refresh()</code>).</li>
             </ul>
@@ -26,13 +25,15 @@
 @code {
     private const string RefTitle = "@ref: grab a handle";
 
-    private const string Source = @"<code @ref=""_code"">@Code</code>
+    private const string Source = @"<input @ref=""_search"" placeholder=""Search"" />
 
 @code {
-    ElementReference _code;
+    ElementReference _search;
 
-    // valid only after render, hand to JS
-    protected override void OnAfterRender(bool _)
-        => Highlight(_code);
+    // valid only after render
+    protected override async Task OnAfterRenderAsync(bool first)
+    {
+        if (first) await _search.FocusAsync();
+    }
 }";
 }
