@@ -25,12 +25,13 @@ public static partial class CodeHighlighter
         "code|functions|foreach|if|else|for|while|do|switch|using|namespace|inject|page|layout|" +
         "implements|inherits|typeparam|attributes|rendermode|bind|ref|key|onclick|oninput|onchange";
 
-    // Token types, tried left-to-right at each position. The (?<!\w) before a tag's "<" keeps
-    // generics (IEnumerable<TItem>) from being read as tags. Comment/string come first so
+    // Token types, tried left-to-right at each position. The (?<!\w) guards only *opening* tags,
+    // so generics (IEnumerable<TItem>) aren't read as tags; closing tags </x> have no such risk
+    // and always match, even glued to text (Deep slide</h2>). Comment/string come first so
     // keywords inside them aren't separately coloured. Comments cover // (C#/Razor), single-line
     // /* */ (CSS), and @* *@ (Razor) — tokenising is per line, so block comments don't span lines.
     private const string Pattern =
-        $@"(//[^\n]*|/\*.*?\*/|@\*.*?\*@)|(""[^""]*""|'[^']*')|(@(?:{Directives})\b)|(@)|((?<!\w)</?[A-Za-z][\w.-]*)|\b(?:{Keywords})\b|\b[A-Z][A-Za-z0-9_]*\b|\b\d[\w.]*\b";
+        $@"(//[^\n]*|/\*.*?\*/|@\*.*?\*@)|(""[^""]*""|'[^']*')|(@(?:{Directives})\b)|(@)|(</[A-Za-z][\w.-]*|(?<!\w)<[A-Za-z][\w.-]*)|\b(?:{Keywords})\b|\b[A-Z][A-Za-z0-9_]*\b|\b\d[\w.]*\b";
 
     [GeneratedRegex(Pattern)]
     private static partial Regex Token();
