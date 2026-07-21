@@ -21,8 +21,9 @@
             <div class="cm-desc">Any component injects it to read &amp; change the same state, no parent link needed.<br /><span class="cm-eg">this deck: <code>DeckState</code></span></div>
         </div>
     </div>
-    <Caption Spaced>Down and up need a parent–child wire. When two far-apart components
-        need the same state, you reach for the third path.</Caption>
+    <Caption Spaced>Down and up are first-class Blazor features, each needing a parent–child wire.
+        The third is a <strong>pattern</strong>, not a dedicated feature: a service you register in DI
+        and inject anywhere to share state, with no wire needed.</Caption>
 </Slide>
 
 @code {
