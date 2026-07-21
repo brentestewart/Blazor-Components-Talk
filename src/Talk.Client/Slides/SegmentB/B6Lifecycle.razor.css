@@ -35,22 +35,6 @@
 }
 .lc-nested .lc-dot::after { display: none; }        /* no spine off a branch */
 .lc-nested .lc-name { font-size: 1.15rem; }
-
-/* The render is a separate phase SetParametersAsync triggers, not a hook it calls. */
-.lc-divider {
-    list-style: none;
-    display: flex; align-items: center; gap: 0.8rem;
-    margin: 0.1rem 0;
-    color: var(--accent); opacity: 0.75;
-    font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.16em; font-weight: 700;
-}
-.lc-divider::before {
-    content: ""; width: 0.85rem; height: 2px;
-    background: color-mix(in srgb, var(--accent) 45%, var(--deck-border));
-}
-.lc-divider::after {
-    content: ""; flex: 1; height: 1px; background: var(--deck-border);
-}
 .lc-body { display: flex; flex-direction: column; gap: 0.15rem; }
 .lc-name {
     font-family: "Cascadia Code", "JetBrains Mono", ui-monospace, monospace;
