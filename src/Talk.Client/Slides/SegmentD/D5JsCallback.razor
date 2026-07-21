@@ -37,7 +37,7 @@ await module.InvokeVoidAsync(""registerKeys"", meRef);
 [JSInvokable]
 public void OnKey(string key) { /* advance slide */ }";
 
-    private const string Js = @"// deck.js: call back into .NET through the reference
+    private const string Js = @"// dotNetRef is the meRef C# passed to registerKeys; call .NET on it
 export function registerKeys(dotNetRef) {
     document.addEventListener(""keydown"", e => {
         dotNetRef.invokeMethodAsync(""OnKey"", e.key);
