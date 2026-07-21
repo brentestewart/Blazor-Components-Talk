@@ -66,14 +66,37 @@
         {
             <div class="overview">
                 <div class="ov-head">Overview — click to jump (Esc to close)</div>
-                <div class="ov-list">
-                    <Virtualize Items="_indexed" Context="entry">
-                        <div class="ov-item @(entry.Index == State.Index ? "cur" : "")"
-                             @key="entry.Index" @onclick="() => Jump(entry.Index)">
-                            <span class="ov-num">@(entry.Index + 1)</span>
-                            <span class="ov-title">@entry.Info.Title</span>
-                        </div>
-                    </Virtualize>
+                <div class="ov-grid">
+                    @foreach (var entry in _indexed)
+                    {
+                        @* Each card renders the real slide, live, at full size inside a viewport-sized
+                           stage that CSS scales down (--ov-k, set from the window by deck.js). It's the
+                           deck rendering all of itself — "it's all components," taken literally. The
+                           stage is pointer-events:none (look, don't touch) and wrapped in an
+                           ErrorBoundary so one bad thumbnail can't take the overview down. *@
+                        <button class="ov-card @(entry.Index == State.Index ? "cur" : "")"
+                                @key="entry.Index" @onclick="() => Jump(entry.Index)"
+                                title="@($"{entry.Index + 1} · {entry.Info.Title}")">
+                            <div class="ov-thumb">
+                                <div class="ov-stage">
+                                    <ErrorBoundary>
+                                        <ChildContent>
+                                            @* OverviewThumb lets a slide render a lighter version of
+                                               itself in the grid — the iframe demos show a poster here
+                                               instead of booting a real circuit 41 times. *@
+                                            <CascadingValue Name="OverviewThumb" Value="true" IsFixed="true">
+                                                <CascadingValue Name="Step" Value="0">
+                                                    <DynamicComponent Type="entry.Info.Type" />
+                                                </CascadingValue>
+                                            </CascadingValue>
+                                        </ChildContent>
+                                        <ErrorContent></ErrorContent>
+                                    </ErrorBoundary>
+                                </div>
+                            </div>
+                            <div class="ov-cap"><span class="ov-num">@(entry.Index + 1)</span><span class="ov-title">@entry.Info.Title</span></div>
+                        </button>
+                    }
                 </div>
             </div>
         }
@@ -204,6 +227,7 @@
     private IJSObjectReference? _module;
     private DynamicComponent? _slide;   // the current slide instance, for reading its step count
     private ErrorBoundary? _boundary;   // wraps the slide host; Recover() re-attempts a failed slide
+    private bool _overviewScaled;       // whether JS has set the thumbnail scale for the open overview
     private int _shownStep;             // step currently displayed (mirrors State.Step)
     private int _outgoingStep;          // step the exiting slide is frozen at during a transition
     private int _countedIndex = -1;     // last slide index whose step count we read (avoids a per-render read)
@@ -357,6 +381,22 @@
         {
             _countedIndex = State.Index;
             State.SetStepCount((_slide?.Instance as ISteppable)?.StepCount ?? 1);
+        }
+
+        // When the overview opens, have JS compute the thumbnail scale from the live viewport so the
+        // rendered-at-full-size slides shrink faithfully. Reset when it closes so it recomputes next time.
+        if (State.ShowOverview)
+        {
+            if (!_overviewScaled && _module is not null)
+            {
+                _overviewScaled = true;
+                await _module.InvokeVoidAsync("setThumbScale");
+                await _module.InvokeVoidAsync("scrollToCurrentThumb");
+            }
+        }
+        else
+        {
+            _overviewScaled = false;
         }
 
         if (!firstRender) return;

@@ -306,41 +306,103 @@
     margin-bottom: 1rem;
 }
 
-.ov-list {
+.ov-grid {
     flex: 1;
     min-height: 0;
     overflow-y: auto;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    /* Rows size to each card's real height and the grid scrolls — otherwise the fixed-height grid
+       distributes its height across all rows and squeezes every slide onto one screen. */
+    grid-auto-rows: max-content;
+    gap: 1.4rem;
+    align-content: start;
+    padding: 0.5rem 0.25rem 1rem;
 }
 
-.ov-item {
+/* A third column only when there's real room for it. */
+@media (min-width: 1500px) {
+    .ov-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+/* A card: the scaled-down live slide (top) plus a caption (bottom). It's a <button>, so reset the
+   default flex/inline styling to an explicit vertical stack. */
+.ov-card {
     display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.6rem 0.9rem;
-    border: 1px solid var(--deck-border);
-    border-radius: 8px;
-    margin-bottom: 0.5rem;
-    cursor: pointer;
-}
-
-.ov-item:hover {
-    border-color: var(--accent);
-}
-
-.ov-item.cur {
-    border-color: var(--accent);
+    flex-direction: column;
+    padding: 0;
+    /* Mix some foreground into the line so cards read clearly against the dark backdrop (works in
+       light themes too, where --deck-fg is dark). */
+    border: 1px solid color-mix(in srgb, var(--deck-fg) 28%, var(--deck-border));
+    border-radius: 10px;
     background: var(--deck-surface);
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    overflow: hidden;
+    box-shadow: 0 8px 24px -16px rgba(0, 0, 0, 0.9);
+    transition: transform 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
+}
+
+.ov-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent);
+    box-shadow: 0 12px 32px -14px rgba(0, 0, 0, 0.75);
+}
+
+.ov-card.cur {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent), 0 0 26px -6px var(--accent);
+}
+
+/* The window onto the live slide: fixed-height box that clips the full-size, scaled stage. flex:none
+   so the flex-column card can't shrink it away (its content — the stage — is absolutely positioned,
+   so it has no intrinsic height to hold the box open). */
+.ov-thumb {
+    flex: none;
+    position: relative;
+    width: 100%;
+    height: var(--ov-thumb-h, 220px);
+    overflow: hidden;
+    background: var(--deck-bg);
+}
+
+/* The stage is a real viewport (100vw × 100vh) so the slide's vw/vh units and fonts resolve exactly
+   as they do full-screen; the transform shrinks the whole thing by the JS-computed factor. */
+.ov-stage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    transform-origin: top left;
+    transform: scale(var(--ov-k, 0.16));
+    pointer-events: none;
+}
+
+.ov-cap {
+    flex: none;
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border-top: 1px solid var(--deck-border);
 }
 
 .ov-num {
     opacity: 0.5;
     font-variant-numeric: tabular-nums;
-    min-width: 1.5rem;
 }
 
 .ov-title {
-    font-size: 1.05rem;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
+
+.ov-card.cur .ov-title { color: var(--accent); }
 
 .settings {
     position: absolute;

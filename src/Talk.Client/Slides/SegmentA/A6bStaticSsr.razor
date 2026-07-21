@@ -15,7 +15,20 @@
     </Left>
     <Right>
         <LiveFrame Label="static ssr · /demo/static-ssr">
-            <iframe class="demo-frame" src="/demo/static-ssr" title="Static SSR demo"></iframe>
+            @if (IsThumb)
+            {
+                <div class="demo-frame demo-poster">▶ /demo/static-ssr</div>
+            }
+            else
+            {
+                <iframe class="demo-frame" src="/demo/static-ssr" title="Static SSR demo"></iframe>
+            }
         </LiveFrame>
     </Right>
 </SplitSlide>
+
+@code {
+    // In the overview grid the deck sets this so the slide shows a poster instead of loading the
+    // real iframe as a thumbnail. Unset (false) in the normal full-screen render.
+    [CascadingParameter(Name = "OverviewThumb")] private bool IsThumb { get; set; }
+}

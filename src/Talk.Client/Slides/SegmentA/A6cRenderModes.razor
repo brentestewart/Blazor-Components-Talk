@@ -9,8 +9,21 @@
             <strong class="accent">per component instance</strong> — different modes can even sit
             side by side on one static page.</p>
         <LiveFrame Label="live · /demo/render-modes">
-            <iframe class="demo-frame" src="/demo/render-modes" title="Per-component render modes demo"></iframe>
+            @if (IsThumb)
+            {
+                <div class="demo-frame demo-poster">▶ /demo/render-modes</div>
+            }
+            else
+            {
+                <iframe class="demo-frame" src="/demo/render-modes" title="Per-component render modes demo"></iframe>
+            }
         </LiveFrame>
         <Caption Spaced>Same page, two runtimes: one island on a SignalR circuit, one running in WebAssembly.</Caption>
     </div>
 </Slide>
+
+@code {
+    // In the overview grid the deck sets this so the slide shows a poster instead of booting the
+    // real iframe/circuit as a thumbnail. Unset (false) in the normal full-screen render.
+    [CascadingParameter(Name = "OverviewThumb")] private bool IsThumb { get; set; }
+}
