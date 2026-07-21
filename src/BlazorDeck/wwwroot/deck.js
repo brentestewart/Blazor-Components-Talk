@@ -51,12 +51,20 @@ export function setThumbScale() {
     }
 }
 
-// Bring the current slide's card into view when the overview opens. Double rAF so it runs after the
-// scale change above has actually reflowed the cards to their real height — a single frame can fire
-// before the layout settles and scroll against a not-yet-grown grid.
+// Center the current slide's card when the overview opens — but scroll ONLY the grid, never any
+// ancestor. Element.scrollIntoView() walks every scrollable ancestor, and for a card in the last
+// row (which the grid can't scroll far enough to truly center) it reaches up and scrolls the deck's
+// overflow:hidden container, shifting the whole deck up with no scrollbar. Setting grid.scrollTop
+// directly clamps to the grid's own range and leaves everything else put. Double rAF so it runs
+// after the scale change has reflowed the cards to their real height.
 export function scrollToCurrentThumb() {
     requestAnimationFrame(() => requestAnimationFrame(() => {
-        document.querySelector(".ov-card.cur")?.scrollIntoView({ block: "center" });
+        const grid = document.querySelector(".ov-grid");
+        const card = document.querySelector(".ov-card.cur");
+        if (!grid || !card) return;
+        const gridRect = grid.getBoundingClientRect();
+        const cardRect = card.getBoundingClientRect();
+        grid.scrollTop += (cardRect.top - gridRect.top) - (grid.clientHeight - cardRect.height) / 2;
     }));
 }
 
