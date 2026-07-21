@@ -1,4 +1,5 @@
 .close { display: flex; flex-direction: column; gap: 1.6rem; max-width: 92ch; }
+.accent { color: var(--accent); }
 .close-lead { margin: 0; font-size: 1.25rem; line-height: 1.55; }
 .close-recap { font-size: 1.1rem; }
 .close-foot {
