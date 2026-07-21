@@ -59,7 +59,8 @@
             <p class="note">Each submit round-trips to the server, which re-renders the page with the new count.</p>
         </section>
     </main>
-    <script src="_framework/blazor.web.js"></script>
+    @* No blazor.web.js: this page has no interactive islands, so it needs no client runtime at
+       all — that's the whole point. The @onclick is inert and the form is a plain HTML POST. *@
 </body>
 
 </html>

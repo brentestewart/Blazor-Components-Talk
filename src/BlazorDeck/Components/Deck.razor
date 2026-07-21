@@ -27,10 +27,19 @@
             @if (_outgoing is int outIdx)
             {
                 <div class="slide-anim slide-layer @OutgoingClass @DirectionClass" @key="@($"out-{outIdx}")">
-                    @* Freeze the exiting slide at the step it was on, so it doesn't snap back. *@
-                    <CascadingValue Name="Step" Value="_outgoingStep" IsFixed="true">
-                        <DynamicComponent Type="Slides[outIdx].Type" />
-                    </CascadingValue>
+                    @* Freeze the exiting slide at the step it was on, so it doesn't snap back.
+                       Guard it too: if the exiting slide throws on render, swallow it (empty
+                       ErrorContent) — it's animating out and about to be discarded, so there's
+                       nothing to recover. Without this, a slide that throws on render would still
+                       crash the deck as you navigate away from it. *@
+                    <ErrorBoundary>
+                        <ChildContent>
+                            <CascadingValue Name="Step" Value="_outgoingStep" IsFixed="true">
+                                <DynamicComponent Type="Slides[outIdx].Type" />
+                            </CascadingValue>
+                        </ChildContent>
+                        <ErrorContent></ErrorContent>
+                    </ErrorBoundary>
                 </div>
             }
             <div class="slide-anim slide-layer @TransitionClass @DirectionClass" @key="@($"in-{State.Index}")">
