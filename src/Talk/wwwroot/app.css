@@ -1,3 +1,10 @@
+/* FocusOnNavigate (Routes.razor) moves keyboard focus to the slide's <h1> on every navigation so
+   screen readers announce the new title. A heading isn't an interactive control, so hide the focus
+   ring the browser draws around it on each load — the focus move (the accessibility win) is kept. */
+h1:focus {
+    outline: none;
+}
+
 /* The Blazor unhandled-error toast — shown by the framework on an uncaught error.
    Everything else the deck needs comes from MudBlazor + the components' own scoped CSS. */
 #blazor-error-ui {
