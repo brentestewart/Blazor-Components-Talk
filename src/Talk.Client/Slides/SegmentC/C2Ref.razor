@@ -16,8 +16,8 @@
                 <li>A <strong>component</strong> instance, to call its public methods
                     (<code>_child.Refresh()</code>).</li>
             </ul>
-            <p class="ref-when">Handles are only valid <em>after</em> render, so use them in
-                <code>OnAfterRender</code>, never in the markup.</p>
+            <p class="ref-when">A handle isn't valid until the <em>first render</em>, so use it from an
+                event handler or in <code>OnAfterRender</code>, never in the markup or an earlier hook.</p>
         </div>
     </Right>
 </SplitSlide>
