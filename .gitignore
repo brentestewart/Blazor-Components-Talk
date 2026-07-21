@@ -483,3 +483,6 @@ $RECYCLE.BIN/
 
 # Claude Code local settings
 .claude/settings.local.json
+
+# Claude Code agent worktrees (isolated per-agent checkouts — never commit these)
+.claude/worktrees/
