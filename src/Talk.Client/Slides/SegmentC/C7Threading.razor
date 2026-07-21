@@ -4,7 +4,7 @@
    triggered off the renderer's sync context — a timer, a background thread — you must marshal
    with InvokeAsync(StateHasChanged). The real deck hits this in its transition timer: after
    `await Task.Delay(650)` clears the outgoing slide layer, the continuation is off-thread. *@
-<SplitSlide Title="StateHasChanged off-thread — use InvokeAsync" WideLeft="true">
+<SplitSlide Title="StateHasChanged off-thread" Subtitle="Use InvokeAsync" WideLeft="true">
     <Left>
         <CodeWindow FileName="Deck.razor" Language="csharp" Code="@Source" />
     </Left>

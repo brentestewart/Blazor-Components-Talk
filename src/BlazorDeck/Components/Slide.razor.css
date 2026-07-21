@@ -8,13 +8,27 @@
     position: relative;
 }
 
-.slide-title {
+.slide-head {
     margin: 0 0 2.5rem;
+}
+
+.slide-title {
+    margin: 0;
     font-size: clamp(2.4rem, 6vw, 4.4rem);
     font-weight: 800;
     color: var(--accent);
     line-height: 1.05;
     letter-spacing: -0.035em;
+}
+
+.slide-subtitle {
+    margin: 0.6rem 0 0;
+    font-size: clamp(1.2rem, 2.6vw, 2rem);
+    font-weight: 500;
+    color: var(--deck-fg);
+    opacity: 0.6;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
 }
 
 .slide-body {

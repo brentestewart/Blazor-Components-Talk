@@ -2,7 +2,7 @@
 
 @* Showcases a single code file full-width, with an optional Footer caption. Composes the base
    Slide (so title + frame match every other slide); the code pane is the reusable CodeWindow. *@
-<Slide Title="@Title">
+<Slide Title="@Title" Subtitle="@Subtitle">
     <CodeWindow Code="@Code" Language="@Language" FileName="@FileName" Focus="@Focus" Step="@Step" />
     @if (Footer is not null)
     {
@@ -12,6 +12,7 @@
 
 @code {
     [Parameter] public string? Title { get; set; }
+    [Parameter] public string? Subtitle { get; set; }
     [Parameter] public string Code { get; set; } = string.Empty;
     [Parameter] public string Language { get; set; } = "csharp";
     [Parameter] public string? FileName { get; set; }

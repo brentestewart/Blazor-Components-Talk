@@ -2,7 +2,7 @@
 
 @* Layout: two columns (e.g. code + notes), with an optional Footer caption below the split.
    Demonstrates templated components (#15) via named RenderFragments. *@
-<Slide Title="@Title">
+<Slide Title="@Title" Subtitle="@Subtitle">
     <div class="split @(WideLeft ? "wide-left" : null)">
         <div class="split-left">@Left</div>
         <div class="split-right">@Right</div>
@@ -15,6 +15,7 @@
 
 @code {
     [Parameter] public string? Title { get; set; }
+    [Parameter] public string? Subtitle { get; set; }
     [Parameter] public RenderFragment? Left { get; set; }
     [Parameter] public RenderFragment? Right { get; set; }
 

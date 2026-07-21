@@ -7,7 +7,13 @@
 <div class="slide" @attributes="Extra">
     @if (!string.IsNullOrWhiteSpace(Title))
     {
-        <h1 class="slide-title">@Title</h1>
+        <div class="slide-head">
+            <h1 class="slide-title">@Title</h1>
+            @if (!string.IsNullOrWhiteSpace(Subtitle))
+            {
+                <p class="slide-subtitle">@Subtitle</p>
+            }
+        </div>
     }
     <div class="slide-body">
         @ChildContent
@@ -20,6 +26,10 @@
 
 @code {
     [Parameter] public string? Title { get; set; }
+
+    /// <summary>Optional second line under the title — use it instead of an em-dash clause.</summary>
+    [Parameter] public string? Subtitle { get; set; }
+
     [Parameter] public int? Number { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
