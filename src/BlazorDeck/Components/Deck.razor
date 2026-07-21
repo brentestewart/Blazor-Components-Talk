@@ -22,7 +22,8 @@
 }
 <MudThemeProvider Theme="_mudTheme" IsDarkMode="t.IsDark" />
 <CascadingValue Value="State.Theme">
-    <div class="deck" style="--accent:var(--mud-palette-primary); --deck-bg:var(--mud-palette-background); --deck-fg:var(--mud-palette-text-primary); --deck-surface:var(--mud-palette-surface); --deck-surface-2:var(--mud-palette-background-gray); --deck-border:var(--mud-palette-lines-default); --deck-code-comment:@comment; --deck-code-keyword:@kw; --deck-code-type:@ty; --deck-code-string:@str; --deck-code-directive:@dir; --deck-code-tag:@tag; --deck-code-number:@num">
+    @* Only the C#-computed syntax palette is inline (static var() mappings live in Deck.razor.css). *@
+    <div class="deck" style="--deck-code-comment:@comment; --deck-code-keyword:@kw; --deck-code-type:@ty; --deck-code-string:@str; --deck-code-directive:@dir; --deck-code-tag:@tag; --deck-code-number:@num">
         <div class="deck-aurora" aria-hidden="true">
             <span class="blob b1"></span>
             <span class="blob b2"></span>

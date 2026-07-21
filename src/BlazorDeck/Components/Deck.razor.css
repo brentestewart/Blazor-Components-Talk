@@ -1,4 +1,15 @@
 .deck {
+    /* Map MudBlazor's runtime palette to the deck's variable vocabulary that every slide reads.
+       These are pure var() references, so they live here in static CSS. The theme-dependent
+       --deck-code-* syntax colours stay inline in Deck.razor: they come from C# locals, and static
+       CSS can't hold Razor @-expressions. */
+    --accent: var(--mud-palette-primary);
+    --deck-bg: var(--mud-palette-background);
+    --deck-fg: var(--mud-palette-text-primary);
+    --deck-surface: var(--mud-palette-surface);
+    --deck-surface-2: var(--mud-palette-background-gray);
+    --deck-border: var(--mud-palette-lines-default);
+
     position: fixed;
     inset: 0;
     overflow: hidden;
