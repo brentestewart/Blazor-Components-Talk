@@ -8,9 +8,16 @@ Running list of content/ideas Brent wants worked into the deck. Newest additions
       router) is embedded live in an iframe: inert `@onclick`, working form POST with an antiforgery
       token. (Future: could still show `[StreamRendering]` / enhanced-nav behaviors; not covered yet.)
 
-- [ ] **PersistentComponentState.** Solves the prerender→hydrate double-render that the deck's own
-      **Auto/WASM hosting choice** creates (the classic double-fetch flicker). The deck's own load is
-      the demo, so it justifies a hosting decision already made. Fits under lifecycle, not routing.
+- [x] **PersistentComponentState.** Shipped as **slide 18 (`B7Persist`)**, closing Segment B after
+      B6 Lifecycle. Single stepped `CodeWindow`: step 1 is the naive version, step 2 adds
+      `[PersistentState]` and `??=` (the only diff, so the fix is the whole reveal). Explains the
+      prerender→hydrate double-run — `OnInitializedAsync` fires on the server prerender *and* again on
+      the client, so a naive fetch runs twice. **Made-up example by choice** (`Weather`/`Api.Load()`),
+      not dogfooded: this deck solves the same prerender/hydrate continuity via **URL state**
+      (`Deck.razor` `OnInitialized` reads `?theme=`/`?slide=` before first paint → no flash), so there's
+      no double-fetch here to demonstrate. (Note for presenting: confirm the `[PersistentState]`
+      attribute name against the installed .NET 10 SDK — stable underlying API is
+      `PersistentComponentState` + `RegisterOnPersisting` / `PersistAsJson` / `TryTakeFromJson`.)
 
 - [ ] **ErrorBoundary.** Wrap `SlideHost` in `<ErrorBoundary>` — a slide that throws renders a
       fallback instead of killing the whole presentation. Live, memorable, and on-brand for the

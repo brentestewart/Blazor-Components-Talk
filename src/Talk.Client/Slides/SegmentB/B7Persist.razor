@@ -1,0 +1,67 @@
+@namespace Talk.Client.Slides
+@inherits SteppableSlide
+
+@* PersistentComponentState: the prerendering double-run gotcha, placed at the end of the
+   fundamentals now that lifecycle (B6) and render modes (A5) are both taught. Under an
+   interactive render mode a component prerenders on the server, then runs AGAIN on the client,
+   so OnInitializedAsync fires twice and a naive fetch runs twice.
+   Step 1: the naive version (no attribute). Step 2: add [PersistentState] and reuse — the only
+   changes that appear are the attribute line and `=` → `??=`, so the fix is the whole diff.
+   Made-up example by design — this deck keeps its own view-state (theme/slide) in the URL, so it
+   has no double-fetch to dogfood (see Deck.razor OnInitialized). *@
+<SplitSlide Title="PersistentComponentState" Subtitle="Don't fetch twice" WideLeft="true">
+    <Left>
+        <div class="pcs-code">
+            @if (Step == 0)
+            {
+                <span class="pcs-tag bad">before</span>
+            }
+            else
+            {
+                <span class="pcs-tag good">with <code>[PersistentState]</code></span>
+            }
+            <CodeWindow FileName="Weather.razor" Language="csharp" Code="@(Step == 0 ? Before : After)" />
+        </div>
+    </Left>
+    <Right>
+        <div class="pcs-side">
+            <div class="pcs-rule pcs-bad">
+                <span class="pcs-mark">2&times;</span>
+                <div><code>OnInitializedAsync</code><span>fires on the server prerender <em>and</em> again on the client &mdash; so the fetch runs twice, and the list flickers on hydrate</span></div>
+            </div>
+            <div class="pcs-rule pcs-good">
+                <span class="pcs-mark">1&times;</span>
+                <div><code>[PersistentState]</code><span>persists the result after prerender; the client finds it already set and skips the refetch &mdash; the <code>??=</code> is the whole trick</span></div>
+            </div>
+            <p class="pcs-when">Only matters under <strong>prerendering</strong> &mdash; Interactive
+                Server, WebAssembly, or Auto. No prerender, no double run.</p>
+        </div>
+    </Right>
+    <Footer>
+        <Caption>Interactive render modes run your component twice;
+            <code>[PersistentState]</code> stops it <em>fetching</em> twice.</Caption>
+    </Footer>
+</SplitSlide>
+
+@code {
+    public override int StepCount => 2;
+
+    // Step 1 — the naive version. A public property (so the only change on advance is the fix),
+    // fetched on init. OnInitializedAsync runs on the prerender and again on hydrate → fetched twice.
+    private const string Before = @"public Weather[]? Data { get; set; }
+
+protected override async Task
+    OnInitializedAsync() =>
+    Data = await Api.Load();";
+
+    // Step 2 — the fix: the [PersistentState] attribute appears and `=` becomes `??=`.
+    // NOTE: [PersistentState] is the .NET 10 declarative form — confirm the attribute name against
+    // the installed SDK. The stable underlying API is PersistentComponentState +
+    // RegisterOnPersisting / PersistAsJson / TryTakeFromJson.
+    private const string After = @"[PersistentState]
+public Weather[]? Data { get; set; }
+
+protected override async Task
+    OnInitializedAsync() =>
+    Data ??= await Api.Load();";
+}
