@@ -4,19 +4,25 @@
    that holds the current slide and raises OnChange when it moves. It's driving the nav you're
    clicking right now. Kept simple here; the real DeckState also holds theme, transition, and
    overview flags. *@
-<Slide Title="The state container">
-    <div class="sc-stack">
-        <CodeWindow FileName="DeckState.cs" Language="csharp" Code="@Container" />
-        <CodeWindow FileName="Deck.razor" Language="csharp" Code="@Subscriber" />
-        <Caption>Nav, progress bar, counter, overview: all read the <em>same</em>
-            <code>DeckState</code>. One calls <code>Next()</code>; <code>OnChange</code> fires;
-            everyone re-renders. That's this whole deck.</Caption>
-        <p class="sc-caveat"><span class="sc-caveat-tag">auto-mode catch</span>
-            Server and WebAssembly each get their <strong>own</strong> <code>DeckState</code>, so its
-            state doesn't cross the Server → WASM switch. Durable state (the current slide) rides in the
-            URL or <code>PersistentComponentState</code>, not the container.</p>
-    </div>
-</Slide>
+<SplitSlide Title="The state container">
+    <Left>
+        <div class="sc-code">
+            <CodeWindow FileName="DeckState.cs" Language="csharp" Code="@Container" />
+            <CodeWindow FileName="Deck.razor" Language="csharp" Code="@Subscriber" />
+        </div>
+    </Left>
+    <Right>
+        <div class="sc-notes">
+            <Caption>Nav, progress bar, counter, overview all read the <em>same</em>
+                <code>DeckState</code>. One calls <code>Next()</code>; <code>OnChange</code> fires;
+                everyone re-renders. That's this whole deck.</Caption>
+            <p class="sc-caveat"><span class="sc-caveat-tag">per runtime</span>
+                That sharing holds within one runtime. Under Auto, crossing the Server ↔ WASM
+                boundary starts a fresh instance, so put durable state (the current slide) in the
+                URL or <code>PersistentComponentState</code>; the container keeps the live copy.</p>
+        </div>
+    </Right>
+</SplitSlide>
 
 @code {
     // The container: state + an event, no UI.

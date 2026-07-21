@@ -1,7 +1,8 @@
-.sc-stack { display: flex; flex-direction: column; gap: 0.9rem; }
+.sc-code { display: flex; flex-direction: column; gap: 0.9rem; }
+.sc-notes { display: flex; flex-direction: column; gap: 1.1rem; }
 
 .sc-caveat {
-    margin: 0; max-width: 92ch;
+    margin: 0;
     font-size: 1rem; line-height: 1.5; opacity: 0.85;
     padding-left: 1rem;
     border-left: 3px solid color-mix(in srgb, var(--accent) 55%, var(--deck-border));
