@@ -191,7 +191,19 @@ public static partial class CodeHighlighter
             {
                 tokens.Add(new CodeToken(src[last..m.Index], null));   // gap = plain text
             }
-            tokens.Add(new CodeToken(m.Value, Classify(m, src)));
+            if (m.Groups[5].Success)
+            {
+                // A tag: the angle bracket(s) stay neutral punctuation (like the closing ">"),
+                // and only the name is coloured — <div>…</div> reads plain-bracket, coloured-name.
+                var text = m.Value;                                // "<div" or "</div"
+                var nameAt = text.StartsWith("</") ? 2 : 1;
+                tokens.Add(new CodeToken(text[..nameAt], null));   // "<" or "</"
+                tokens.Add(new CodeToken(text[nameAt..], "tag"));  // the tag name
+            }
+            else
+            {
+                tokens.Add(new CodeToken(m.Value, Classify(m, src)));
+            }
             last = m.Index + m.Length;
         }
         if (last < src.Length)
