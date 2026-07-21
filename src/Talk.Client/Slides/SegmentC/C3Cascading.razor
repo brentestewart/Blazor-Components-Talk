@@ -11,9 +11,9 @@
         <CodeWindow FileName="AnySlide.razor" Language="razor" Code="@Consumer" />
     </Right>
     <Footer>
-        <Caption>The deck cascades the current <code>theme</code> once at the top.
-            A slide ten levels deep can grab it, with no <code>Theme="…"</code> passed hand to hand
-            through every parent in between.</Caption>
+        <Caption>The deck cascades the <code>DeckTheme</code> once at the top. A descendant grabs it
+            with <code>[CascadingParameter]</code>, matched by <strong>type</strong>, not by name, so the
+            property can be called anything. Nothing is threaded through the parents in between.</Caption>
     </Footer>
 </SplitSlide>
 
@@ -25,11 +25,12 @@
     </div>
 </CascadingValue>";
 
-    // Any descendant opts in by type, then uses it, here tinting a heading with the accent.
-    private const string Consumer = @"<h2 style=""color: @Theme.Accent"">Deep slide</h2>
+    // A descendant opts in by type (no Name), so the property name is arbitrary, here 'Current'.
+    private const string Consumer = @"<h2 style=""color: @Current.Accent"">Deep slide</h2>
 
 @code {
+    // no Name, so it's matched by type
     [CascadingParameter]
-    DeckTheme Theme { get; set; }
+    DeckTheme Current { get; set; }
 }";
 }
