@@ -1,0 +1,28 @@
+@namespace Talk.Client.Slides
+
+@* Prerendering: formally names the two-phase render the deck has been showing since A6 (the
+   static→interactive flash) and A6c's replay button. Interactive modes render static HTML on the
+   server first, then the runtime hydrates. Sets up the double-run gotcha that B7Persist pays off. *@
+<Slide Title="Prerendering" Subtitle="Static HTML first, then hydrate">
+    <div class="pr">
+        <div class="pr-flow">
+            <div class="pr-phase">
+                <div class="pr-num">1</div>
+                <div class="pr-name">Server prerenders</div>
+                <div class="pr-desc">The component renders to <strong class="accent">static HTML</strong> on
+                    the server and ships immediately — instant first paint, before any runtime loads.</div>
+            </div>
+            <div class="pr-arrow" aria-hidden="true">→</div>
+            <div class="pr-phase">
+                <div class="pr-num">2</div>
+                <div class="pr-name">Client hydrates</div>
+                <div class="pr-desc">The runtime — a SignalR circuit or WebAssembly — starts, re-renders,
+                    and <strong class="accent">wires up interactivity</strong>. Now <code>@@onclick</code> works.</div>
+            </div>
+        </div>
+        <Caption Spaced>It's the flash you saw on A6 (and A6c's replay). The catch: both phases run your
+            init, so <code>OnInitializedAsync</code> fires <strong class="accent">twice</strong> — a fetch
+            runs on the server and again in the browser. That double-run is what
+            <strong class="accent">PersistentComponentState</strong> (coming up) fixes.</Caption>
+    </div>
+</Slide>

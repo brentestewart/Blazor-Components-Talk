@@ -1,0 +1,33 @@
+.pr { display: flex; flex-direction: column; gap: 1.8rem; max-width: 78rem; }
+
+.pr-flow { display: flex; align-items: stretch; gap: 1.2rem; }
+
+.pr-phase {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    padding: 1.6rem 1.7rem;
+    border-radius: 14px;
+    border: 1px solid color-mix(in srgb, var(--deck-border) 55%, var(--deck-fg) 22%);
+    background: color-mix(in srgb, var(--deck-surface) 86%, var(--deck-fg) 9%);
+    box-shadow: 0 16px 40px -28px rgba(0, 0, 0, 0.8);
+}
+
+.pr-num {
+    width: 1.9rem;
+    height: 1.9rem;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--accent);
+    color: var(--deck-bg);
+    font-weight: 700;
+}
+
+.pr-name { font-size: 1.35rem; font-weight: 700; color: var(--accent); }
+.pr-desc { font-size: 1.05rem; line-height: 1.5; opacity: 0.85; }
+.pr-desc code { color: var(--accent); }
+
+.pr-arrow { align-self: center; font-size: 2rem; color: var(--accent); opacity: 0.55; }
