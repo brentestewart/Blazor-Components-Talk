@@ -1,8 +1,5 @@
 .deck {
-    /* Map MudBlazor's runtime palette to the deck's variable vocabulary that every slide reads.
-       These are pure var() references, so they live here in static CSS. The theme-dependent
-       --deck-code-* syntax colours stay inline in Deck.razor: they come from C# locals, and static
-       CSS can't hold Razor @-expressions. */
+    /* Map MudBlazor's runtime palette to the deck's variable vocabulary that every slide reads. */
     --accent: var(--mud-palette-primary);
     --deck-bg: var(--mud-palette-background);
     --deck-fg: var(--mud-palette-text-primary);
@@ -18,6 +15,28 @@
     background-color: var(--deck-bg);
     color: var(--deck-fg);
     font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+/* Syntax palette the CodeHighlighter paints with — one set per mode so code stays legible on
+   either background. Order: comment, keyword, type, string, directive, tag, number.
+   Gated on dark/light (set from t.IsDark in Deck.razor), since it varies by mode, not accent. */
+.deck.dark {
+    --deck-code-comment: #6a9955;
+    --deck-code-keyword: #569cd6;
+    --deck-code-type: #4ec9b0;
+    --deck-code-string: #ce9178;
+    --deck-code-directive: #c586c0;
+    --deck-code-tag: #e5c07b;
+    --deck-code-number: #b5cea8;
+}
+.deck.light {
+    --deck-code-comment: #4d7a2e;
+    --deck-code-keyword: #0057b7;
+    --deck-code-type: #267f99;
+    --deck-code-string: #a31515;
+    --deck-code-directive: #af00db;
+    --deck-code-tag: #7a3e9d;
+    --deck-code-number: #098658;
 }
 
 /* Living aurora: slow-drifting accent light behind everything. */
