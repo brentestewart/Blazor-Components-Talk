@@ -22,6 +22,13 @@ public static partial class CodeHighlighter
         // they only ever light up JavaScript.
         "function|export|const|let";
 
+    // Built-in browser objects worth colouring in the deck.js windows. They're lowercase, so the
+    // capitalised-identifier rule below never catches them; we match them explicitly and colour
+    // them as "type" (the built-in accent), not as control keywords.
+    private const string Globals = "document|window|console|navigator";
+    private static readonly HashSet<string> GlobalSet =
+        new(StringComparer.Ordinal) { "document", "window", "console", "navigator" };
+
     // Structural Razor directives whose whole @word is coloured (unlike @expressions such as
     // @Title, where only the "@" is coloured and the identifier stays a plain variable name).
     private const string Directives =
@@ -34,7 +41,7 @@ public static partial class CodeHighlighter
     // keywords inside them aren't separately coloured. Comments cover // (C#/Razor), single-line
     // /* */ (CSS), and @* *@ (Razor) — tokenising is per line, so block comments don't span lines.
     private const string Pattern =
-        $@"(//[^\n]*|/\*.*?\*/|@\*.*?\*@)|(""[^""]*""|'[^']*')|(@(?:{Directives})\b)|(@)|(</[A-Za-z][\w.-]*|(?<!\w)<[A-Za-z][\w.-]*)|\b(?:{Keywords})\b|\b[A-Z][A-Za-z0-9_]*\b|\b\d[\w.]*\b";
+        $@"(//[^\n]*|/\*.*?\*/|@\*.*?\*@)|(""[^""]*""|'[^']*')|(@(?:{Directives})\b)|(@)|(</[A-Za-z][\w.-]*|(?<!\w)<[A-Za-z][\w.-]*)|\b(?:{Globals})\b|\b(?:{Keywords})\b|\b[A-Z][A-Za-z0-9_]*\b|\b\d[\w.]*\b";
 
     [GeneratedRegex(Pattern)]
     private static partial Regex Token();
@@ -225,6 +232,7 @@ public static partial class CodeHighlighter
 
         var text = m.Value;
         if (char.IsDigit(text[0])) return "number";
+        if (GlobalSet.Contains(text)) return "type";   // built-in browser objects (document, …)
         if (char.IsUpper(text[0])) return IsTypePosition(src, m.Index, m.Index + m.Length) ? "type" : null;
         return "keyword";
     }
