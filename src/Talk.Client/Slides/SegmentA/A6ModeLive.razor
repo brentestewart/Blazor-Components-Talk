@@ -1,4 +1,5 @@
 @namespace Talk.Client.Slides
+@using System.Runtime.InteropServices
 
 <SplitSlide Title="Which mode is this slide?">
     <Left>
@@ -15,6 +16,10 @@
                 <div class="ml-label">running as</div>
                 <div class="ml-name">@RendererInfo.Name</div>
                 <div class="ml-flag">interactive: @(RendererInfo.IsInteractive ? "true" : "false")</div>
+                <dl class="ml-facts">
+                    <dt>runs on</dt><dd>@RuntimeInformation.OSDescription</dd>
+                    <dt>arch</dt><dd>@RuntimeInformation.ProcessArchitecture</dd>
+                </dl>
             </div>
         </LiveFrame>
         <p class="ml-hint">↻ Reload (<kbd>r</kbd>) and watch it flip from

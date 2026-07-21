@@ -1,9 +1,16 @@
-@* A tiny island that reports how it was rendered. Drop it on a page under a @rendermode and it
-   shows its runtime (Static / Server / WebAssembly) and whether it has gone interactive yet. The
-   counter only moves once the island hydrates — proof the render mode actually took. *@
+@using System.Runtime.InteropServices
+@* A tiny island that reports how it was rendered — and proves where it's executing. It shows its
+   runtime (Static / Server / WebAssembly), whether it has gone interactive, and two facts pulled
+   from the actual process: the OS and CPU architecture. The Server island reports the server's own
+   values; the WebAssembly island reports "Browser" / "Wasm" — same component, two runtimes. The
+   counter only moves once the island hydrates. *@
 <div class="probe">
     <div class="probe-mode">@RendererInfo.Name</div>
     <div class="probe-state">@(RendererInfo.IsInteractive ? "● interactive" : "○ static — awaiting hydration")</div>
+    <dl class="probe-facts">
+        <dt>runs on</dt><dd>@RuntimeInformation.OSDescription</dd>
+        <dt>arch</dt><dd>@RuntimeInformation.ProcessArchitecture</dd>
+    </dl>
     <button @onclick="() => _count++" disabled="@(!RendererInfo.IsInteractive)">count: @_count</button>
 </div>
 

@@ -19,14 +19,36 @@
             color: #e8e8ea;
         }
         main { padding: 1.5rem 1.75rem; }
-        .host { margin: 0 0 1.25rem; color: #9aa0ac; }
+        .host { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin: 0 0 1.25rem; color: #9aa0ac; }
+        .host p { margin: 0; }
         .host strong { color: #e8e8ea; }
+        .replay {
+            flex: none;
+            padding: 0.35rem 0.85rem;
+            border-radius: 7px;
+            border: 1px solid #2c3040;
+            background: #1a1d26;
+            color: #e8e8ea;
+            font: inherit;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+        .replay:hover { border-color: #7c8cff; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
         section { border: 1px solid #23262f; border-radius: 10px; padding: 1rem 1.1rem; background: #12141a; }
         h2 { margin: 0 0 0.75rem; font-size: 0.95rem; font-weight: 600; color: #7c8cff; }
         .probe { display: flex; flex-direction: column; gap: 0.5rem; }
         .probe-mode { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.01em; }
         .probe-state { font-size: 0.85rem; color: #9aa0ac; }
+        .probe-facts {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 0.1rem 0.7rem;
+            margin: 0.1rem 0;
+            font-size: 0.82rem;
+        }
+        .probe-facts dt { color: #6b7280; }
+        .probe-facts dd { margin: 0; color: #cfd3db; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
         .probe button {
             align-self: flex-start;
             margin-top: 0.3rem;
@@ -44,7 +66,12 @@
 
 <body>
     <main>
-        <p class="host">This host page is <strong>static SSR</strong>. Each box below is an island with its own render mode.</p>
+        <div class="host">
+            <p>This host page is <strong>static SSR</strong>. Each box below is an island with its own render mode.</p>
+            @* Native onclick — the host is static, so this reloads the document (no Blazor runtime
+               here). Re-runs prerender → hydration so you can watch both islands flip live. *@
+            <button type="button" class="replay" onclick="location.reload()">↻ replay hydration</button>
+        </div>
         <div class="grid">
             <section>
                 <h2>@@rendermode InteractiveServer</h2>
