@@ -15,7 +15,9 @@
             <p class="js-lead">JavaScript calls back into C# through a
                 <code>DotNetObjectReference</code>, a handle to one component instance.</p>
             <ul>
-                <li><code>DotNetObjectReference.Create(this)</code>: wrap the component for JS</li>
+                <li><code>DotNetObjectReference.Create(this)</code>: wrap the component in a handle JS can hold</li>
+                <li><code>InvokeVoidAsync("registerKeys", meRef)</code>: call the JS export, handing it that
+                    handle to keep</li>
                 <li><code>[JSInvokable]</code>: mark the methods JS is allowed to call</li>
                 <li><code>invokeMethodAsync("OnKey", …)</code>: JS invokes C# by method name</li>
             </ul>
