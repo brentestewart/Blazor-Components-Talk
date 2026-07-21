@@ -1,0 +1,17 @@
+.notfound {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    background: #0f1115;
+    color: #e8e8ea;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.notfound h1 { margin: 0; font-size: 5rem; font-weight: 800; color: #7c8cff; letter-spacing: -0.02em; }
+.notfound p { margin: 0; opacity: 0.7; }
+.notfound a { margin-top: 1.2rem; color: #7c8cff; text-decoration: none; }
+.notfound a:hover { text-decoration: underline; }
