@@ -21,13 +21,14 @@
             <ul>
                 <li>a shared service raises an event <span class="sh-eg">← <code>DeckState</code></span></li>
                 <li>a timer or background callback fires</li>
-                <li>you change state after an <code>await</code></li>
+                <li>you want an interim render during a long <code>async</code> method</li>
             </ul>
         </div>
     </div>
-    <Caption Spaced>That's the piece hiding under the container's subscribe line:
-        <code>State.OnChange += StateHasChanged</code>. The <em>service</em> changed, not this
-        component, so it asks to re-render itself.</Caption>
+    <Caption Spaced>When a shared service like <code>DeckState</code> changes, the update came from
+        the service, not from this component, so Blazor won't re-render on its own. That's why each
+        subscriber runs <code>DeckState.OnChange += StateHasChanged</code>: when the service fires,
+        the component calls <code>StateHasChanged</code> to re-render itself.</Caption>
 </Slide>
 
 @code {
