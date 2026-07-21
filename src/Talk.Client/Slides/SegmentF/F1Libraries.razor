@@ -1,0 +1,46 @@
+@namespace Talk.Client.Slides
+
+@* Concept #23: component libraries (RCLs). BlazorDeck is a Razor Class Library; the Talk apps just
+   reference it, and its components + static assets ship under _content/BlazorDeck/. This is the
+   whole deck's foundation, and it explains the _content/ path from the JS interop slide. *@
+<SplitSlide Title="Component libraries" Subtitle="The RCL this deck runs on" WideLeft="true">
+    <Left>
+        <div class="code-stack">
+            <CodeWindow FileName="BlazorDeck.csproj" Language="xml" Code="@Rcl" />
+            <CodeWindow FileName="Talk.Client.csproj" Language="xml" Code="@Consumer" />
+        </div>
+    </Left>
+    <Right>
+        <div class="side">
+            <p class="lead">A <strong>Razor Class Library</strong> packages components and their
+                static assets so any app can reference them. <code>BlazorDeck</code> is one, and this
+                whole deck is built from it.</p>
+            <ul>
+                <li><code>Sdk="Microsoft.NET.Sdk.Razor"</code>: the project type that bundles
+                    <code>.razor</code> components and their scoped CSS</li>
+                <li>static assets (JS, CSS, images) ship too, served under
+                    <code>_content/{LibraryName}/</code></li>
+                <li>reference it like any project or NuGet package, then <code>@@using</code> its
+                    namespace and drop the components in</li>
+            </ul>
+            <p class="real"><code>Slide</code>, <code>SplitSlide</code>, <code>CodeWindow</code>,
+                <code>Deck</code> all live in <code>BlazorDeck</code>, and <code>deck.js</code> loaded
+                from <code>_content/BlazorDeck/deck.js</code>, that RCL asset path from the interop
+                slide.</p>
+        </div>
+    </Right>
+</SplitSlide>
+
+@code {
+    private const string Rcl = @"<Project Sdk=""Microsoft.NET.Sdk.Razor"">
+  <ItemGroup>
+    <PackageReference Include=""MudBlazor"" Version=""9.7.0"" />
+  </ItemGroup>
+</Project>";
+
+    private const string Consumer = @"<Project Sdk=""Microsoft.NET.Sdk.BlazorWebAssembly"">
+  <ItemGroup>
+    <ProjectReference Include=""..\BlazorDeck\BlazorDeck.csproj"" />
+  </ItemGroup>
+</Project>";
+}

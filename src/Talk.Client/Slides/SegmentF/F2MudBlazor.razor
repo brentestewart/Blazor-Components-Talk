@@ -1,0 +1,36 @@
+@namespace Talk.Client.Slides
+
+@* Concept #24: MudBlazor, a real third-party component library the deck already uses. AddMudServices
+   in Program.cs, one MudThemeProvider in Deck.razor fed by DeckTheme, so MudBlazor's palette tracks
+   the deck's accent. The live components on the right are real MudBlazor, themed by that sharing. *@
+<SplitSlide Title="MudBlazor" Subtitle="Third-party components, themed to match" WideLeft="true">
+    <Left>
+        <div class="mud-code">
+            <CodeWindow FileName="Program.cs" Language="csharp" Code="@Setup" />
+            <CodeWindow FileName="Deck.razor" Language="razor" Code="@Theme" />
+        </div>
+    </Left>
+    <Right>
+        <div class="mud-side">
+            <LiveFrame Label="live: real MudBlazor">
+                <div class="mud-demo">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary">Primary</MudButton>
+                    <MudButton Variant="Variant.Outlined" Color="Color.Primary">Outlined</MudButton>
+                    <MudProgressLinear Color="Color.Primary" Value="64" Class="mud-bar" />
+                </div>
+            </LiveFrame>
+            <p class="lead">A library hands you a themed toolkit, buttons, dialogs, data grids, so
+                you're not hand-rolling every control.</p>
+            <p class="real">These are real MudBlazor components. The deck feeds its accent into
+                MudBlazor's <code>MudTheme</code>, so they match the slide with no extra styling.</p>
+        </div>
+    </Right>
+</SplitSlide>
+
+@code {
+    private const string Setup = @"// Program.cs — register MudBlazor's services once
+builder.Services.AddMudServices();";
+
+    private const string Theme = @"@* one provider drives MudBlazor's whole palette *@
+<MudThemeProvider Theme=""_mudTheme"" IsDarkMode=""IsDark"" />";
+}

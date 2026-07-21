@@ -1,0 +1,9 @@
+.code-stack { display: flex; flex-direction: column; gap: 0.9rem; }
+.side { display: flex; flex-direction: column; gap: 0.95rem; }
+.lead { margin: 0; font-size: 1.1rem; line-height: 1.5; }
+.lead code, .lead strong { color: var(--accent); }
+.side ul { margin: 0; padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.6rem; font-size: 1.02rem; line-height: 1.4; opacity: 0.9; }
+.side ul code { color: var(--accent); }
+.real { margin: 0; font-size: 1rem; opacity: 0.8; line-height: 1.5;
+    padding-top: 0.85rem; border-top: 1px solid var(--deck-border); }
+.real code { color: var(--accent); }
