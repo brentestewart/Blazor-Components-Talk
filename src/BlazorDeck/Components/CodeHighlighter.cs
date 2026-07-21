@@ -17,7 +17,10 @@ public static partial class CodeHighlighter
     private const string Keywords =
         "public|private|protected|internal|class|record|struct|interface|void|async|await|new|" +
         "return|if|else|for|foreach|while|in|var|string|int|bool|double|null|true|false|namespace|" +
-        "using|get|set|static|readonly|event|partial|override|virtual|abstract|this|typeof|nameof";
+        "using|get|set|static|readonly|event|partial|override|virtual|abstract|this|typeof|nameof|" +
+        // JS keywords, for the deck.js windows. None of these appear in the C#/Razor snippets, so
+        // they only ever light up JavaScript.
+        "function|export|const|let";
 
     // Structural Razor directives whose whole @word is coloured (unlike @expressions such as
     // @Title, where only the "@" is coloured and the identifier stays a plain variable name).
