@@ -6,12 +6,12 @@
    overview flags. *@
 <SplitSlide Title="The state container">
     <Left>
-        <div class="sc-code">
-            <CodeWindow FileName="DeckState.cs" Language="csharp" Code="@Container" />
-            <CodeWindow FileName="Deck.razor" Language="csharp" Code="@Subscriber" />
-        </div>
+        <CodeWindow FileName="DeckState.cs" Language="csharp" Code="@Container" />
     </Left>
     <Right>
+        <CodeWindow FileName="Deck.razor" Language="csharp" Code="@Subscriber" />
+    </Right>
+    <Footer>
         <div class="sc-notes">
             <Caption>Nav, progress bar, counter, overview all read the <em>same</em>
                 <code>DeckState</code>. One calls <code>Next()</code>; <code>OnChange</code> fires;
@@ -21,7 +21,7 @@
                 boundary starts a fresh instance, so put durable state (the current slide) in the
                 URL or <code>PersistentComponentState</code>; the container keeps the live copy.</p>
         </div>
-    </Right>
+    </Footer>
 </SplitSlide>
 
 @code {
