@@ -1,0 +1,27 @@
+@page "/mvvm-sample"
+@inherits ViewModelComponentBase<SampleViewModel>
+
+@* The component is almost all markup: it binds to the VM and forwards a click. All the logic —
+   loading, busy state, errors — lives in SampleViewModel. @Vm is the injected view model. *@
+
+<h3>People</h3>
+
+@if (Vm.IsProcessing)
+{
+    <p><em>@Vm.ProcessingMessage</em></p>
+}
+else if (Vm.ErrorMessage is not null)
+{
+    <p class="error">@Vm.ErrorMessage</p>
+}
+else
+{
+    <ul>
+        @foreach (var person in Vm.People)
+        {
+            <li>@person</li>
+        }
+    </ul>
+}
+
+<button @onclick="Vm.Refresh" disabled="@Vm.IsProcessing">Refresh</button>

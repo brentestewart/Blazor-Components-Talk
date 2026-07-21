@@ -1,0 +1,60 @@
+@using MvvmSample.Example
+@* Standalone host page for the MVVM sample, served OUTSIDE the deck's router (see Program.cs).
+   The document itself is static SSR; the sample is an InteractiveServer island, so its button and
+   busy-state actually run. This is the code walked through live during the talk — the reusable
+   files live in samples/mvvm/MvvmSample. *@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="/" />
+    <title>MVVM sample</title>
+    <style>
+        :root { color-scheme: dark; }
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+            background: #0f1115;
+            color: #e8e8ea;
+        }
+        main { padding: 1.5rem 1.75rem; }
+        .host { margin: 0 0 1.25rem; color: #9aa0ac; }
+        .host p { margin: 0; }
+        .host strong { color: #e8e8ea; }
+        .host code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: #cfd3db; }
+        section { border: 1px solid #23262f; border-radius: 10px; padding: 1rem 1.25rem; background: #12141a; }
+        section h3 { margin: 0 0 0.75rem; font-size: 0.95rem; font-weight: 600; color: #7c8cff; }
+        section ul { margin: 0.25rem 0; padding-left: 1.2rem; }
+        section li { margin: 0.15rem 0; }
+        section .error { color: #e5484d; }
+        section button {
+            margin-top: 0.6rem;
+            padding: 0.4rem 0.9rem;
+            border-radius: 7px;
+            border: 1px solid #2c3040;
+            background: #1a1d26;
+            color: #e8e8ea;
+            font: inherit;
+            cursor: pointer;
+        }
+        section button:hover:enabled { border-color: #7c8cff; }
+        section button:disabled { opacity: 0.5; cursor: default; }
+    </style>
+</head>
+
+<body>
+    <main>
+        <div class="host">
+            <p>The page binds to a <strong>view model</strong> that holds the state and logic; the
+               component is almost all markup. Source in <code>samples/mvvm/MvvmSample</code>.</p>
+        </div>
+        <section>
+            <SamplePage @rendermode="InteractiveServer" />
+        </section>
+    </main>
+    <script src="_framework/blazor.web.js"></script>
+</body>
+
+</html>

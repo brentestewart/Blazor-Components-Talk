@@ -14,6 +14,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BlazorDeck\BlazorDeck.csproj" />
+    <!-- MVVM sample: rendered as an InteractiveServer island at /demo/mvvm (see Program.cs). -->
+    <ProjectReference Include="..\..\samples\mvvm\MvvmSample\MvvmSample.csproj" />
   </ItemGroup>
 
 </Project>

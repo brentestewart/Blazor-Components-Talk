@@ -4,6 +4,9 @@
     <Project Path="src/Talk.Client/Talk.Client.csproj" />
     <Project Path="src/Talk/Talk.csproj" />
   </Folder>
+  <Folder Name="/samples/">
+    <Project Path="samples/mvvm/MvvmSample/MvvmSample.csproj" />
+  </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/BlazorDeck.Tests/BlazorDeck.Tests.csproj" />
   </Folder>

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using MudBlazor.Services;
 using BlazorDeck.Services;
+using MvvmSample;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,9 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddMudServices();
 builder.Services.AddScoped<DeckState>();
+
+// MVVM sample services (view models + their dependencies) for the /demo/mvvm host page.
+builder.Services.AddMvvmSample();
 
 var app = builder.Build();
 
@@ -50,5 +54,10 @@ app.MapPost("/demo/static-ssr",
         new Dictionary<string, object?> { ["Count"] = count + 1 }));
 app.MapGet("/demo/render-modes",
     () => new RazorComponentResult<RenderModesDemo>());
+
+// MVVM sample: a static host document with the sample rendered as an InteractiveServer island,
+// so its button + busy-state actually run. The pattern's source lives in samples/mvvm/MvvmSample.
+app.MapGet("/demo/mvvm",
+    () => new RazorComponentResult<MvvmDemo>());
 
 app.Run();
