@@ -1,7 +1,8 @@
 .stack { display: flex; flex-direction: column; gap: 0.9rem; }
+.tp-live { margin: 0 0 1.3rem; }
 .tp-lead { margin: 0 0 1rem; font-size: 1.1rem; line-height: 1.5; }
 .tp-lead em { font-style: normal; color: var(--accent); }
-.tp-list { margin: 0 0 1.3rem; padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.55rem; font-size: 1.02rem; }
+.tp-list { margin: 0; padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.55rem; font-size: 1.02rem; }
 .tp-lead code, .tp-list code { color: var(--accent); }
 
 /* The Card is rendered by the Card component (and wrapped by LiveFrame), so reach it with
