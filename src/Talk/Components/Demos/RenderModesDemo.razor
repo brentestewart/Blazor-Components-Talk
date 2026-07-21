@@ -1,0 +1,62 @@
+@* Standalone static host page, served OUTSIDE the deck's interactive router via a minimal
+   endpoint (see Program.cs). The document itself is static SSR; each box is an island with its
+   own render mode, so Server and WebAssembly report themselves side by side. Meant to be embedded
+   in a slide with <iframe src="/demo/render-modes">. *@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="/" />
+    <title>Render modes</title>
+    <style>
+        :root { color-scheme: dark; }
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+            background: #0f1115;
+            color: #e8e8ea;
+        }
+        main { padding: 1.5rem 1.75rem; }
+        .host { margin: 0 0 1.25rem; color: #9aa0ac; }
+        .host strong { color: #e8e8ea; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        section { border: 1px solid #23262f; border-radius: 10px; padding: 1rem 1.1rem; background: #12141a; }
+        h2 { margin: 0 0 0.75rem; font-size: 0.95rem; font-weight: 600; color: #7c8cff; }
+        .probe { display: flex; flex-direction: column; gap: 0.5rem; }
+        .probe-mode { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.01em; }
+        .probe-state { font-size: 0.85rem; color: #9aa0ac; }
+        .probe button {
+            align-self: flex-start;
+            margin-top: 0.3rem;
+            padding: 0.4rem 0.9rem;
+            border-radius: 7px;
+            border: 1px solid #2c3040;
+            background: #1a1d26;
+            color: #e8e8ea;
+            font: inherit;
+            cursor: pointer;
+        }
+        .probe button:disabled { opacity: 0.5; cursor: default; }
+    </style>
+</head>
+
+<body>
+    <main>
+        <p class="host">This host page is <strong>static SSR</strong>. Each box below is an island with its own render mode.</p>
+        <div class="grid">
+            <section>
+                <h2>@@rendermode InteractiveServer</h2>
+                <RenderModeProbe @rendermode="InteractiveServer" />
+            </section>
+            <section>
+                <h2>@@rendermode InteractiveWebAssembly</h2>
+                <RenderModeProbe @rendermode="InteractiveWebAssembly" />
+            </section>
+        </div>
+    </main>
+    <script src="_framework/blazor.web.js"></script>
+</body>
+
+</html>

@@ -1,4 +1,7 @@
 using Talk.Components;
+using Talk.Components.Demos;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using MudBlazor.Services;
 using BlazorDeck.Services;
 
@@ -35,5 +38,17 @@ app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(Talk.Client._Imports).Assembly);
+
+// Standalone render-mode demos, served OUTSIDE the deck's globally-interactive <Routes>.
+// Each is its own static SSR document (via RazorComponentResult) that a slide embeds in an
+// <iframe> — the iframe boundary keeps them isolated from the deck's interactive router.
+app.MapGet("/demo/static-ssr",
+    (int count = 0) => new RazorComponentResult<StaticSsrDemo>(
+        new Dictionary<string, object?> { ["Count"] = count }));
+app.MapPost("/demo/static-ssr",
+    ([FromForm] int count) => new RazorComponentResult<StaticSsrDemo>(
+        new Dictionary<string, object?> { ["Count"] = count + 1 }));
+app.MapGet("/demo/render-modes",
+    () => new RazorComponentResult<RenderModesDemo>());
 
 app.Run();

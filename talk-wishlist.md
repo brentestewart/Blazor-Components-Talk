@@ -2,14 +2,11 @@
 
 Running list of content/ideas Brent wants worked into the deck. Newest additions at the bottom.
 
-- [ ] **Static SSR — how a component behaves with no interactivity.** The counterpart to the
-      whole interactive story. Under static SSR: `OnInitialized`/`OnParametersSet` run but there's
-      **no re-render** (`StateHasChanged` is a no-op, `OnAfterRender` never fires); `@onclick` and
-      other handlers are inert → interaction happens via **form POST / enhanced form handling**;
-      `[StreamRendering]` changes how async content flushes; enhanced navigation patches the DOM
-      instead of reloading. Slot it right after A5 (four render modes) so the audience knows which
-      world each later lesson assumes. It's a component-behavior lesson, not plumbing — the same
-      components, different rules. Ties back to B6 lifecycle, C6 `StateHasChanged`, B5 `EventCallback`.
+- [x] **Static SSR — how a component behaves with no interactivity.** Shipped as **slide 7
+      (`A6bStaticSsr`)**. The deck is interactive so it can't be static from the inside — instead a
+      genuinely static page (`/demo/static-ssr`, a `RazorComponentResult` served outside the deck's
+      router) is embedded live in an iframe: inert `@onclick`, working form POST with an antiforgery
+      token. (Future: could still show `[StreamRendering]` / enhanced-nav behaviors; not covered yet.)
 
 - [ ] **PersistentComponentState.** Solves the prerender→hydrate double-render that the deck's own
       **Auto/WASM hosting choice** creates (the classic double-fetch flicker). The deck's own load is
@@ -25,9 +22,11 @@ Running list of content/ideas Brent wants worked into the deck. Newest additions
       `EditContext` cascade), so it earns a place on component grounds. `PlaygroundSlide` could grow
       a validated parameter editor to carry it.
 
-- [ ] **Per-component `@rendermode`.** A5/A6 teach render modes at the *page* level; .NET 8+ lets you
-      drop a single `InteractiveServer` island into the WASM spine. One Server-rendered slide inside
-      the WASM deck = the whole concept on one screen. Extends A5/A6 from page-level to instance-level.
+- [x] **Per-component `@rendermode`.** Shipped as **slide 8 (`A6cRenderModes`)**. A static host page
+      (`/demo/render-modes`, served outside the deck's router) carries an `InteractiveServer` island
+      and an `InteractiveWebAssembly` island side by side, each reporting its own mode — the whole
+      instance-level concept on one screen, embedded live via iframe. (Couldn't be an island *inside*
+      the deck itself: the deck's router is globally interactive, so a static host had to be carved out.)
 
 - [ ] **Show the different ways to bind.** Slide 13 (B4Binding) covers the core two-way
       `@bind` + `@bind:event`. Consider showing the other modifiers: `@bind:format`,

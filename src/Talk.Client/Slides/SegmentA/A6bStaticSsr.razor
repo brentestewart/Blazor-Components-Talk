@@ -1,0 +1,21 @@
+@namespace Talk.Client.Slides
+
+@* The deck is interactive, so it can't demonstrate Static SSR from the inside. This slide embeds
+   a genuinely static page (served outside the deck's router, see /demo/static-ssr) in an iframe,
+   live. Split layout — the behaviour needs narrating, so prose left, demo right. *@
+<SplitSlide Title="Static SSR — no runtime" LeftRatio="1.1">
+    <Left>
+        <p>This deck is interactive, so it can't <em>be</em> static. On the right is a real
+            static page, embedded live.</p>
+        <p>The <strong class="accent">@@onclick</strong> button is wired up — but nothing runs in
+            the browser, so clicking it does nothing.</p>
+        <p>The <strong class="accent">form</strong> still works, the old-fashioned way: each POST
+            round-trips to the server, which re-renders the page with the new count.</p>
+        <Caption Spaced>No circuit, no WebAssembly — just HTML over HTTP.</Caption>
+    </Left>
+    <Right>
+        <LiveFrame Label="static ssr · /demo/static-ssr">
+            <iframe class="demo-frame" src="/demo/static-ssr" title="Static SSR demo"></iframe>
+        </LiveFrame>
+    </Right>
+</SplitSlide>

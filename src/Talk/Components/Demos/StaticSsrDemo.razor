@@ -1,0 +1,71 @@
+@* Standalone static SSR page, served OUTSIDE the deck's interactive router via a minimal endpoint
+   (see Program.cs). No render mode: it renders on the server and ships as HTML. The @onclick is
+   wired but inert (no runtime to handle it); the form POST does work — each submit round-trips to
+   the server, which re-renders with the new count. Embedded in a slide with <iframe>. *@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="/" />
+    <title>Static SSR</title>
+    <style>
+        :root { color-scheme: dark; }
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+            background: #0f1115;
+            color: #e8e8ea;
+        }
+        main { padding: 1.5rem 1.75rem; }
+        h1 { margin: 0 0 0.35rem; font-size: 1.5rem; }
+        .lede { margin: 0 0 1.5rem; color: #9aa0ac; }
+        section { border: 1px solid #23262f; border-radius: 10px; padding: 1rem 1.1rem; background: #12141a; margin-bottom: 1rem; }
+        h2 { margin: 0 0 0.6rem; font-size: 0.95rem; font-weight: 600; color: #7c8cff; }
+        p.note { margin: 0.6rem 0 0; font-size: 0.85rem; color: #9aa0ac; }
+        button {
+            padding: 0.4rem 0.9rem;
+            border-radius: 7px;
+            border: 1px solid #2c3040;
+            background: #1a1d26;
+            color: #e8e8ea;
+            font: inherit;
+            cursor: pointer;
+        }
+        .count { margin-left: 0.6rem; color: #9aa0ac; }
+    </style>
+</head>
+
+<body>
+    <main>
+        <h1>Static SSR</h1>
+        <p class="lede">This page has no render mode. It rendered on the server and shipped as plain HTML.</p>
+
+        <section>
+            <h2>@@onclick is inert</h2>
+            <button @onclick="() => _clicks++">Clicked @_clicks times</button>
+            <p class="note">The handler is wired, but with no interactive runtime the click does nothing.</p>
+        </section>
+
+        <section>
+            <h2>A form POST does work</h2>
+            <form method="post" action="/demo/static-ssr">
+                <AntiforgeryToken />
+                <input type="hidden" name="count" value="@Count" />
+                <button type="submit">POST +1</button>
+                <span class="count">server count: @Count</span>
+            </form>
+            <p class="note">Each submit round-trips to the server, which re-renders the page with the new count.</p>
+        </section>
+    </main>
+    <script src="_framework/blazor.web.js"></script>
+</body>
+
+</html>
+
+@code {
+    private int _clicks;
+
+    [Parameter] public int Count { get; set; }
+}

@@ -1,0 +1,12 @@
+@* A tiny island that reports how it was rendered. Drop it on a page under a @rendermode and it
+   shows its runtime (Static / Server / WebAssembly) and whether it has gone interactive yet. The
+   counter only moves once the island hydrates — proof the render mode actually took. *@
+<div class="probe">
+    <div class="probe-mode">@RendererInfo.Name</div>
+    <div class="probe-state">@(RendererInfo.IsInteractive ? "● interactive" : "○ static — awaiting hydration")</div>
+    <button @onclick="() => _count++" disabled="@(!RendererInfo.IsInteractive)">count: @_count</button>
+</div>
+
+@code {
+    private int _count;
+}
