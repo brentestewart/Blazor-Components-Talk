@@ -1,0 +1,39 @@
+@namespace Talk.Client.Slides
+
+@* Concept #22: ShouldRender, the flip side of StateHasChanged (C6). Blazor re-renders after every
+   event, parameter change, and StateHasChanged; ShouldRender lets a component veto the ones that
+   can't change its output. Grounded in the deck's real CodeWindow, which guards its expensive
+   tokenising in OnParametersSet so a same-code render costs almost nothing. *@
+<SplitSlide Title="ShouldRender" Subtitle="Skip the renders you don't need" WideLeft="true">
+    <Left>
+        <CodeWindow FileName="Counter.razor" Language="csharp" Code="@Source" />
+    </Left>
+    <Right>
+        <div class="side">
+            <p class="lead">Blazor re-renders after every event, <code>[Parameter]</code> change, and
+                <code>StateHasChanged</code>. Override <code>ShouldRender</code> to <strong>veto</strong>
+                the ones that can't change your output.</p>
+            <ul>
+                <li><code>ShouldRender()</code>: sync only, runs before each render after the first</li>
+                <li>return <code>false</code> and Blazor skips the diff and DOM update that cycle</li>
+                <li>reach for it only when a render is genuinely expensive, most are cheap</li>
+            </ul>
+            <p class="real">Cheaper still: guard the expensive work itself. The deck's
+                <code>CodeWindow</code> re-tokenises only when its <code>Code</code> changes, so
+                re-rendering with the same code costs next to nothing.</p>
+        </div>
+    </Right>
+</SplitSlide>
+
+@code {
+    private const string Source = @"// Blazor calls ShouldRender before every render (after the first).
+// Return false to skip the diff + DOM update for this cycle.
+private int _shown = -1;
+
+protected override bool ShouldRender()
+{
+    if (Count == _shown) return false;   // nothing we render changed
+    _shown = Count;
+    return true;
+}";
+}

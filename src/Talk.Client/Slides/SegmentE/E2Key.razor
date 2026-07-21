@@ -1,0 +1,38 @@
+@namespace Talk.Client.Slides
+
+@* Concept #19: @key. Gives each list item a stable identity so Blazor diffs by key, not by
+   position. Dissects the deck's real BulletList (@key="item") and the overview list
+   (@key="entry.Index"). Without it, an insert or reorder makes every row look changed and
+   element state sticks to the slot instead of the item. *@
+<SplitSlide Title="@KeyTitle" Subtitle="Stable identity in a list" WideLeft="true">
+    <Left>
+        <CodeWindow FileName="BulletList.razor" Language="razor" Code="@Source" />
+    </Left>
+    <Right>
+        <div class="side">
+            <p class="lead"><code>@@key</code> gives each item a <strong>stable identity</strong>, so
+                Blazor matches rows across renders by key, not by their position.</p>
+            <ul>
+                <li>without it: Blazor diffs by position, so an insert or reorder makes every row
+                    look changed, and element state sticks to the slot</li>
+                <li>with it: same key reuses that element and its state; a missing key removes it; a
+                    new key creates one</li>
+                <li>the key must be stable and unique per item (an id, or the item itself), never the
+                    loop index</li>
+            </ul>
+            <p class="real">The deck's <code>BulletList</code> keys by the item; the overview (press
+                <code>o</code>) keys its rows by slide index.</p>
+        </div>
+    </Right>
+</SplitSlide>
+
+@code {
+    private const string KeyTitle = "@key";   // literal; @@ isn't allowed in a component attribute
+
+    private const string Source = @"<ul>
+    @foreach (var item in Items)
+    {
+        <li @key=""item"">@ItemTemplate(item)</li>
+    }
+</ul>";
+}

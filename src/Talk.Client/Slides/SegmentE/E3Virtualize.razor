@@ -1,0 +1,35 @@
+@namespace Talk.Client.Slides
+
+@* Concept #20: <Virtualize>. Renders only the rows in the viewport (plus a small buffer) and
+   recycles them as you scroll. Dissects the deck's real overview list, which virtualizes over
+   every slide, so a long deck renders only the handful you can see. *@
+<SplitSlide Title="Virtualize" Subtitle="Render only what's visible" WideLeft="true">
+    <Left>
+        <CodeWindow FileName="Deck.razor · overview" Language="razor" Code="@Source" />
+    </Left>
+    <Right>
+        <div class="side">
+            <p class="lead"><code>&lt;Virtualize&gt;</code> renders only the rows in the viewport
+                (plus a small buffer) and <strong>recycles</strong> them as you scroll, instead of
+                building the whole list.</p>
+            <ul>
+                <li><code>Items</code>: the full collection; only the visible slice becomes DOM</li>
+                <li><code>Context</code>: the per-item variable, like a templated component</li>
+                <li>pair it with <code>@@key</code> so recycled rows keep the right identity</li>
+                <li><code>ItemsProvider</code> overload: fetch on demand, for paged or remote data</li>
+            </ul>
+            <p class="real">The deck's overview (press <code>o</code>) is a <code>Virtualize</code> over
+                every slide, so a 200-slide deck still only renders the rows you can see.</p>
+        </div>
+    </Right>
+</SplitSlide>
+
+@code {
+    private const string Source = @"<Virtualize Items=""_indexed"" Context=""entry"">
+    <div class=""ov-item"" @key=""entry.Index""
+         @onclick=""() => Jump(entry.Index)"">
+        <span>@(entry.Index + 1)</span>
+        <span>@entry.Info.Title</span>
+    </div>
+</Virtualize>";
+}
