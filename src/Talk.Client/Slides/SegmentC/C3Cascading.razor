@@ -13,7 +13,8 @@
     <Footer>
         <Caption>The deck cascades the <code>DeckTheme</code> once at the top. A descendant grabs it
             with <code>[CascadingParameter]</code>, matched by <strong>type</strong>, not by name, so the
-            property can be called anything. Nothing is threaded through the parents in between.</Caption>
+            property can be called anything. The components in between never declare it or pass it
+            along, no <code>Theme="…"</code> forwarded link by link down the tree.</Caption>
     </Footer>
 </SplitSlide>
 
