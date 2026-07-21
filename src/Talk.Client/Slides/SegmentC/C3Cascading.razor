@@ -25,8 +25,10 @@
     </div>
 </CascadingValue>";
 
-    // Any descendant opts in by type.
-    private const string Consumer = @"@code {
+    // Any descendant opts in by type, then uses it, here tinting a heading with the accent.
+    private const string Consumer = @"<h2 style=""color: @Theme.Accent"">Deep slide</h2>
+
+@code {
     [CascadingParameter]
     DeckTheme Theme { get; set; }
 }";
