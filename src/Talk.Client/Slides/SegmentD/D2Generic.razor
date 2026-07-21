@@ -11,16 +11,16 @@
         </div>
     </Left>
     <Right>
-        <LiveFrame Label="live: this is the component">
-            <BulletList Items="_people">
-                <ItemTemplate Context="p">@p.Name — @p.Role</ItemTemplate>
-            </BulletList>
-        </LiveFrame>
-    </Right>
-    <Footer>
+        <div class="gc-live">
+            <LiveFrame Label="live: this is the component">
+                <BulletList Items="_people">
+                    <ItemTemplate Context="p">@p.Name — @p.Role</ItemTemplate>
+                </BulletList>
+            </LiveFrame>
+        </div>
         <Caption><code>TItem</code> is inferred as <code>Person</code> from
             <code>Items</code>, with no cast, fully typed inside <code>&lt;ItemTemplate&gt;</code>.</Caption>
-    </Footer>
+    </Right>
 </SplitSlide>
 
 @code {
