@@ -3,7 +3,7 @@
 @* Concept #10: @ref. An illustrative example, not deck code: capture an <input> and call
    FocusAsync after the first render. (Highlighting moved to C#, so CodeWindow no longer uses
    @ref; the deck's only real @ref is the DynamicComponent in Deck.razor, too niche to teach.) *@
-<SplitSlide Title="@RefTitle" WideLeft="true">
+<SplitSlide Title="@RefTitle" Subtitle="grab a handle" WideLeft="true">
     <Left>
         <CodeWindow FileName="SearchBox.razor" Language="razor" Code="@Source" />
     </Left>
@@ -23,7 +23,7 @@
 </SplitSlide>
 
 @code {
-    private const string RefTitle = "@ref: grab a handle";
+    private const string RefTitle = "@ref";
 
     private const string Source = @"<input @ref=""_search"" placeholder=""Search"" />
 
