@@ -5,3 +5,15 @@
     color: var(--deck-fg); width: 100%; box-sizing: border-box;
 }
 .bind-echo { font-size: 1.3rem; margin: 0; }
+.bind-clear {
+    align-self: flex-start;
+    font-family: inherit; font-size: 1.05rem;
+    padding: 0.45rem 1.2rem; border-radius: 8px;
+    border: 1px solid var(--deck-border); background: var(--deck-surface);
+    color: var(--deck-fg); cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+}
+.bind-clear:hover {
+    border-color: color-mix(in srgb, var(--accent) 55%, var(--deck-border));
+    background: color-mix(in srgb, var(--accent) 10%, var(--deck-surface));
+}

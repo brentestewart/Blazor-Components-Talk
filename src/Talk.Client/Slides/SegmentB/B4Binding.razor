@@ -11,13 +11,15 @@
             <div class="bind-body">
                 <input class="bind-in" @bind="_text" @bind:event="oninput" placeholder="type here…" />
                 <p class="bind-echo">You typed: <strong>@(_text.Length == 0 ? "—" : _text)</strong></p>
+                <button class="bind-clear" @onclick="Clear">Clear</button>
             </div>
         </LiveFrame>
     </Right>
     <Footer>
         <Caption>
-            <code>@@bind</code> is sugar for a <em>value</em> plus its <code>ValueChanged</code>
-            callback — the <code>EventCallback</code> on the next slide.
+            Type and the model updates; <strong>Clear</strong> resets the model and the box follows —
+            that's the two-way. <code>@@bind</code> is sugar for a <em>value</em> plus its
+            <code>ValueChanged</code> callback (the <code>EventCallback</code> on the next slide).
         </Caption>
     </Footer>
 </SplitSlide>
@@ -25,11 +27,14 @@
 @code {
     private string _text = string.Empty;
 
-    private const string Source = @"<input @bind=""_text""
-       @bind:event=""oninput"" />
+    private void Clear() => _text = string.Empty;
+
+    private const string Source = @"<input @bind=""_text"" @bind:event=""oninput"" />
+<button @onclick=""Clear"">Clear</button>
 <p>You typed: @_text</p>
 
 @code {
     private string _text = """";
+    void Clear() => _text = """";
 }";
 }
