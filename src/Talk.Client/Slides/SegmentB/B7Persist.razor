@@ -11,17 +11,7 @@
    has no double-fetch to dogfood (see Deck.razor OnInitialized). *@
 <SplitSlide Title="PersistentComponentState" Subtitle="Don't fetch twice" WideLeft="true">
     <Left>
-        <div class="pcs-code">
-            @if (Step == 0)
-            {
-                <span class="pcs-tag bad">before</span>
-            }
-            else
-            {
-                <span class="pcs-tag good">with <code>[PersistentState]</code></span>
-            }
-            <CodeWindow FileName="Weather.razor" Language="csharp" Code="@(Step == 0 ? Before : After)" />
-        </div>
+        <CodeWindow FileName="Weather.razor" Language="csharp" Code="@(Step == 0 ? Before : After)" />
     </Left>
     <Right>
         <div class="pcs-side">
