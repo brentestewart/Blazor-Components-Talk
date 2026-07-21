@@ -8,7 +8,11 @@
     <ul class="lifecycle">
         @foreach (var h in _hooks)
         {
-            <li class="lc-step">
+            @if (h.DividerBefore)
+            {
+                <li class="lc-divider"><span>render</span></li>
+            }
+            <li class="lc-step@(h.Nested ? " lc-nested" : "")">
                 <span class="lc-dot"></span>
                 <div class="lc-body">
                     <code class="lc-name">@h.Name<span class="lc-async">@h.Twin</span></code>
@@ -25,14 +29,15 @@
 </Slide>
 
 @code {
-    private record Hook(string Name, string Twin, string Desc, string When);
+    private record Hook(string Name, string Twin, string Desc, string When,
+        bool Nested = false, bool DividerBefore = false);
 
     private static readonly Hook[] _hooks =
     {
-        new("SetParametersAsync", "(async only)", "raw parameters arrive; the base sets them, then runs the rest", "on set"),
-        new("OnInitialized", "OnInitializedAsync", "the component is created; set up initial state", "once"),
-        new("OnParametersSet", "OnParametersSetAsync", "a parameter is set or changes; react to new inputs", "on change"),
-        new("ShouldRender", "(sync only)", "gate a re-render; return false to skip one", "before render"),
+        new("SetParametersAsync", "(async only)", "raw parameters arrive; the base assigns them, then runs:", "on set"),
+        new("OnInitialized", "OnInitializedAsync", "the component is created; set up initial state", "once", Nested: true),
+        new("OnParametersSet", "OnParametersSetAsync", "a parameter is set or changes; react to new inputs", "on change", Nested: true),
+        new("ShouldRender", "(sync only)", "gate a re-render; return false to skip one", "before render", DividerBefore: true),
         new("OnAfterRender", "OnAfterRenderAsync", "it has rendered to the DOM; touch rendered elements", "after render"),
     };
 }
