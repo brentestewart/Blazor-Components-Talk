@@ -1,0 +1,40 @@
+@namespace Talk.Client.Slides
+
+@* Concept #25: bUnit. Renders a real component in memory and asserts on the markup it produces, no
+   browser. The code shown is the deck's real CaptionTests, one of four passing tests in
+   tests/BlazorDeck.Tests (the pure CodeHighlighter is tested with plain xunit alongside it). *@
+<SplitSlide Title="bUnit" Subtitle="Render components in a test" WideLeft="true">
+    <Left>
+        <CodeWindow FileName="CaptionTests.cs" Language="csharp" Code="@Source" />
+    </Left>
+    <Right>
+        <div class="side">
+            <p class="lead"><strong>bUnit</strong> renders a real component in memory, then lets you
+                assert on the markup it produced, no browser required.</p>
+            <ul>
+                <li><code>BunitContext</code>: the base class that hosts the render</li>
+                <li><code>Render&lt;T&gt;(…)</code>: render the component with its parameters</li>
+                <li><code>Find</code> / <code>FindAll</code> + <code>MarkupMatches</code>: query and
+                    assert the resulting DOM</li>
+            </ul>
+            <p class="real">These are real, passing tests in <code>tests/BlazorDeck.Tests</code>.
+                Components like <code>Caption</code> render under bUnit; the pure
+                <code>CodeHighlighter</code> is tested with plain xunit next to them.</p>
+        </div>
+    </Right>
+</SplitSlide>
+
+@code {
+    private const string Source = @"public class CaptionTests : BunitContext
+{
+    [Fact]
+    public void Renders_its_child_content_in_a_caption_paragraph()
+    {
+        var cut = Render<Caption>(p =>
+            p.AddChildContent(""It's all components.""));
+
+        var caption = cut.Find(""p.caption"");
+        Assert.Equal(""It's all components."", caption.TextContent);
+    }
+}";
+}

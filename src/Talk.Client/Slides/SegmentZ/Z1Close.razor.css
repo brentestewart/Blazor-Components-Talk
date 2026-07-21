@@ -1,0 +1,10 @@
+.close { display: flex; flex-direction: column; gap: 1.6rem; max-width: 92ch; }
+.close-lead { margin: 0; font-size: 1.25rem; line-height: 1.55; }
+.close-recap { font-size: 1.1rem; }
+.close-foot {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.4rem 1.4rem;
+    padding-top: 1.2rem; border-top: 1px solid var(--deck-border);
+}
+.close-thanks { font-size: 1.35rem; font-weight: 700; color: var(--accent); }
+.close-links { font-size: 0.95rem; opacity: 0.75; }
+.close-links code { color: var(--accent); }

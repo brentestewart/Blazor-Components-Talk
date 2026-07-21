@@ -1,0 +1,40 @@
+@namespace Talk.Client.Slides
+
+@* Closing slide: bookends A2 ("It's all components"). Recaps the six segments with a BulletList,
+   the same component the deck taught, and lands the meta-conceit: the whole deck was a Blazor Web
+   App made of the components it was explaining. Real links: the repo and the Blazor docs. *@
+<Slide Title="It's all components" Subtitle="…the whole way down">
+    <div class="close">
+        <p class="close-lead">Every slide you just saw was a Blazor component, rendered by the same
+            deck it was teaching, the nav, the code windows, the theming, the transitions, the live
+            demos. No slide software. Just components.</p>
+
+        <div class="close-recap">
+            <BulletList Items="_segments">
+                <ItemTemplate Context="s">
+                    <strong style="color:var(--accent)">@s.Head</strong> — @s.Sub
+                </ItemTemplate>
+            </BulletList>
+        </div>
+
+        <div class="close-foot">
+            <span class="close-thanks">Thank you.</span>
+            <span class="close-links">Source <code>github.com/brentestewart/Blazor-Components-Talk</code>
+                · Docs <code>learn.microsoft.com/aspnet/core/blazor</code></span>
+        </div>
+    </div>
+</Slide>
+
+@code {
+    private record Segment(string Head, string Sub);
+
+    private static readonly Segment[] _segments =
+    {
+        new("Fundamentals", "anatomy, parameters, binding, lifecycle"),
+        new("Communication & DI", "cascading, state containers, StateHasChanged"),
+        new("Advanced composition", "templates, generics, DynamicComponent, JS interop"),
+        new("Performance", "ShouldRender, @key, virtualization"),
+        new("Reuse", "CSS isolation, class libraries, MudBlazor"),
+        new("Testing", "bUnit"),
+    };
+}
