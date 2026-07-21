@@ -1,0 +1,33 @@
+@namespace Talk.Client.Slides
+
+@* ErrorBoundary — a component you wrap around other components so a throw degrades to a fallback
+   instead of taking down the app. Dogfooded: the code on the left is (trimmed) the real wrap around
+   this deck's own slide host in Deck.razor. The next slide (D3cBoom) breaks a real slide live. *@
+<SplitSlide Title="ErrorBoundary" Subtitle="Wrap components so a throw doesn't take down the app" WideLeft="true">
+    <Left>
+        <CodeWindow FileName="Deck.razor" Language="razor" Code="@Wrap" />
+    </Left>
+    <Right>
+        <div class="eb-notes">
+            <p>Wrap a subtree in <code>&lt;ErrorBoundary&gt;</code>. If anything inside throws — in
+                render or a lifecycle method — it shows <strong class="accent">ErrorContent</strong>
+                instead of letting the failure tear down the circuit.</p>
+            <p>Two slots: <strong class="accent">ChildContent</strong> for the normal UI, and
+                <strong class="accent">ErrorContent</strong>, handed the exception.</p>
+            <p>This deck keys every slide, so each gets a fresh boundary — navigate away and it
+                recovers on its own. <code>Recover()</code> re-attempts the same slide in place.</p>
+            <Caption Spaced>Next: a real slide that throws — and the deck walks right past it.</Caption>
+        </div>
+    </Right>
+</SplitSlide>
+
+@code {
+    private const string Wrap = @"<ErrorBoundary @ref=""_boundary"">
+    <ChildContent>
+        <DynamicComponent Type=""Slides[State.Index].Type"" />
+    </ChildContent>
+    <ErrorContent Context=""ex"">
+        <SlideErrorFallback Error=""ex"" OnRecover=""() => _boundary.Recover()"" />
+    </ErrorContent>
+</ErrorBoundary>";
+}

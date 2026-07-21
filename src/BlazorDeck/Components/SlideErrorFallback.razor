@@ -1,0 +1,26 @@
+@namespace BlazorDeck.Components
+
+@* The fallback an ErrorBoundary shows when a slide throws. Styled with the deck's own theme
+   variables so it fits whichever preset is active. The deck chrome (nav, keyboard, progress) lives
+   outside the boundary, so this replaces only the slide body — the presentation keeps running.
+   OnRecover, when set, re-attempts the same slide via ErrorBoundary.Recover(). *@
+<div class="slide-error">
+    <div class="se-badge">⚠</div>
+    <h2 class="se-title">This slide threw.</h2>
+    <p class="se-msg">@(Error?.Message ?? "An unexpected error occurred.")</p>
+    <div class="se-actions">
+        @if (OnRecover.HasDelegate)
+        {
+            <button class="se-btn" @onclick="OnRecover">↻ Recover</button>
+        }
+        <span class="se-hint">…and the deck's still running. Press <kbd>→</kbd> to move on.</span>
+    </div>
+</div>
+
+@code {
+    /// <summary>The caught exception, surfaced to the audience (message only).</summary>
+    [Parameter] public Exception? Error { get; set; }
+
+    /// <summary>Optional — when set, a Recover button re-attempts the failed slide.</summary>
+    [Parameter] public EventCallback OnRecover { get; set; }
+}

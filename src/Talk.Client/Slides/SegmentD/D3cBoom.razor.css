@@ -1,0 +1,27 @@
+.boom {
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+    align-items: flex-start;
+}
+
+.boom-lede { margin: 0; font-size: 1.2rem; }
+
+.boom-btn {
+    padding: 0.9rem 1.6rem;
+    border-radius: 12px;
+    border: 1px solid color-mix(in srgb, var(--accent) 60%, var(--deck-border));
+    background: color-mix(in srgb, var(--accent) 16%, var(--deck-surface));
+    color: var(--deck-fg);
+    font: inherit;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+.boom-btn:hover { background: color-mix(in srgb, var(--accent) 26%, var(--deck-surface)); }
+
+.boom-note { margin: 0; opacity: 0.75; max-width: 46ch; line-height: 1.5; }
+.boom-note kbd {
+    background: var(--deck-surface); border: 1px solid var(--deck-border);
+    border-radius: 4px; padding: .05em .45em; font-size: .85em;
+}

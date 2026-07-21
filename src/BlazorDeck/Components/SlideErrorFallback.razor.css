@@ -1,0 +1,39 @@
+.slide-error {
+    max-width: 46rem;
+    margin: 3.5rem auto;
+    padding: 2.2rem 2.4rem;
+    border-radius: 16px;
+    border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--deck-border));
+    background: color-mix(in srgb, var(--accent) 7%, var(--deck-surface));
+    text-align: center;
+}
+
+.se-badge { font-size: 2.6rem; line-height: 1; }
+.se-title { margin: 0.5rem 0 0.5rem; font-size: 1.6rem; font-weight: 700; }
+
+.se-msg {
+    margin: 0 0 1.5rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 1rem;
+    color: var(--deck-fg);
+    opacity: 0.85;
+}
+
+.se-actions { display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+
+.se-btn {
+    padding: 0.5rem 1.05rem;
+    border-radius: 8px;
+    border: 1px solid var(--accent);
+    background: color-mix(in srgb, var(--accent) 18%, transparent);
+    color: var(--deck-fg);
+    font: inherit;
+    cursor: pointer;
+}
+.se-btn:hover { background: color-mix(in srgb, var(--accent) 30%, transparent); }
+
+.se-hint { opacity: 0.6; font-size: 0.95rem; }
+.se-hint kbd {
+    background: var(--deck-surface); border: 1px solid var(--deck-border);
+    border-radius: 4px; padding: .05em .45em; font-size: .85em;
+}

@@ -1,0 +1,34 @@
+@namespace Talk.Client.Slides
+
+@* The payoff for D3bErrorBoundary: a real slide that throws. The handler on the left is exactly what
+   the button fires — an uncaught throw that lands in the deck's slide-host ErrorBoundary (Deck.razor),
+   so instead of the circuit dying you get the fallback and can press → to keep presenting. *@
+<SplitSlide Title="Break this slide" WideLeft="true">
+    <Left>
+        <CodeWindow FileName="Boom.razor" Language="razor" Code="@Code" />
+    </Left>
+    <Right>
+        <div class="boom">
+            <p class="boom-lede">That handler throws with no catch of its own —</p>
+            <button class="boom-btn" @onclick="Detonate">💥 Boom!</button>
+            <p class="boom-note">— so it lands in the deck's slide-host boundary. Only this slide
+                falls back; the nav, keyboard, and progress bar keep working. Press <kbd>→</kbd> and
+                the presentation carries on.</p>
+        </div>
+    </Right>
+</SplitSlide>
+
+@code {
+    private void Detonate() =>
+        throw new InvalidOperationException("The boom slide has a bug.");
+
+    private const string Code = @"<button @onclick=""Detonate"">
+    💥 Boom!
+</button>
+
+@code {
+    void Detonate() =>
+        throw new InvalidOperationException(
+            ""The boom slide has a bug."");
+}";
+}

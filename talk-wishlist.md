@@ -19,10 +19,11 @@ Running list of content/ideas Brent wants worked into the deck. Newest additions
       attribute name against the installed .NET 10 SDK — stable underlying API is
       `PersistentComponentState` + `RegisterOnPersisting` / `PersistAsJson` / `TryTakeFromJson`.)
 
-- [ ] **ErrorBoundary.** Wrap `SlideHost` in `<ErrorBoundary>` — a slide that throws renders a
-      fallback instead of killing the whole presentation. Live, memorable, and on-brand for the
-      conference risk plan ("what happens when slide 30 has a bug mid-talk?"). It's a component you
-      wrap around other components.
+- [x] **ErrorBoundary.** Shipped as **slides 30–31** (`D3bErrorBoundary` teaching, `D3cBoom` dogfood),
+      in Segment D after `D3DynamicComponent`. The deck's real slide host in `Deck.razor` is wrapped in
+      `<ErrorBoundary>` → `SlideErrorFallback`; the keyed-per-slide div auto-recovers on navigation,
+      `Recover()` retries in place. The boom slide throws from a click handler into that boundary — the
+      slide falls back but the deck chrome survives. 3 bUnit tests; the whole deck now has the safety net.
 
 - [ ] **Forms & `InputBase<T>`.** Weakest meta-fit (a deck has no forms) but the #1 thing a mixed
       audience actually ships. `InputBase<T>` is component authoring at its core (inheritance +

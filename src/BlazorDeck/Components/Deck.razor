@@ -36,9 +36,19 @@
             <div class="slide-anim slide-layer @TransitionClass @DirectionClass" @key="@($"in-{State.Index}")">
                 @if (Slides.Count > 0)
                 {
-                    <CascadingValue Name="Step" Value="State.Step">
-                        <DynamicComponent @ref="_slide" Type="Slides[State.Index].Type" />
-                    </CascadingValue>
+                    @* The slide host, wrapped so a throwing slide degrades to a fallback instead of
+                       killing the circuit. The keyed div above gives a fresh boundary per slide, so
+                       navigating away recovers automatically; Recover() re-attempts the same slide. *@
+                    <ErrorBoundary @ref="_boundary">
+                        <ChildContent>
+                            <CascadingValue Name="Step" Value="State.Step">
+                                <DynamicComponent @ref="_slide" Type="Slides[State.Index].Type" />
+                            </CascadingValue>
+                        </ChildContent>
+                        <ErrorContent Context="ex">
+                            <SlideErrorFallback Error="ex" OnRecover="RecoverSlide" />
+                        </ErrorContent>
+                    </ErrorBoundary>
                 }
             </div>
         </div>
@@ -184,6 +194,7 @@
     private DotNetObjectReference<Deck>? _ref;
     private IJSObjectReference? _module;
     private DynamicComponent? _slide;   // the current slide instance, for reading its step count
+    private ErrorBoundary? _boundary;   // wraps the slide host; Recover() re-attempts a failed slide
     private int _shownStep;             // step currently displayed (mirrors State.Step)
     private int _outgoingStep;          // step the exiting slide is frozen at during a transition
     private int _countedIndex = -1;     // last slide index whose step count we read (avoids a per-render read)
@@ -324,6 +335,10 @@
         State.Goto(index);
         State.CloseOverview();
     }
+
+    // Re-attempt the current slide after it threw. If it throws again (e.g. it fails on init),
+    // the boundary just catches it again — navigating to another slide always recovers.
+    private void RecoverSlide() => _boundary?.Recover();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
