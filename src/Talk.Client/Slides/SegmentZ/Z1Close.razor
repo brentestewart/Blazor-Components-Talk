@@ -1,40 +1,17 @@
 @namespace Talk.Client.Slides
 
-@* Closing slide: bookends A2 ("It's all components"). Recaps the six segments with a BulletList,
-   the same component the deck taught, and lands the meta-conceit: the whole deck was a Blazor Web
-   App made of the components it was explaining. Real links: the repo and the Blazor docs. *@
-<Slide Title="It's all components" Subtitle="…the whole way down">
+@* Closing slide: a thank-you with the repo front and centre. No segment recap — the point isn't to
+   re-list what we covered, it's to send people to the source, which is the whole talk anyway. *@
+<Slide>
     <div class="close">
-        <p class="close-lead">Every slide you just saw was a Blazor component, rendered by the same
-            deck it was teaching, the nav, the code windows, the theming, the transitions, the live
-            demos. No slide software. Just components.</p>
-
-        <div class="close-recap">
-            <BulletList Items="_segments">
-                <ItemTemplate Context="s">
-                    <strong class="accent">@s.Head</strong> — @s.Sub
-                </ItemTemplate>
-            </BulletList>
-        </div>
-
-        <div class="close-foot">
-            <span class="close-thanks">Thank you.</span>
-            <span class="close-links">Source <code>github.com/brentestewart/Blazor-Components-Talk</code>
-                · Docs <code>learn.microsoft.com/aspnet/core/blazor</code></span>
-        </div>
+        <h1 class="close-thanks">Thank you.</h1>
+        <a class="close-repo" href="https://github.com/brentestewart/Blazor-Components-Talk"
+           target="_blank" rel="noopener">
+            <svg class="gh" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
+            </svg>
+            <span>github.com/brentestewart/Blazor-Components-Talk</span>
+        </a>
+        <p class="close-sub">The whole deck — every component you saw — is right here.</p>
     </div>
 </Slide>
-
-@code {
-    private record Segment(string Head, string Sub);
-
-    private static readonly Segment[] _segments =
-    {
-        new("Fundamentals", "anatomy, parameters, binding, lifecycle"),
-        new("Communication & DI", "cascading, state containers, StateHasChanged"),
-        new("Advanced composition", "templates, generics, DynamicComponent, JS interop"),
-        new("Performance", "ShouldRender, @key, virtualization"),
-        new("Reuse", "CSS isolation, class libraries, MudBlazor"),
-        new("Testing", "bUnit"),
-    };
-}
