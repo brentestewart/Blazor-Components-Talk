@@ -5,6 +5,7 @@
    Step 2: drop Stars (it's served its purpose) and show Review's rendered DOM beside the generated
    CSS, so the b-a1 rewrite — and why the child's buttons dodge it — is visible. *@
 <Slide Title="Scoped CSS — and the ::deep escape hatch">
+    <div class="iso-frame">
     <div class="iso">
         <div class="iso-left">
             @if (Step == 0)
@@ -14,7 +15,7 @@
             }
             else
             {
-                <CodeWindow FileName="Review — rendered DOM" Language="razor" Code="@ParentRendered" />
+                <CodeWindow FileName="Review.razor — rendered" Language="razor" Code="@ParentRendered" />
             }
         </div>
         <div class="iso-right">
@@ -28,7 +29,6 @@
             }
         </div>
     </div>
-    <div class="iso-cap">
         @if (Step == 0)
         {
             <Caption>The build tags every element <code>Review</code> renders with a unique

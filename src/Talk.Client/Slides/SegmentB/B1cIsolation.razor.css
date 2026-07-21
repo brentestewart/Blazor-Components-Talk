@@ -1,15 +1,15 @@
+/* Reserve the taller step's total height on the frame so the centred slide body keeps a constant
+   height — the title stays put while the windows swap. The caption sits directly under the
+   windows; on the shorter step the spare room falls below it, not between them. */
+.iso-frame { min-height: 25rem; }
+
 .iso {
     display: grid;
     grid-template-columns: 0.95fr 1.05fr;
     gap: 1.6rem;
     align-items: start;
     margin-top: 0.3rem;
-    /* Both steps reserve the taller step's height, so swapping windows doesn't reflow the
-       slide (the body is centred, so any height change would move the title + caption). */
-    min-height: 21rem;
 }
-
-.iso-cap { min-height: 5.25rem; }
 
 .iso-left { display: flex; flex-direction: column; gap: 0.8rem; }
 
