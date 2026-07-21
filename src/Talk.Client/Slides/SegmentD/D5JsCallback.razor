@@ -1,0 +1,44 @@
+@namespace Talk.Client.Slides
+
+@* Concept #18b: calling C# from JS. Hand JavaScript a DotNetObjectReference to a component and
+   mark the callable methods [JSInvokable]; JS invokes them by name. The deck's real deck.js does
+   this for keyboard nav, every key comes back through OnKey. Dispose the reference to avoid a leak. *@
+<SplitSlide Title="JavaScript interop" Subtitle="JS → C#" WideLeft="true">
+    <Left>
+        <div class="js-code">
+            <CodeWindow FileName="Deck.razor" Language="csharp" Code="@Cs" />
+            <CodeWindow FileName="deck.js" Language="javascript" Code="@Js" />
+        </div>
+    </Left>
+    <Right>
+        <div class="js-side">
+            <p class="js-lead">JavaScript calls back into C# through a
+                <code>DotNetObjectReference</code>, a handle to one component instance.</p>
+            <ul>
+                <li><code>DotNetObjectReference.Create(this)</code>: wrap the component for JS</li>
+                <li><code>[JSInvokable]</code>: mark the methods JS is allowed to call</li>
+                <li><code>invokeMethodAsync("OnKey", …)</code>: JS invokes C# by method name</li>
+            </ul>
+            <p class="js-real">The deck uses this for keyboard nav, every arrow key comes back
+                through <code>OnKey</code>. Dispose the reference when the component goes away.</p>
+        </div>
+    </Right>
+</SplitSlide>
+
+@code {
+    private const string Cs = @"@inject IJSRuntime JS
+
+// hand JS a reference to this component
+var meRef = DotNetObjectReference.Create(this);
+await module.InvokeVoidAsync(""registerKeys"", meRef);
+
+[JSInvokable]
+public void OnKey(string key) { /* advance slide */ }";
+
+    private const string Js = @"// deck.js: call back into .NET through the reference
+export function registerKeys(dotNetRef) {
+    document.addEventListener(""keydown"", e => {
+        dotNetRef.invokeMethodAsync(""OnKey"", e.key);
+    });
+}";
+}

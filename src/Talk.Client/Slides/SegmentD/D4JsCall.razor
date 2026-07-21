@@ -1,0 +1,43 @@
+@namespace Talk.Client.Slides
+
+@* Concept #18a: calling JS from C#. Import a JS ES module as an IJSObjectReference, then call its
+   exported functions by name. The deck's real deck.js exports toggleFullscreen, a browser-only
+   API. Timed to OnAfterRender, since the element and JS runtime only exist once interactive. *@
+<SplitSlide Title="JavaScript interop" Subtitle="C# → JS" WideLeft="true">
+    <Left>
+        <div class="js-code">
+            <CodeWindow FileName="Deck.razor" Language="csharp" Code="@Cs" />
+            <CodeWindow FileName="deck.js" Language="javascript" Code="@Js" />
+        </div>
+    </Left>
+    <Right>
+        <div class="js-side">
+            <p class="js-lead">C# loads a JavaScript module as an
+                <code>IJSObjectReference</code>, then calls its exports <strong>by name</strong>.</p>
+            <ul>
+                <li><code>@@inject IJSRuntime JS</code>: the entry point for all interop</li>
+                <li><code>InvokeAsync&lt;IJSObjectReference&gt;("import", …)</code>: load an ES module</li>
+                <li><code>InvokeVoidAsync("name", args…)</code>: call an export, ignore the result</li>
+            </ul>
+            <p class="js-real">The deck uses this for fullscreen, a browser-only API. It runs in
+                <code>OnAfterRender</code>, once the element and JS runtime actually exist.</p>
+        </div>
+    </Right>
+</SplitSlide>
+
+@code {
+    private const string Cs = @"@inject IJSRuntime JS
+
+// import the module, call one of its exports
+var module = await JS.InvokeAsync<IJSObjectReference>(
+    ""import"", ""./deck.js"");
+await module.InvokeVoidAsync(""toggleFullscreen"");";
+
+    private const string Js = @"// deck.js: a plain ES module export
+export function toggleFullscreen() {
+    if (document.fullscreenElement)
+        document.exitFullscreen();
+    else
+        document.documentElement.requestFullscreen();
+}";
+}
