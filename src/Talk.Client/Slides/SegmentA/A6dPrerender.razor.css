@@ -1,4 +1,4 @@
-.pr { display: flex; flex-direction: column; gap: 1.8rem; max-width: 78rem; }
+.pr { display: flex; flex-direction: column; gap: 1.2rem; max-width: 78rem; }
 
 .pr-flow { display: flex; align-items: stretch; gap: 1.2rem; }
 
@@ -6,8 +6,8 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 0.55rem;
-    padding: 1.6rem 1.7rem;
+    gap: 0.45rem;
+    padding: 1.25rem 1.45rem;
     border-radius: 14px;
     border: 1px solid color-mix(in srgb, var(--deck-border) 55%, var(--deck-fg) 22%);
     background: color-mix(in srgb, var(--deck-surface) 86%, var(--deck-fg) 9%);

@@ -9,21 +9,27 @@
             <div class="pr-phase">
                 <div class="pr-num">1</div>
                 <div class="pr-name">Server prerenders</div>
-                <div class="pr-desc">The component renders to <strong class="accent">static HTML</strong> on
-                    the server and ships immediately — instant first paint, before any runtime loads.</div>
+                <div class="pr-desc">Renders to <strong class="accent">static HTML</strong> on the server
+                    and ships it — content on screen before any runtime loads.</div>
             </div>
             <div class="pr-arrow" aria-hidden="true">→</div>
             <div class="pr-phase">
                 <div class="pr-num">2</div>
                 <div class="pr-name">Client hydrates</div>
-                <div class="pr-desc">The runtime — a SignalR circuit or WebAssembly — starts, re-renders,
-                    and <strong class="accent">wires up interactivity</strong>. Now <code>@@onclick</code> works.</div>
+                <div class="pr-desc">The runtime — circuit or WebAssembly — boots and
+                    <strong class="accent">wires up interactivity</strong>. Now <code>@@onclick</code> works.</div>
             </div>
         </div>
-        <Caption Spaced>You watched it happen a few slides back — the boxes that flashed static for a
-            beat, then hydrated to live. The catch: both phases run your init, so
-            <code>OnInitializedAsync</code> fires <strong class="accent">twice</strong> — a fetch runs on
-            the server and again in the browser. That double-run is what
-            <strong class="accent">PersistentComponentState</strong> (coming up) fixes.</Caption>
+        <Caption>You saw it a few slides back — static for a beat, then live. Both phases run your init,
+            so <code>OnInitializedAsync</code> fires <strong class="accent">twice</strong>; reach for
+            <strong class="accent">PersistentComponentState</strong> (coming up), or turn prerendering off
+            per component:</Caption>
+        <CodeWindow FileName="Page.razor" Language="razor" Code="@OptOut" />
     </div>
 </Slide>
+
+@code {
+    // Interactive render modes prerender by default; pass prerender: false to skip the static pass.
+    private const string OptOut =
+        @"<Chart @rendermode=""new InteractiveServerRenderMode(prerender: false)"" />";
+}
