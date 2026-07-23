@@ -19,6 +19,9 @@ public class DeckState
     /// <summary>Fallback transition for slides that don't set their own. Adjustable in settings.</summary>
     public SlideTransition DefaultTransition { get; private set; } = SlideTransition.Fade;
 
+    /// <summary>Shape of the design canvas. Adjustable in settings; defaults to matching the screen.</summary>
+    public DeckAspect Aspect { get; private set; } = DeckAspect.Auto;
+
     /// <summary>Whether the last move advanced (true) or went back (false) — drives directional transitions.</summary>
     public bool LastForward { get; private set; } = true;
 
@@ -109,6 +112,15 @@ public class DeckState
         if (DefaultTransition != transition)
         {
             DefaultTransition = transition;
+            Notify();
+        }
+    }
+
+    public void SetAspect(DeckAspect aspect)
+    {
+        if (Aspect != aspect)
+        {
+            Aspect = aspect;
             Notify();
         }
     }

@@ -20,10 +20,11 @@
     --deck-surface-2: var(--mud-palette-background-gray);
     --deck-border: var(--mud-palette-lines-default);
 
-    /* The fixed design canvas. container-type:size makes cqw/cqh resolve to 1280×720, so every
-       slide's units scale with the canvas rather than the live viewport. */
+    /* The design canvas. container-type:size makes cqw/cqh resolve to the canvas, so every slide's
+       units scale with it rather than with the live viewport. Only the height varies (with the
+       chosen aspect); --deck-h is published by deck.js (fitDeck). */
     width: 1280px;
-    height: 720px;
+    height: var(--deck-h, 720px);
     flex: none;
     container-type: size;
     transform: scale(var(--deck-scale, 1));

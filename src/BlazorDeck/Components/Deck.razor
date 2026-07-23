@@ -141,6 +141,18 @@
                     </div>
 
                     <div class="set-row">
+                        <div class="set-label">Screen shape</div>
+                        <div class="set-opts">
+                            @foreach (var asp in DeckAspects.Selectable)
+                            {
+                                var av = asp;
+                                <button class="set-opt @(State.Aspect == av ? "active" : "")"
+                                        @onclick="() => State.SetAspect(av)">@av.Label()</button>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="set-row">
                         <div class="set-label">Default transition</div>
                         <div class="set-opts">
                             @foreach (var tr in SlideTransitions.Selectable)
@@ -245,6 +257,7 @@
     private int _syncedIndex = -1;
     private int _syncedTheme = -1;
     private SlideTransition _syncedTransition = (SlideTransition)(-1);
+    private DeckAspect _syncedAspect = (DeckAspect)(-1);   // last canvas shape pushed to JS
 
     // Keep theme/transition out of the URL until they matter: they only appear once
     // they arrived in the URL or the user actually changed them. Plain slide navigation
@@ -443,16 +456,26 @@
             _overviewScaled = false;
         }
 
+        // The presenter picked a different canvas shape. fitDeck re-fits the current slide and the
+        // thumbnails too, since both depend on the canvas height.
+        if (_syncedAspect != State.Aspect && _module is not null)
+        {
+            _syncedAspect = State.Aspect;
+            await _module.InvokeVoidAsync("fitDeck", State.Aspect.Ratio());
+        }
+
         if (!firstRender) return;
         _syncedIndex = State.Index;
         _syncedTheme = State.ThemeIndex;
         _syncedTransition = State.DefaultTransition;
+        _syncedAspect = State.Aspect;
         _ready = true;
         _module = await JS.InvokeAsync<IJSObjectReference>(
             "import", "./_content/BlazorDeck/deck.js");
         _ref = DotNetObjectReference.Create(this);
         await _module.InvokeVoidAsync("registerKeys", _ref);
-        await _module.InvokeVoidAsync("fitDeck");       // scale the canvas to fit; re-runs on resize
+        // null ratio == Auto: the canvas takes the screen's own shape, so no bars appear.
+        await _module.InvokeVoidAsync("fitDeck", State.Aspect.Ratio());
         await _module.InvokeVoidAsync("fitSlide");      // fit the initial slide
         await _module.InvokeVoidAsync("observeSlides"); // later slides fit before paint, so no flicker
     }

@@ -5,19 +5,43 @@
 
 let handler = null;
 
-// The deck is authored at this fixed canvas and scaled as a whole to fit any screen.
-const DESIGN_W = 1280, DESIGN_H = 720;
+// The deck is authored at a canvas this wide and scaled as a whole to fit any screen. Only the
+// HEIGHT varies with the chosen aspect, so every horizontal cqw unit — fonts, padding, the left
+// rail every title sits on — is identical whichever shape is in use.
+const DESIGN_W = 1280;
+// Auto mode derives the height from the display, clamped so an ultrawide screen can't squash the
+// canvas so flat that every slide has to shrink, or a portrait one stretch it absurdly tall.
+const MIN_H = 640, MAX_H = 1024;
+
+// Ratio (w/h) currently in force, or null for "match the screen". Remembered so the resize handler
+// keeps using the presenter's choice.
+let aspectRatio = null;
+let designHeight = 720;
+
+export function designH() { return designHeight; }
 
 // Scale the whole canvas to fit the viewport (min ratio → letterbox, never crop). Publishes
-// --deck-scale, which .deck reads. Recomputes on resize.
+// --deck-h and --deck-scale, which .deck reads. Recomputes on resize.
+// ratio: width/height to pin the canvas to, or null/undefined for Auto.
 let fitBound = false;
-export function fitDeck() {
-    const k = Math.min(window.innerWidth / DESIGN_W, window.innerHeight / DESIGN_H);
-    document.documentElement.style.setProperty("--deck-scale", k);
+export function fitDeck(ratio) {
+    if (ratio !== undefined) aspectRatio = ratio;
+    // In Auto the canvas takes the screen's own shape, so the scale below lands on exactly 1:1 with
+    // no bars at all; a pinned ratio letterboxes whatever doesn't match.
+    const effective = aspectRatio ?? (window.innerWidth / window.innerHeight);
+    designHeight = Math.min(MAX_H, Math.max(MIN_H, DESIGN_W / effective));
+
+    const k = Math.min(window.innerWidth / DESIGN_W, window.innerHeight / designHeight);
+    const root = document.documentElement.style;
+    root.setProperty("--deck-h", designHeight + "px");
+    root.setProperty("--deck-scale", k);
     if (!fitBound) {
         window.addEventListener("resize", () => fitDeck());
         fitBound = true;
     }
+    // The canvas just changed shape, so every slide's available height changed with it.
+    fitSlide();
+    setThumbScale();
 }
 
 // Shrink a slide's CONTENT to fit the canvas when it's taller than the space left under the title.
@@ -122,12 +146,13 @@ let resizeBound = false;
 export function setThumbScale() {
     const thumb = document.querySelector(".ov-thumb");
     if (!thumb) return;
-    // The thumbnail stage is the full 1280×720 canvas, so scale by (card width / canvas width).
-    // clientWidth is layout px inside the canvas, unaffected by the outer --deck-scale transform.
+    // The thumbnail stage is the full canvas, so scale by (card width / canvas width). clientWidth is
+    // layout px inside the canvas, unaffected by the outer --deck-scale transform. The height follows
+    // the live canvas height, so cards stay the right shape when the aspect changes.
     const k = thumb.clientWidth / DESIGN_W;
     const root = document.documentElement.style;
     root.setProperty("--ov-k", k);
-    root.setProperty("--ov-thumb-h", DESIGN_H * k + "px");
+    root.setProperty("--ov-thumb-h", designHeight * k + "px");
     if (!resizeBound) {
         window.addEventListener("resize", () => setThumbScale());
         resizeBound = true;
