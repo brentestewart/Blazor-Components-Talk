@@ -63,7 +63,7 @@
        its own indentation via white-space: pre on .cl. */
     white-space: normal;
     font-family: "Cascadia Code", "JetBrains Mono", ui-monospace, monospace;
-    font-size: clamp(0.9rem, 1.7vw, 1.25rem);
+    font-size: clamp(0.9rem, 1.7cqw, 1.25rem);
     line-height: 1.6;
     color: var(--deck-fg);
 }

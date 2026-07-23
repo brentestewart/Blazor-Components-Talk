@@ -1,3 +1,16 @@
+/* The deck is authored at a fixed 1280×720 canvas and scaled as a whole to fit any screen, so it
+   never crops — .deck-fit is the letterbox area (fills the viewport, centers the scaled canvas),
+   and .deck is the canvas. --deck-scale is set from the window by deck.js (fitDeck). */
+.deck-fit {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--mud-palette-background, #0f1115);
+}
+
 .deck {
     /* Map MudBlazor's runtime palette to the deck's variable vocabulary that every slide reads. */
     --accent: var(--mud-palette-primary);
@@ -7,8 +20,14 @@
     --deck-surface-2: var(--mud-palette-background-gray);
     --deck-border: var(--mud-palette-lines-default);
 
-    position: fixed;
-    inset: 0;
+    /* The fixed design canvas. container-type:size makes cqw/cqh resolve to 1280×720, so every
+       slide's units scale with the canvas rather than the live viewport. */
+    width: 1280px;
+    height: 720px;
+    flex: none;
+    container-type: size;
+    transform: scale(var(--deck-scale, 1));
+    transform-origin: center;
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -55,20 +74,20 @@
 }
 
 .deck-aurora .b1 {
-    width: 52vw;
-    height: 52vw;
-    top: -16vw;
-    right: -10vw;
+    width: 52cqw;
+    height: 52cqw;
+    top: -16cqw;
+    right: -10cqw;
     background: radial-gradient(circle, color-mix(in srgb, var(--accent) 60%, transparent), transparent 70%);
     opacity: 0.42;
     animation: drift-1 19s ease-in-out infinite alternate;
 }
 
 .deck-aurora .b2 {
-    width: 44vw;
-    height: 44vw;
-    bottom: -18vw;
-    left: -8vw;
+    width: 44cqw;
+    height: 44cqw;
+    bottom: -18cqw;
+    left: -8cqw;
     background: radial-gradient(circle, color-mix(in srgb, var(--accent) 42%, transparent), transparent 70%);
     opacity: 0.32;
     animation: drift-2 24s ease-in-out infinite alternate;
@@ -76,12 +95,12 @@
 
 @keyframes drift-1 {
     from { transform: translate(0, 0) scale(1); }
-    to   { transform: translate(-7vw, 6vw) scale(1.18); }
+    to   { transform: translate(-7cqw, 6cqw) scale(1.18); }
 }
 
 @keyframes drift-2 {
     from { transform: translate(0, 0) scale(1); }
-    to   { transform: translate(6vw, -5vw) scale(1.12); }
+    to   { transform: translate(6cqw, -5cqw) scale(1.12); }
 }
 
 /* Blueprint grid — components are building blocks. Fades out toward the edges. */
@@ -102,9 +121,9 @@
 .deck-index {
     position: absolute;
     z-index: 0;
-    right: 3vw;
-    bottom: 1vh;
-    font-size: 38vh;
+    right: 3cqw;
+    bottom: 1cqh;
+    font-size: 38cqh;
     font-weight: 800;
     line-height: 0.8;
     letter-spacing: -0.05em;
@@ -395,14 +414,17 @@
     background: var(--deck-bg);
 }
 
-/* The stage is a real viewport (100vw × 100vh) so the slide's vw/vh units and fonts resolve exactly
+/* The stage is a real viewport (100cqw × 100cqh) so the slide's vw/vh units and fonts resolve exactly
    as they do full-screen; the transform shrinks the whole thing by the JS-computed factor. */
 .ov-stage {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100cqw;
+    height: 100cqh;
+    /* Its own container context, sized to the full canvas, so the thumbnail slide's cqw/cqh resolve
+       exactly as they do full-screen; the transform then shrinks the whole thing into the card. */
+    container-type: size;
     transform-origin: top left;
     transform: scale(var(--ov-k, 0.16));
     pointer-events: none;
@@ -443,7 +465,7 @@
 }
 
 .settings-panel {
-    width: min(640px, 88vw);
+    width: min(640px, 88cqw);
     background: var(--deck-surface);
     border: 1px solid var(--deck-border);
     border-radius: 16px;

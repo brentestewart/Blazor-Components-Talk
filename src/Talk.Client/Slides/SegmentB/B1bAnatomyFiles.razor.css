@@ -2,5 +2,5 @@
 /* Tighter type so three windows fit comfortably on one slide. .cs-pre is rendered by
    CodeWindow, so ::deep is needed to reach across the component boundary. */
 .anatomy ::deep .cs-pre { padding: 0.9rem 1.2rem; }
-.anatomy ::deep .cs-pre code { font-size: clamp(0.72rem, 1.25vw, 1rem); line-height: 1.45; }
+.anatomy ::deep .cs-pre code { font-size: clamp(0.72rem, 1.25cqw, 1rem); line-height: 1.45; }
 .tease { opacity: 0.6; font-style: italic; }

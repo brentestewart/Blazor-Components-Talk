@@ -14,6 +14,8 @@
 <MudThemeProvider Theme="@t.Mud" IsDarkMode="t.IsDark" />
 <CascadingValue Value="State.Theme">
     @* dark/light gates the syntax palette; all colour values live in Deck.razor.css. *@
+    @* .deck-fit letterboxes; .deck is the fixed 1280×720 canvas scaled to fit (see Deck.razor.css). *@
+    <div class="deck-fit">
     <div class="deck @(t.IsDark ? "dark" : "light")">
         <div class="deck-aurora" aria-hidden="true">
             <span class="blob b1"></span>
@@ -165,6 +167,7 @@
             <button title="Settings (s)" @onclick="() => State.ToggleSettings()">&#9881;</button>
             <button title="Fullscreen (f)" @onclick="ToggleFullscreen">&#x2922;</button>
         </footer>
+    </div>
     </div>
 </CascadingValue>
 
@@ -419,6 +422,9 @@
         {
             _countedIndex = State.Index;
             State.SetStepCount((_slide?.Instance as ISteppable)?.StepCount ?? 1);
+            // Shrink the new slide to fit the canvas if its content overflows (firstRender is handled
+            // below, once the JS module is loaded).
+            if (_module is not null) await _module.InvokeVoidAsync("fitSlide");
         }
 
         // When the overview opens, have JS compute the thumbnail scale from the live viewport so the
@@ -446,6 +452,9 @@
             "import", "./_content/BlazorDeck/deck.js");
         _ref = DotNetObjectReference.Create(this);
         await _module.InvokeVoidAsync("registerKeys", _ref);
+        await _module.InvokeVoidAsync("fitDeck");       // scale the canvas to fit; re-runs on resize
+        await _module.InvokeVoidAsync("fitSlide");      // fit the initial slide
+        await _module.InvokeVoidAsync("observeSlides"); // later slides fit before paint, so no flicker
     }
 
     [JSInvokable]

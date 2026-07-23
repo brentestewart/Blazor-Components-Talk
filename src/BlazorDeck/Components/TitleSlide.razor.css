@@ -7,7 +7,7 @@
 }
 
 .ts-title {
-    font-size: clamp(2.8rem, 8.5vw, 6.2rem);
+    font-size: clamp(2.8rem, 8.5cqw, 6.2rem);
     font-weight: 800;
     line-height: 1.0;
     letter-spacing: -0.04em;
@@ -16,6 +16,6 @@
 
 .ts-sub {
     opacity: 0.75;
-    font-size: clamp(1rem, 2.2vw, 1.5rem);
+    font-size: clamp(1rem, 2.2cqw, 1.5rem);
     max-width: 40ch;
 }

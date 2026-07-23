@@ -4,7 +4,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 7vh 9vw;
+    padding: 7cqh 9cqw;
     position: relative;
 }
 
@@ -14,7 +14,7 @@
 
 .slide-title {
     margin: 0;
-    font-size: clamp(2.4rem, 6vw, 4.4rem);
+    font-size: clamp(2.4rem, 6cqw, 4.4rem);
     font-weight: 800;
     color: var(--accent);
     line-height: 1.05;
@@ -23,7 +23,7 @@
 
 .slide-subtitle {
     margin: 0.6rem 0 0;
-    font-size: clamp(1.2rem, 2.6vw, 2rem);
+    font-size: clamp(1.2rem, 2.6cqw, 2rem);
     font-weight: 500;
     color: var(--deck-fg);
     opacity: 0.6;
@@ -32,14 +32,21 @@
 }
 
 .slide-body {
-    font-size: clamp(1.1rem, 2.4vw, 1.7rem);
+    font-size: clamp(1.1rem, 2.4cqw, 1.7rem);
     line-height: 1.6;
+    /* Shrink-to-fit: only the content region scales, and only when it overflows the canvas. The head
+       is outside this box, so the title keeps its place under the <Tag /> chrome no matter how far
+       the content shrinks, and top-left origin keeps the content's left edge on the title's left
+       edge. --content-fit and a matching layout height are set per slide by deck.js (fitSlide);
+       slides whose content already fits are left completely untouched. */
+    transform: scale(var(--content-fit, 1));
+    transform-origin: top left;
 }
 
 .slide-badge {
     position: absolute;
-    bottom: 4vh;
-    right: 5vw;
+    bottom: 4cqh;
+    right: 5cqw;
     font-size: 0.9rem;
     opacity: 0.35;
     font-variant-numeric: tabular-nums;

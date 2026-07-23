@@ -10,7 +10,7 @@
 }
 .hello .why {
     margin: 0; max-width: 22ch;
-    font-size: clamp(1.8rem, 3.6vw, 2.8rem); font-weight: 700; line-height: 1.15;
+    font-size: clamp(1.8rem, 3.6cqw, 2.8rem); font-weight: 700; line-height: 1.15;
     letter-spacing: -0.01em;
 }
 .hello .why .hl { color: var(--accent); }
