@@ -50,3 +50,20 @@
     font-size: 1.05rem;
     opacity: 0.6;
 }
+
+/* Scanning is unreliable on an inverted or low-contrast code, and the deck can be on a dark or a
+   light theme, so the QR always gets its own white card with a quiet zone around it (the padding) —
+   the margin QR readers need to find the code's edges. Sized in cqh because vertical space is what
+   this slide is short of. The clamp keeps it big enough to scan from the back of the room and still
+   inside the canvas: 16:9 is the tightest shape, where the content has 575px to work with and this
+   lands at ~216px, leaving headroom. Staying under the limit matters here — the slide has no title,
+   so its block is centred, and if it ever overflowed, shrink-to-fit would scale it from the top-left
+   and visibly knock it off centre. */
+.close-qr {
+    width: clamp(150px, 30cqh, 290px);
+    height: clamp(150px, 30cqh, 290px);
+    padding: 12px;
+    background: #fff;
+    border-radius: 12px;
+    display: block;
+}
