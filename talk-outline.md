@@ -1,8 +1,8 @@
 # Unleashing the Power of Blazor Components
 
-**Duration:** 60 minutes (~48 min content · ~7 min live code tour · ~5 min Q&A)
+**Duration:** 60 minutes (~53 min content · ~5 min Q&A). The live code tour is parked — see Segment H.
 **Audience:** Mixed (some new to Blazor, some experienced)
-**Style:** Mainly code slides; meta live demo woven throughout + a live code tour at the end
+**Style:** Mainly code slides; meta live demo woven throughout
 **Library focus:** MudBlazor (the deck's themes *are* `MudTheme`s; Segment F shows Mud components
 sharing the slide palette)
 **Big idea:** The talk is *meta* — the slide deck itself is a Blazor app (`BlazorDeck`), and the
@@ -19,7 +19,7 @@ render modes from the inside. See Slide technology below.
 
 ## Status
 
-- **44 slides**, segments **A–H** plus a close (`Z`). Source of truth is the `Slides` table in
+- **43 slides**, segments **A–H** plus a close (`Z`). Source of truth is the `Slides` table in
   `src/Talk.Client/Present.razor` — that array *is* the table of contents.
 - **Concepts #2–#26**, plus lettered/fractional additions that earned their own slides
   (`#11b` named cascading, `#13½` `StateHasChanged`, `#18a`/`#18b` the two interop directions) and
@@ -35,7 +35,7 @@ render modes from the inside. See Slide technology below.
 
 ---
 
-## Ordering — the 44 slides as built
+## Ordering — the 43 slides as built
 
 Numbers are live slide positions (`/slide/N`).
 
@@ -125,17 +125,21 @@ same reason.*
 |---|-------|---------|
 | 42 | `G1Bunit` | #25 *(flex)* — the deck's real `CaptionTests` under `BunitContext` |
 
-### H · Code tour (43)
+### H · Code tour — **parked**
+
+`H1CodeTour` is still in the repo but commented out of the `Slides` table. The live walk of the
+project was the easiest several minutes to give back when the talk ran long; restoring it is
+uncommenting one line in `Present.razor`.
+
+While it's parked, nothing in the deck reaches the MVVM starter in `samples/mvvm` (served at
+`/demo/mvvm`) — the tour was its only appearance. The closing slide still hands out the repo, so
+the code is available, just never walked on stage.
+
+### Close (43)
 
 | # | Slide | Beat |
 |---|-------|------|
-| 43 | `H1CodeTour` | `SectionSlide` segue: leave the deck, walk the real project in the editor — the `BlazorDeck` RCL and the MVVM starter in `samples/mvvm` (served live at `/demo/mvvm`) |
-
-### Close (44)
-
-| # | Slide | Beat |
-|---|-------|------|
-| 44 | `Z1Close` | Thank-you + repo link + scannable QR. No recap — the source *is* the recap |
+| 43 | `Z1Close` | Thank-you + repo link + scannable QR. No recap — the source *is* the recap |
 
 ---
 
@@ -191,8 +195,8 @@ demo slides are safe to type in.
   (7–8), the `@bind` toy (16), the live `<Stepper>` (17), the live `Card` (28) and `BulletList` (29),
   two working forms with validation firing (30–31), a real slide crashing and recovering (34),
   fullscreen and keyboard interop (35–36), the virtualized overview (39), live MudBlazor (41).
-- **Finale (43–44):** drop out of the deck into the editor, walk the real project, then hand them
-  the repo.
+- **Finale (43):** close on the repo — thank-you, link, QR. (The editor walk that used to sit here
+  is parked; see Segment H.)
 
 ## Anchor — the deck itself (`BlazorDeck`)
 
@@ -303,9 +307,10 @@ point that a slide can crash on stage, and RCL reusability is unarguable.
 - [ ] **More `@bind` modifiers** — slide 16 covers `@bind` + `@bind:event` only. Consider
       `@bind:format`, `@bind:after`, `@bind:get`/`@bind:set`. (`@bind-Value` is now covered at 31.)
       Open question: a compact "modifiers" strip on slide 16, or its own slide.
-- [ ] **Time budget** — the deck is now 44 slides against ~48 minutes of content. Candidate cuts
-      flagged earlier: fold `B1bAnatomyFiles` into `B1`, drop `C3bNamedCascading` (flex, and
-      explicitly fictional), fold `A6dPrerender` into `A6c`.
+- [ ] **Time budget** — 43 slides against ~53 minutes. Parking the code tour bought back the
+      several minutes that walk cost; slide cuts were considered and rejected, since each one
+      removed a concept for a saving measured in seconds. If it still runs long, the lever is
+      pace and the flex items (#16, #11b, #22, #25), not the slide list.
 - [ ] **Decide keep-or-delete on the three orphan layouts** — `CompareSlide`/`CompareOption`,
       `PlaygroundSlide`, `DemoSlide`. (`CodeSlide` and `SectionSlide` are no longer orphans: B1 and
       H1 use them.)
