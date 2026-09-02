@@ -1,250 +1,296 @@
 # Unleashing the Power of Blazor Components
 
-**Duration:** 60 minutes (~48 min content · ~7 min live demo · ~5 min Q&A)
+**Duration:** 60 minutes (~48 min content · ~7 min live code tour · ~5 min Q&A)
 **Audience:** Mixed (some new to Blazor, some experienced)
-**Style:** Mainly code slides; meta live demo woven throughout + a completeness beat at the end
-**Library focus:** MudBlazor (used to build the deck chrome; capstone shows custom slides feeling native beside it)
+**Style:** Mainly code slides; meta live demo woven throughout + a live code tour at the end
+**Library focus:** MudBlazor (the deck's themes *are* `MudTheme`s; Segment F shows Mud components
+sharing the slide palette)
 **Big idea:** The talk is *meta* — the slide deck itself is a Blazor app (`BlazorDeck`), and the
 components we teach ARE the deck's own components. Revealed upfront as the hook.
-**Hosting:** Unified Blazor Web App (.NET 8+, Microsoft's current direction). Present via
-WebAssembly/Auto for reliability (no live circuit to drop mid-talk); keep 1–2 Server-rendered
-slides as a live render-modes exhibit. See Slide technology below.
+**Hosting:** Unified Blazor Web App (.NET 10). Globally interactive router in `Talk.Client` so
+navigation is client-side and slide transitions survive a move. Three static-SSR demo endpoints are
+carved out *outside* the router and embedded by iframe, so the deck can still show non-interactive
+render modes from the inside. See Slide technology below.
+
+> This document describes the deck **as built**. It was rewritten to match the shipped 42-slide
+> deck; earlier revisions were a plan and had drifted from the code.
 
 ---
 
-## Concept status
+## Status
 
-- **23 concepts** selected across 7 segments (A–G)
-- **Flex items** (skippable live to hit time, placed at segment boundaries): Generic components (#16), bUnit testing (#24). *(Dynamic components #17 is no longer flex — it's the deck's rendering engine, now load-bearing.)*
-- **Cut:** Forms & validation · Error boundaries · QuickGrid · PersistentComponentState · Sections
-
----
-
-## Ordering
-
-### A · Set the stage
-1. Cold open — the meta reveal as the hook: "Every slide you'll see today is a Blazor component. This deck is a Blazor Web App, and by the end you'll understand every piece of it." Advance a slide, flip the theme, press `O` for the overview — all live. (See Demo structure below.)
-2. Render modes / hosting models — *framing; colors lifecycle, DI lifetimes, JS interop timing later.* Self-demo: show a static-SSR slide, an Interactive Server slide, and the WASM/Auto spine — live, in the deck itself.
-
-### B · Fundamentals
-3. Component structure / anatomy
-4. Parameters
-5. Attribute splatting / `CaptureUnmatchedValues` — *"parameters for everything you didn't declare"*
-6. Data binding
-7. `EventCallback`
-8. Lifecycle methods
-
-### C · Communication & DI
-9. Parent/child communication — *reframes params + `EventCallback` as "talking down and up"*
-10. Component references (`@ref`)
-11. Cascading parameters
-12. Dependency injection — *placed here because state containers need it*
-13. State container services
-14. `StateHasChanged` + `InvokeAsync` threading — *the gotcha, right where it bites*
-
-### D · Advanced composition
-15. Templated components / `RenderFragment`
-16. Generic components *(flex)* — *pairs with templating*
-17. Dynamic components (`DynamicComponent`) — *the deck's engine: `SlideHost` renders the current slide by type*
-18. JavaScript interop — *depends on lifecycle (`OnAfterRender`) + render modes*
-
-### E · Performance
-19. Rendering / diffing / `@key`
-20. Virtualization
-
-### F · Styling, reuse & integration
-21. CSS isolation
-22. Component libraries (RCL)
-23. Integrating with MudBlazor *(capstone)* — *pays off cascading (#11), templating (#15), generics (#16), splatting (#5)*
-
-### G · Payoff & close
-24. Testing with bUnit *(flex)*
-25. Live demo (the finale — *completeness beat*): step back through the deck and name each component now that the audience understands them — "that's `DeckState`, that's `DynamicComponent`, that's the cascading theme, that's CSS isolation." Payoff line: "You've been inside the demo the whole time — and here's the RCL you can reuse for your own talks."
-26. Wrap-up / Q&A
+- **42 slides**, segments **A–H** plus a close (`Z`). Source of truth is the `Slides` table in
+  `src/Talk.Client/Present.razor` — that array *is* the table of contents.
+- **Concepts #2–#25**, plus lettered/fractional additions that earned their own slides
+  (`#11b` named cascading, `#13½` `StateHasChanged`, `#18a`/`#18b` the two interop directions) and
+  several that carry no number at all (Static SSR, per-component render mode, prerendering,
+  `PersistentComponentState`, `ErrorBoundary`).
+- **Flex items** (skippable live to hit time, at segment boundaries): generic components (#16),
+  named cascading (#11b), `ShouldRender` (#22), bUnit (#25).
+  *(`DynamicComponent` #17 is not flex — it's the deck's rendering engine.)*
+- **Previously cut, since shipped:** `ErrorBoundary` (D3b/D3c) · `PersistentComponentState` (B7).
+- **Still cut:** Forms & validation · QuickGrid · `Sections`.
+- **Tests:** 6 passing in `tests/BlazorDeck.Tests` (bUnit for components, plain xunit for the
+  pure `CodeHighlighter`).
 
 ---
 
-## Slide technology — decision
+## Ordering — the 42 slides as built
 
-**Build the deck as a unified Blazor Web App** (.NET 8+ template — Microsoft's current direction),
-packaged as a reusable framework, `BlazorDeck`. The medium is the message: teaching Blazor
-components *with* Blazor components.
+Numbers are live slide positions (`/slide/N`).
 
-- **Hosting decision:** unified Blazor Web App, **presented via WebAssembly/Auto**. Rationale:
-  - Aligns with Microsoft's current default (unified render-mode model), *and*
-  - Lets the deck **demonstrate render modes on itself** (#2) — a static-SSR slide, an Interactive
-    Server slide, and the WASM/Auto spine, live.
-  - Presenting via WASM/Auto means **no live SignalR circuit** to drop mid-talk (the big risk with
-    Interactive Server: reconnect on laptop sleep or projector display/resolution change).
-  - Keep just **1–2 Server-rendered slides** as the teaching exhibit; the spine runs client-side.
-- **Risk plan (non-negotiable for a conference):** run it **offline**, pre-warmed; **export a
-  static PDF/screenshot deck as a fallback** in case the laptop misbehaves.
-- **Effort note:** wiring syntax highlighting (Prism/highlight.js via JS interop) is the one piece
-  a tool like Slidev gives for free — budget an afternoon to get Razor/C# crisp.
-- Heroes/superhero theme: **dropped.** No domain payload; the deck is the subject.
+### A · Set the stage (1–10)
+
+| # | Slide | Beat |
+|---|-------|------|
+| 1 | `A1Title` | Title + subtitle (with the joke) |
+| 2 | `A3Hello` | Who's talking — Brent · Alien Arc · GitHub |
+| 3 | `A2Reveal` | ⭐ The meta hook: "It's all components" — this deck is the demo |
+| 4 | `A4Agenda` | What we'll cover (`BulletList<T>`) |
+| 5 | `A5RenderModes` | #2 — the four render modes, as framing |
+| 6 | `A6ModeLive` | Self-demo: `RendererInfo` reports this slide's own mode |
+| 7 | `A6bStaticSsr` | Static SSR, live in an iframe: inert `@onclick`, working form POST |
+| 8 | `A6cRenderModes` | Render mode is **per-component**: a Server island beside a WASM island |
+| 9 | `A6dPrerender` | Prerendering — names the two-phase render, sets up B7's gotcha |
+| 10 | `A7WhyItMatters` | Why mode choice colours DI lifetimes and interop timing |
+
+*Intro before the reveal (2 before 3) is deliberate: who's talking, then what the deck is.*
+
+### B · Fundamentals (11–19) — each slide dissects a real deck component
+
+| # | Slide | Concept |
+|---|-------|---------|
+| 11 | `B1Anatomy` | #3 — one `.razor` file: markup + inline `@code` (the real `Slide`) |
+| 12 | `B1bAnatomyFiles` | #3b — the same component split into `.razor` + `.razor.cs` + `.razor.css` (both extras badged **optional**) |
+| 13 | `B1cIsolation` | #21 — CSS isolation: the `b-…` attribute rewrite, and why a child's elements dodge it |
+| 14 | `B2Parameters` | #4 — `[Parameter]` declared, parent passes it (one-way, down) |
+| 15 | `B3Splatting` | #5 — `CaptureUnmatchedValues` + `@attributes` |
+| 16 | `B4Binding` | #6 — real `@bind` code beside the live component it drives |
+| 17 | `B5EventCallback` | #7 — `Stepper.razor` child + parent, beside the live `<Stepper>` |
+| 18 | `B6Lifecycle` | #8 — the full `ComponentBase` hook timeline, with frequency badges |
+| 19 | `B7Persist` | `PersistentComponentState` — the prerender double-run; step 2 adds `[PersistentState]` + `??=` |
+
+*CSS isolation moved here from Segment F: it's part of "what a component is made of", so it belongs
+next to the anatomy slides rather than in a styling segment at the end.*
+
+### C · Communication & DI (20–27) — dissecting the deck's own state container
+
+| # | Slide | Concept |
+|---|-------|---------|
+| 20 | `C1CommunicationMap` | #9 — the map: params down, `EventCallback` up, DI service anywhere |
+| 21 | `C2Ref` | #10 — `@ref`: capture an element, `FocusAsync` after first render *(illustrative)* |
+| 22 | `C3Cascading` | #11 — the real `<CascadingValue Value="State.Theme">` + a consumer |
+| 23 | `C3bNamedCascading` | #11b — two cascades of one type, disambiguated by `Name` *(illustrative)* |
+| 24 | `C4Di` | #12 — `AddScoped<DeckState>()` in **both** `Program.cs` files (the InteractiveAuto detail) |
+| 25 | `C5StateContainer` | #13 ⭐ — `DeckState`: state + `OnChange`; subscribe in `OnInitialized`, unsubscribe in `Dispose` |
+| 26 | `C6StateHasChanged` | #13½ — automatic re-render vs. asking for one |
+| 27 | `C7Threading` | #14 — the transition timer's off-thread continuation → `InvokeAsync(StateHasChanged)` |
+
+### D · Advanced composition (28–34)
+
+| # | Slide | Concept |
+|---|-------|---------|
+| 28 | `D1Templated` | #15 — `RenderFragment` slots: the real `Card.razor` (named `Header` + `ChildContent`), live |
+| 29 | `D2Generic` | #16 *(flex)* — the deck's real `BulletList<T>`: `@typeparam`, inferred `TItem` |
+| 30 | `D3DynamicComponent` | #17 — the deck's engine: one `<DynamicComponent>` swaps in whichever slide you're on |
+| 31 | `D3bErrorBoundary` | `ErrorBoundary` — the real wrap around this deck's slide host |
+| 32 | `D3cBoom` | ⭐ The payoff: a real slide throws live; the fallback appears, the deck survives, `→` keeps going |
+| 33 | `D4JsCall` | #18a — C# → JS: `IJSObjectReference` module import, `toggleFullscreen` |
+| 34 | `D5JsCallback` | #18b — JS → C#: `DotNetObjectReference` + `[JSInvokable]`, the real keyboard nav |
+
+### E · Performance (35–37)
+
+| # | Slide | Concept |
+|---|-------|---------|
+| 35 | `E1ShouldRender` | #22 — veto the renders that can't change your output; the deck guards tokenising instead |
+| 36 | `E2Key` | #19 — `@key` for stable list identity (the real `BulletList` + overview rows) |
+| 37 | `E3Virtualize` | #20 — the overview grid is a real `<Virtualize>` |
+
+### F · Reuse (38–39)
+
+| # | Slide | Concept |
+|---|-------|---------|
+| 38 | `F1Libraries` | #23 — the RCL: `Sdk="Microsoft.NET.Sdk.Razor"`, assets under `_content/BlazorDeck/` |
+| 39 | `F2MudBlazor` | #24 — real MudBlazor components, themed by the shared palette |
+
+### G · Testing (40)
+
+| # | Slide | Concept |
+|---|-------|---------|
+| 40 | `G1Bunit` | #25 *(flex)* — the deck's real `CaptionTests` under `BunitContext` |
+
+### H · Code tour (41)
+
+| # | Slide | Beat |
+|---|-------|------|
+| 41 | `H1CodeTour` | `SectionSlide` segue: leave the deck, walk the real project in the editor — the `BlazorDeck` RCL and the MVVM starter in `samples/mvvm` (served live at `/demo/mvvm`) |
+
+### Close (42)
+
+| # | Slide | Beat |
+|---|-------|------|
+| 42 | `Z1Close` | Thank-you + repo link + scannable QR. No recap — the source *is* the recap |
+
+---
+
+## Slide technology — as built
+
+**A unified Blazor Web App (.NET 10)**, with the reusable deck framework packaged as the
+`BlazorDeck` RCL. The medium is the message: teaching Blazor components *with* Blazor components.
+
+- **Repo layout:** `src/BlazorDeck` (RCL) · `src/Talk` (server host) · `src/Talk.Client` (WASM
+  client + all slides) · `samples/mvvm/MvvmSample` · `tests/BlazorDeck.Tests` ·
+  `BlazorComponents.slnx`.
+- **Run it:** `dotnet run` from `src/Talk` — profile `https` (https://localhost:7270,
+  http://localhost:5028) or `http` (5028 only).
+- **Router:** `Routes.razor` lives in `Talk.Client` so the router itself runs in the interactive
+  runtime. That's what keeps navigation client-side (no round-trip, no remount) and lets slide
+  transitions survive a move. **Don't** revert this to per-page render modes.
+- **The static-SSR carve-out:** because the router is globally interactive, the deck cannot show a
+  non-interactive component from the inside. Three endpoints are mapped in `src/Talk/Program.cs`
+  *outside* `<Routes>` as `RazorComponentResult` documents, and slides embed them in iframes:
+  - `/demo/static-ssr` — GET + POST form round-trip (slide 7)
+  - `/demo/render-modes` — a Server island beside a WASM island (slide 8)
+  - `/demo/mvvm` — the MVVM sample as an InteractiveServer island (referenced by slide 41)
+- **Syntax highlighting is C#, not JS.** `CodeHighlighter` is a pure function (code in → per-line
+  tokens out) that runs during render, so code is coloured correctly from the first paint —
+  including prerender — with no JS and no flash. It is unit-tested directly.
+  *(The original plan called for Prism/highlight.js via interop; that was dropped.)*
+- **JS interop is still genuine**, just elsewhere: keyboard nav, fullscreen, canvas fitting, and
+  overview thumbnail scaling — all in `_content/BlazorDeck/deck.js`.
+- **Risk plan:** run offline, pre-warmed. PDF/screenshot fallback export is still an open item.
+
+### Presenter controls
+
+`←/→` `PageUp/PageDown` `Space` `Enter` move (steps within a slide are consumed before slides) ·
+`Home`/`End` jump to ends · `o` overview · `t` theme · `f` fullscreen · `s` settings · `r` reload ·
+`Escape` closes overview/settings. Keys are ignored while focus is in a text field, so the `@bind`
+demo slides are safe to type in.
+
+- **4 themes:** Dark/Light × Indigo/Amber. Each *is* a `MudTheme`, and all `--deck-*` variables
+  resolve from `--mud-palette-*`, so custom slides and MudBlazor components share one palette.
+- **5 transitions:** Fade (default) · Slide · Vertical · Scale · None. Per-slide via `SlideInfo`,
+  or set the deck default in settings.
+- **4 canvas shapes:** Auto (match the screen — default) · 16:9 · 16:10 · 4:3. The canvas is always
+  1280 wide, so horizontal `cqw` units are identical whichever shape is picked; only height changes.
+- **View state in the URL:** `/slide/N` plus `?theme=`/`?transition=`, read in `OnInitialized`
+  before first paint — which is why the deck has no prerender flash and no double-fetch of its own
+  (see the B7 note).
 
 ## Demo structure — meta, revealed upfront
 
-- **Cold open (#1):** state the meta outright — "this deck is a Blazor app; these slides are the
-  components." Knowing it doesn't spoil anything; watching it get built *is* the payoff.
-- **Snippets throughout:** each segment shows real code from the deck's own components, and you can
-  point at the running deck in front of the room.
-- **Finale (#25):** the *completeness beat* — walk back through the deck naming each component now
-  that the audience understands them, then hand them the `BlazorDeck` RCL to reuse themselves.
+- **Cold open (slides 1–3):** state the meta outright — "this deck is a Blazor app; these slides are
+  the components." Knowing it doesn't spoil anything; watching it get built *is* the payoff.
+- **Live moments throughout**, not just at the end: the render-mode probe (6), two live iframes
+  (7–8), the `@bind` toy (16), the live `<Stepper>` (17), the live `Card` (28) and `BulletList` (29),
+  a real slide crashing and recovering (32), fullscreen and keyboard interop (33–34), the
+  virtualized overview (37), live MudBlazor (39).
+- **Finale (41–42):** drop out of the deck into the editor, walk the real project, then hand them
+  the repo.
 
 ## Anchor — the deck itself (`BlazorDeck`)
 
-The reusable framework whose parts are the taught components:
+The RCL whose parts are the taught components:
 
-- **`Deck`** — root; owns the slide list, keyboard handling, routing
-- **`Slide`** — base slide layout (`Title`, `Number`, content)
-- **`CodeSlide` / `CodeBlock`** — code display + syntax highlighting + line-step reveal
-- **`SlideHost`** — renders the current slide *by type* via `DynamicComponent`
-- **`DeckState`** — service: current index, theme, presenter mode
-- **`ThemeProvider`** — cascades accent / light-dark / font-scale to everything
-- **`SlideNav`** — prev/next/jump controls + progress
-- **`Overview`** — press-`O` thumbnail grid (virtualized)
-- **`PlaygroundSlide`** — live `@bind` parameter editor
-- **Services** — `ISyntaxHighlighter`, `DeckState` (DI)
+**Layout / content components**
+- **`Deck`** — root: slide list, keyboard handling, URL sync, transitions, overview, settings,
+  canvas fitting, and the `ErrorBoundary` around the slide host
+- **`Slide`** — base slide layout (title, subtitle, body); the anatomy specimen in B1
+- **`TitleSlide`** · **`SectionSlide`** — opening statement / segment divider
+- **`CodeSlide`** — full-bleed code slide (used by B1)
+- **`CodeWindow`** — the workhorse: one filenamed, highlighted, optionally step-revealed code pane
+- **`SplitSlide`** — two columns via named `Left`/`Right` fragments (+ `Footer`, `WideLeft`)
+- **`LiveFrame`** — the "live" tag + framed stage around a real running component
+- **`BulletList<T>`** — typed, templated, `@key`-ed list
+- **`Caption`** — inline prose/code annotation
+- **`SlideErrorFallback`** — what a thrown slide degrades to
 
-**Why it holds up better than a domain anchor:** `DynamicComponent` becomes the deck's engine (not a
-throwaway mention), `DeckState`/slide-index is a textbook state container, JS interop has three
-genuine uses, and RCL reusability is unarguable (reused every slide + every future talk). Only
-soft spot: generics (#16), a mild stretch — already flex, cut-friendly.
+**State & services**
+- **`DeckState`** (scoped DI) — index, step/step-count, theme, transition, aspect, overview and
+  settings flags, direction; raises `OnChange`
+- **`DeckTheme`/`DeckThemes`** · **`SlideTransition(s)`** · **`DeckAspect(s)`** — the presenter-facing
+  option sets
+- **`SlideInfo`** — one TOC entry: `Type`, `Title`, `Transition`, `Tag` (the corner `<Tag />` label)
+- **`ISteppable`/`SteppableSlide`** — how a slide reports its build-step count to the deck
+- **`CodeHighlighter`** — pure, testable Razor/C# tokenizer (no DI, no JS)
+
+**Assets:** `deck.js` · `background.png`, served from `_content/BlazorDeck/`.
+
+**Why it holds up:** `DynamicComponent` is the deck's engine (not a throwaway mention), `DeckState`
+is a textbook state container, JS interop has four genuine uses, `ErrorBoundary` is dogfooded to the
+point that a slide can crash on stage, and RCL reusability is unarguable.
 
 ### Concept → deck-component mapping
 
-| # | Concept | How the *deck itself* shows it | Carried by | Fit |
-|---|---------|-------------------------------|-----------|-----|
-| 2 | Render modes | Unified Blazor Web App: show static-SSR + Interactive Server + WASM/Auto slides live in the deck itself | Deck host | ⭐ self-demo |
-| 3 | Structure / anatomy | `Slide.razor` — markup + `@code` + directives | Slide | strong |
-| 4 | Parameters | `Slide.Title`/`Number`; `CodeSlide.Language`/`HighlightLines` | Slide / CodeSlide | strong |
-| 5 | Attribute splatting | `Slide` forwards `class`/`data-*` so one slide can restyle itself | Slide | strong |
-| 6 | Data binding | `@bind` on "jump to slide N"; live parameter playground | SlideNav / Playground | genuine |
-| 7 | `EventCallback` | `OnNext`/`OnPrev`/`OnSlideChanged` from nav | SlideNav | strong |
-| 8 | Lifecycle | Slide-enter animation in `OnAfterRender`; highlight on `OnAfterRenderAsync` | Slide / CodeSlide | strong |
-| 9 | Parent/child | `Deck` ↔ `Slide` via params + callbacks | Deck + Slide | strong |
-| 10 | `@ref` | `Deck` calls `slide.Advance()` to step through fragments within a slide | Deck → Slide | genuine |
-| 11 | Cascading params | Theme (accent / light-dark / font scale) cascades to every slide + code block | ThemeProvider | strong |
-| 12 | DI | Inject `ISyntaxHighlighter` + `DeckState` | Services | strong |
-| 13 | State container | `DeckState` — current index synced across nav, progress, counter, overview | DeckState | ⭐ textbook |
-| 14 | `InvokeAsync`/threading | Auto-advance / rehearsal-timer fires off-thread → `InvokeAsync(StateHasChanged)` | DeckState timer | genuine |
-| 15 | Templated components | `Slide` exposes `TitleTemplate` + `ChildContent`; `TwoColumn` layout fragments ⭐ | Slide layouts | strong |
-| 16 | Generics *(flex)* | `BulletList<TItem>` / `AgendaList<TItem>` data-driven slide | Content comps | ⚠️ mild stretch |
-| 17 | `DynamicComponent` | `SlideHost` renders the current slide **by type** — the deck's engine ⭐ | SlideHost | load-bearing |
-| 18 | JS interop | Keyboard nav (`keydown`), fullscreen API, syntax highlighting ⭐ | Deck interop | 3 genuine uses |
-| 19 | `@key` | Keying slides / overview thumbnails so transitions diff correctly | Deck / Overview | genuine |
-| 20 | Virtualization | The `Overview` thumbnail grid, virtualized | Overview | reasonable |
-| 21 | CSS isolation | `Slide.razor.css` / `CodeSlide.razor.css`; `::deep` into highlighted code ⭐ | Slide / CodeSlide | strong |
-| 22 | RCL | Package as `BlazorDeck` — reused every slide *and every future talk* ⭐⭐ | The library | the payoff |
-| 23 | MudBlazor capstone | Build deck chrome (nav, buttons, overview) with MudBlazor; slides feel native beside Mud | Deck chrome | strong |
-| 24 | bUnit *(flex)* | Test `Slide` renders its template; advancing nav increments `DeckState.Index` | Tests | strong |
+| # | Concept | Slide | How the *deck itself* shows it | Fit |
+|---|---------|-------|-------------------------------|-----|
+| 2 | Render modes | 5–10 | The host is Auto; a probe reports the live mode; two iframes show Static SSR and per-component islands | ⭐ self-demo |
+| 3 | Anatomy | 11–12 | The real `Slide.razor`, then the same type split across three files | strong |
+| 4 | Parameters | 14 | `Slide.Title` declared; a parent slide passes it | strong |
+| 5 | Attribute splatting | 15 | `CaptureUnmatchedValues` + `@attributes` on the root element | strong |
+| 6 | Data binding | 16 | Live `@bind` toy beside its own source | genuine (toy) |
+| 7 | `EventCallback` | 17 | `Stepper` raises, parent decides what a step means | strong (toy) |
+| 8 | Lifecycle | 18 | Full `ComponentBase` timeline; `OnAfterRender` pays off at 33 | strong |
+| — | `PersistentComponentState` | 19 | Prerender double-run; `[PersistentState]` + `??=` as the whole diff | made-up by design |
+| 9 | Parent/child | 20 | The communication map framing the segment | strong |
+| 10 | `@ref` | 21 | Capture an `<input>`, `FocusAsync` | illustrative |
+| 11 | Cascading params | 22 | The real theme cascade wrapping the whole stage | ⭐ strong |
+| 11b | Named cascading | 23 | Two same-typed cascades disambiguated by `Name` | illustrative *(flex)* |
+| 12 | DI | 24 | `AddScoped<DeckState>()` in **both** `Program.cs` files | ⭐ real detail |
+| 13 | State container | 25 | `DeckState` drives everything you're watching | ⭐ textbook |
+| 13½ | `StateHasChanged` | 26 | The missing piece under `State.OnChange += StateHasChanged` | strong |
+| 14 | `InvokeAsync`/threading | 27 | The transition timer's off-thread continuation | ⭐ genuine |
+| 15 | Templated components | 28 | Real `Card` with a named `Header` slot, rendered live | strong |
+| 16 | Generics | 29 | The real `BulletList<T>` that slides 4/5/10 already use | strong *(flex)* |
+| 17 | `DynamicComponent` | 30 | The deck's engine — renders the current slide **by type** | ⭐ load-bearing |
+| — | `ErrorBoundary` | 31–32 | The real wrap around the slide host; slide 32 throws live and recovers | ⭐ dogfooded |
+| 18a | JS interop C#→JS | 33 | `IJSObjectReference` → `toggleFullscreen` in the real `deck.js` | strong |
+| 18b | JS interop JS→C# | 34 | `DotNetObjectReference` + `[JSInvokable]` — every keypress you make | ⭐ strong |
+| 19 | `@key` | 36 | `BulletList` keys by item; overview rows key by index | genuine |
+| 20 | Virtualization | 37 | The overview grid is a real `<Virtualize>` | genuine |
+| 21 | CSS isolation | 13 | The `b-…` rewrite; why a child's elements dodge it | strong |
+| 22 | `ShouldRender` | 35 | Framed as the flip side of #13½; `CodeWindow` guards the work instead | honest caveat *(flex)* |
+| 23 | RCL | 38 | `BlazorDeck` itself — reused every slide and every future talk | ⭐⭐ the payoff |
+| 24 | MudBlazor | 39 | Deck themes *are* `MudTheme`s; Mud components match with no extra styling | structural |
+| 25 | bUnit | 40 | The deck's real `CaptionTests` | strong *(flex)* |
 
-## Spike — DONE ✓
+## Slide-type palette — usage as built
 
-3-slide `BlazorDeck` skeleton built and verified in the browser (.NET 10, unified Blazor Web App).
-Repo layout: `src/BlazorDeck` (RCL) · `src/Talk` + `src/Talk.Client` (host, Auto) ·
-`tests/BlazorDeck.Tests` (bUnit) · `BlazorComponents.slnx`. Run with launch profile `deck` (port 5028).
+| Layout | Purpose | Uses |
+|--------|---------|------|
+| `CodeWindow` | One filenamed, highlighted, step-revealable code pane | 47 — the workhorse |
+| `Slide` | Generic title + freeform body | 26 |
+| `Caption` | Inline prose/code annotation | 24 |
+| `SplitSlide` | Two columns via named `Left`/`Right` fragments | 22 — the default concept-slide shape |
+| `LiveFrame` | Framed live component with a "live" tag | 9 |
+| `BulletList<T>` | Typed, templated, keyed list | 3 |
+| `TitleSlide` | Opening statement | 1 (A1) |
+| `SectionSlide` | Segment divider | 1 (H1) |
+| `CodeSlide` | Full-bleed code slide | 1 (B1) |
+| `CompareSlide` + `CompareOption` | Side-by-side options with a recommended pick | **0 — orphan** |
+| `PlaygroundSlide` | Preview + controls panes | **0 — orphan** |
+| `DemoSlide` | Full-slide live component (now just a thin wrapper over `LiveFrame`) | **0 — orphan** |
 
-Validated live (build clean, 0 warnings, no console errors):
-- `DynamicComponent` renders the current slide by type (#17 — the deck engine)
-- `DeckState` container drives nav + position counter (#13)
-- JS interop: keyboard nav + fullscreen + code highlighting via `IJSObjectReference` module (#18)
-- Cascading theme flip indigo→amber across title, code accent, keywords (#11)
-- Render-mode self-demo slide reported **WebAssembly / interactive: True** (#2)
-- CSS isolation per slide/code component (#21); RCL served at `_content/BlazorDeck/deck.js` (#22)
-
-Spike files are the real foundation — Step 3 builds on them (not throwaway).
-
-## Slide-type palette — BUILT ✓
-
-The reusable layout components in `BlazorDeck` (compose these inside per-talk slide wrappers):
-
-| Layout | Purpose | Demonstrates |
-|--------|---------|--------------|
-| `TitleSlide` | Opening / big statement (kicker + title + subtitle) | structure, params |
-| `SectionSlide` | Segment divider (marker + title) | — |
-| `Slide` | Generic title + freeform body (base others build on) | #3 #4 #5 #11 #21 |
-| `CodeSlide` | Full code + JS-interop highlighting | #8 #18 #21 |
-| `SplitSlide` | Two columns via named `Left`/`Right` fragments | templating #15 |
-| `BulletList<T>` | Typed, templated list (used inside slides) | generics #16, #15, #19 |
-| `CompareSlide` + `CompareOption` | Side-by-side options w/ a recommended pick | parent/child #9 |
-| `DemoSlide` | Frames a live interactive component inline | the meta moments |
-| `PlaygroundSlide` | Preview + controls panes; per-slide wires `@bind` | data binding #6 |
-| `Overview` (in `Deck`) | Press-`o` virtualized slide list, click to jump | virtualization #20, #19 |
-
-All verified live in the browser (8 showcase slides, build clean, no console errors): overview jump,
-theme flip, live counter, `@bind` slider, split/compare/section layouts.
-
-**MudBlazor integrated (theming aligned).** The deck wraps `MudThemeProvider`; the `t` toggle drives
-MudBlazor `IsDarkMode` + primary across 4 presets (Dark/Light × Indigo/Amber). All `--deck-*`
-variables resolve *from* `--mud-palette-*`, so custom slides and MudBlazor components share one
-palette — the Segment F "feels native" capstone (#23) is now structural, not staged. Verified:
-`--deck-bg` === `--mud-palette-background`, `--accent` === `--mud-palette-primary`.
-
-Known content-sizing note: `SplitSlide` code overflows if too wide — keep split-code snippets short.
-
-## Step 3 progress — slide content per segment
-
-- [x] **Segment A · Set the stage** — built & verified (`src/Talk.Client/Slides/SegmentA/`)
-  - A1 Title · A2 "It's all components" (reveal hook) · A3 Hello (⚠ placeholder bio to fill)
-  - A4 Agenda (bullet list) · A5 Four render modes · A6 Mode-live self-demo (RendererInfo → WebAssembly)
-  - A7 Why render mode matters (sets up DI lifetimes + JS interop callbacks)
-  - Showcase slides removed (in git history); `Present.razor` now lists Segment A only.
-- [x] **Segment B · Fundamentals** — built & verified (`src/Talk.Client/Slides/SegmentB/`)
-  - Approach: lean on the deck's own components where it helps, but keep each snippet the
-    **minimal version for the current lesson** (teaching code need not match the real code 1:1).
-    Concept slides = one focused code window per file (two windows when a lesson spans two files).
-  - B1 Anatomy — **two slides**: (1) recommended single-file layout — real `Slide.razor`
-    (markup + inline `@code`); (2) "…or split across files" — same component as `.razor` +
-    `.razor.cs` + `.razor.css`, with `.cs`/`.css` badged **optional**. (Extracted a reusable
-    `CodeWindow` primitive from `CodeSlide`; `Slide` kept single-file to match the recommendation.)
-  - B2 Parameters — two windows: `Slide.razor` (declares `Title`) + `A5RenderModes.razor` (parent passes it)
-  - B3 Attribute splatting — two windows: `Slide.razor` (`CaptureUnmatchedValues` + `@attributes`) + a caller
-  - B4 Data binding — live `@bind` demo **beside its own code** (deck uses a state container, so this is a live toy)
-  - B5 EventCallback — child (`Stepper.razor`) + parent code windows **beside the live `<Stepper>`**
-  - B6 Lifecycle — a **timeline** (not empty code stubs) of all six hooks in order:
-    `SetParametersAsync` (async-only) · `OnInitialized{Async}` · `OnParametersSet{Async}` ·
-    `ShouldRender` (sync-only) · `OnAfterRender{Async}` · `Dispose`/`DisposeAsync`, each with a
-    frequency badge; most pair sync+async, two don't. NO JS interop here (that's Segment D #18,
-    which will reference this lifecycle); `ShouldRender` foreshadows Segment E rendering/#19.
-  - Note: deck has no real `@bind`/`EventCallback` usage → B4/B5 are live demos that foreshadow the
-    state container (#13, Segment C). A3 bio now filled in (Brent · Alien Arc · GitHub).
-- [x] Segment C · Communication & DI — **built & verified** (slides 15–21). Concepts #9–14 (+#13½),
-    each dissecting the deck's real state container. Layout guard: keep code windows ≤ ~36 chars
-    wide and short enough that one-line content clears the top (the `.cs-pre` clips, doesn't wrap).
-  - C1 (#9) — communication map: `[Parameter]` down · `EventCallback` up · `DeckState` anywhere
-  - C2 (#10) — `@ref`: the real `CodeWindow` captures its `<code>` ElementReference, hands it to JS
-  - C3 (#11) — cascading params: the real `<CascadingValue Value="State.Theme">` provider + a consumer
-  - C4 (#12) — DI: `AddScoped<DeckState>()` in **both** Program.cs (Server + WASM — an InteractiveAuto detail)
-  - C5 (#13) — ⭐ `DeckState`: state + `OnChange` event; subscribe in `OnInitialized`, unsubscribe in `Dispose`
-  - C6 (#13½) — `StateHasChanged`: introduced here (before it's used off-thread). When Blazor re-renders
-    for you vs. when you must ask; ties back to the container's `State.OnChange += StateHasChanged` line
-  - C7 (#14) — threading: the transition timer's off-thread continuation → `InvokeAsync(StateHasChanged)`
-- [x] Segment D · Advanced composition — **built & verified at 1920×1080** (slides 22–25). Concepts #15–18.
-    Design target is 1080p (fonts are capped, height is vh-based, so 720p is the tighter constraint).
-    Live demos are real components, not fakes — what's on screen IS the code shown.
-  - D1 (#15) — templated components: real `Card.razor` (Header + ChildContent slots) + `Page.razor` caller + live `Card`
-  - D2 (#16) — generic components: real `TypedList<TItem>` (`@typeparam`, `RenderFragment<TItem> Row`) + caller + live list; `TItem` inferred
-  - D3 (#17) — `DynamicComponent`: the deck's real engine — a table of slide types rendered by index (Parameters dict for reuse)
-  - D4 (#18) — JS interop: both directions from real deck.js — `IJSObjectReference` (C#→JS) and `DotNetObjectReference`/`[JSInvokable]` (JS→C#)
-  - Razor gotcha: a component tag (`<TypedList>`) written inside a CSS comment in a `<style>` block is parsed as markup — keep angle brackets out of `<style>` comments.
-- [ ] Segments E–G (next: Segment E · Performance — #19 @key, #20 Virtualization; both real deck features)
+**Layout guardrails learned the hard way:**
+- Keep `SplitSlide` code windows ≤ ~36 chars wide — `.cs-pre` clips, it doesn't wrap.
+- A related code-window **pair** stacks over-under; side-by-side is reserved for code + live demo.
+- A component tag written inside a CSS comment in a `<style>` block is parsed as markup — keep
+  angle brackets out of `<style>` comments.
+- Design target is 1080p; fonts are capped and height is `cqh`-based, so 720p is the tighter
+  constraint. Check 4:3 before presenting on an old projector.
 
 ## Open items
 
-- [ ] Continue Step 3 with Segment E
-- [x] **Refactor toward original intent — done (Option B).** Retrofitted 14 hand-rolled slides (B1–B5,
-      C2–C5, C7, D1–D4) to compose the reusable layouts. Enhancements: `SplitSlide` gained optional
-      `Footer` + `WideLeft`; extracted `LiveFrame` (the "live" tag + framed stage), which `DemoSlide`
-      and the code∣live slides both use. D2 now dissects the **real** `BulletList<T>` (dropped the
-      duplicate `TypedList`). Segment A already composed layouts; bespoke slides kept bespoke: A2, A3,
-      B1b, B6, C1, C6. Verified at 1080p. Razor gotcha hit: a component tag inside a `<style>` CSS
-      comment is parsed as markup.
-- [ ] **Orphaned layouts still at 0 uses** — decide keep-or-delete: `CompareSlide`/`CompareOption`,
-      `CodeSlide`, `PlaygroundSlide`, `SectionSlide`, and `DemoSlide` (now only reused *by* LiveFrame,
-      not rendered anywhere). C6 was left bespoke — `CompareSlide` is "pick one of two"; C6 is a
-      taxonomy (automatic vs manual), a semantic mismatch. `SectionSlide` would fit if we add segment
-      dividers.
-- [ ] Later: real highlighter (vendor Prism/Shiki to replace the spike's minimal one),
-      bUnit tests (#24), PDF-export fallback, `DiagramSlide` if the lifecycle timeline needs it
+- [ ] **Forms & `InputBase<T>`** — the weakest meta-fit (a deck has no forms) but the #1 thing a
+      mixed audience actually ships. `PlaygroundSlide` could grow a validated parameter editor to
+      carry it — which would also un-orphan that layout.
+- [ ] **More `@bind` modifiers** — slide 16 covers `@bind` + `@bind:event` only. Consider
+      `@bind:format`, `@bind:after`, `@bind:get`/`@bind:set`, and `@bind-Value`. Open question:
+      a compact "modifiers" strip on slide 16, or its own slide.
+- [ ] **Decide keep-or-delete on the three orphan layouts** — `CompareSlide`/`CompareOption`,
+      `PlaygroundSlide`, `DemoSlide`. (`CodeSlide` and `SectionSlide` are no longer orphans: B1 and
+      H1 use them.)
+- [ ] **PDF/screenshot fallback export** for the conference risk plan.
+- [ ] Possible future render-mode material: `[StreamRendering]`, enhanced navigation.
+- [ ] `AngleSharp` 1.4.0 in the test project has a known moderate advisory (NU1902) — bump when a
+      fixed bUnit ships.
