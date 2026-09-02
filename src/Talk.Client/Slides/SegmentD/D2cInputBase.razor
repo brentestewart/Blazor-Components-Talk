@@ -5,15 +5,17 @@
    generics because InputBase<T> IS a generic base class, and it converges most of the deck:
    parameters (B2), splatting (B3), @bind-Value (B4), the EditContext cascade (C3) and generics (D2).
    It also demonstrates @inherits, which the deck uses in its own slides but never teaches.
-   Step 1: the component you write. Step 2: the form that uses it.
+   Usage first, then the component: step 1 is the form (the vocabulary from D2bForms, now with our
+   own input in it), step 2 is how that input is written. Showing the component first meant the
+   audience met InputBase before the machinery it plugs into.
    The live frame on the right is the real DurationInput — type "banana" and the box goes red with
    the message from TryParseValueFromString, neither of which is code we wrote.
    Illustrative by necessity: a slide deck has no forms of its own to dogfood.
    The shown code is the real file re-wrapped narrower — .cs-pre clips rather than wraps. *@
 <SplitSlide Title="Custom form inputs" Subtitle="@Sub" WideLeft="true" LeftRatio="1.55">
     <Left>
-        <CodeWindow FileName="@(Step == 0 ? "DurationInput.razor" : "TaskForm.razor")"
-                    Language="razor" Code="@(Step == 0 ? Component : Caller)" />
+        <CodeWindow FileName="@(Step == 0 ? "TaskForm.razor" : "DurationInput.razor")"
+                    Language="razor" Code="@(Step == 0 ? Caller : Component)" />
     </Left>
     <Right>
         <div class="fi-live">
@@ -32,20 +34,20 @@
 
         @if (Step == 0)
         {
-            <Caption>Inheriting <code>InputBase&lt;TimeSpan&gt;</code> supplies
-                <code>Value</code>/<code>ValueChanged</code>/<code>ValueExpression</code>, registers the
-                field with the cascaded <code>EditContext</code>, and computes <code>CssClass</code>.
-                You write the parse.</Caption>
-            <Caption Spaced>Return <code>false</code> and your message becomes the field's validation
-                error — that's what reddens the box and fills <code>&lt;ValidationMessage&gt;</code>.</Caption>
+            <Caption>Same form as the last slide — only the input has changed. It drops into
+                <code>&lt;EditForm&gt;</code> exactly like <code>&lt;InputText&gt;</code> did, with
+                <code>@@bind-Value</code> and a <code>&lt;ValidationMessage&gt;</code>.</Caption>
+            <Caption Spaced>But <code>_task.Estimate</code> is a <code>TimeSpan</code>, and no
+                built-in input parses <em>"1h 30m"</em>. So we write one.</Caption>
         }
         else
         {
-            <Caption><code>@@bind-Value</code> binds the <code>Value</code>/<code>ValueChanged</code>
-                pair the base class already declared; nobody passes <code>EditContext</code> — it
-                arrives by cascade from <code>&lt;EditForm&gt;</code>.</Caption>
-            <Caption Spaced>It behaves like a built-in <code>&lt;InputText&gt;</code> because it is
-                one — same base class, different parse.</Caption>
+            <Caption>Inheriting <code>InputBase&lt;TimeSpan&gt;</code> supplies
+                <code>Value</code>/<code>ValueChanged</code>/<code>ValueExpression</code> (that's what
+                <code>@@bind-Value</code> binds), registers the field with the cascaded
+                <code>EditContext</code>, and computes <code>CssClass</code>. You write the parse.</Caption>
+            <Caption Spaced>Return <code>false</code> and your message becomes the field's validation
+                error — that's what reddens the box and fills <code>&lt;ValidationMessage&gt;</code>.</Caption>
         }
     </Right>
     <Footer>

@@ -1,0 +1,47 @@
+.fb-live { margin-bottom: 1.3rem; }
+
+.fb-label {
+    display: block;
+    font-size: 1.05rem;
+    letter-spacing: 0.02em;
+    color: color-mix(in srgb, var(--deck-fg) 65%, transparent);
+    margin-bottom: 0.45rem;
+}
+
+/* ::deep because <InputText> is a child component — its <input> never carries this slide's scope
+   attribute, so a plain selector wouldn't reach it. Exactly the rule B1cIsolation teaches. */
+.fb-live ::deep input {
+    font-family: inherit;
+    font-size: 1.35rem;
+    padding: 0.5rem 0.8rem;
+    border-radius: 8px;
+    border: 1px solid var(--deck-border);
+    background: var(--deck-surface);
+    color: var(--deck-fg);
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.fb-live ::deep input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+.fb-live ::deep input.modified.valid {
+    border-color: color-mix(in srgb, #3fb950 60%, var(--deck-border));
+}
+
+.fb-live ::deep input.invalid {
+    border-color: #f85149;
+    box-shadow: 0 0 0 3px color-mix(in srgb, #f85149 22%, transparent);
+}
+
+/* Reserved height, so the frame doesn't jump when the message appears. */
+.fb-msg {
+    min-height: 1.7rem;
+    margin-top: 0.5rem;
+    font-size: 1.05rem;
+    color: #f85149;
+}

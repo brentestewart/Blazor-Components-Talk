@@ -12,19 +12,19 @@ navigation is client-side and slide transitions survive a move. Three static-SSR
 carved out *outside* the router and embedded by iframe, so the deck can still show non-interactive
 render modes from the inside. See Slide technology below.
 
-> This document describes the deck **as built**. It was rewritten to match the shipped 42-slide
-> deck; earlier revisions were a plan and had drifted from the code.
+> This document describes the deck **as built**. It was rewritten to match the shipped deck;
+> earlier revisions were a plan and had drifted from the code.
 
 ---
 
 ## Status
 
-- **42 slides**, segments **A–H** plus a close (`Z`). Source of truth is the `Slides` table in
+- **44 slides**, segments **A–H** plus a close (`Z`). Source of truth is the `Slides` table in
   `src/Talk.Client/Present.razor` — that array *is* the table of contents.
-- **Concepts #2–#25**, plus lettered/fractional additions that earned their own slides
+- **Concepts #2–#26**, plus lettered/fractional additions that earned their own slides
   (`#11b` named cascading, `#13½` `StateHasChanged`, `#18a`/`#18b` the two interop directions) and
   several that carry no number at all (Static SSR, per-component render mode, prerendering,
-  `PersistentComponentState`, `ErrorBoundary`).
+  `PersistentComponentState`, `ErrorBoundary`, forms).
 - **Flex items** (skippable live to hit time, at segment boundaries): generic components (#16),
   named cascading (#11b), `ShouldRender` (#22), bUnit (#25).
   *(`DynamicComponent` #17 is not flex — it's the deck's rendering engine.)*
@@ -35,7 +35,7 @@ render modes from the inside. See Slide technology below.
 
 ---
 
-## Ordering — the 42 slides as built
+## Ordering — the 44 slides as built
 
 Numbers are live slide positions (`/slide/N`).
 
@@ -86,50 +86,56 @@ next to the anatomy slides rather than in a styling segment at the end.*
 | 26 | `C6StateHasChanged` | #13½ — automatic re-render vs. asking for one |
 | 27 | `C7Threading` | #14 — the transition timer's off-thread continuation → `InvokeAsync(StateHasChanged)` |
 
-### D · Advanced composition (28–34)
+### D · Advanced composition (28–36)
 
 | # | Slide | Concept |
 |---|-------|---------|
 | 28 | `D1Templated` | #15 — `RenderFragment` slots: the real `Card.razor` (named `Header` + `ChildContent`), live |
 | 29 | `D2Generic` | #16 *(flex)* — the deck's real `BulletList<T>`: `@typeparam`, inferred `TItem` |
-| 30 | `D3DynamicComponent` | #17 — the deck's engine: one `<DynamicComponent>` swaps in whichever slide you're on |
-| 31 | `D3bErrorBoundary` | `ErrorBoundary` — the real wrap around this deck's slide host |
-| 32 | `D3cBoom` | ⭐ The payoff: a real slide throws live; the fallback appears, the deck survives, `→` keeps going |
-| 33 | `D4JsCall` | #18a — C# → JS: `IJSObjectReference` module import, `toggleFullscreen` |
-| 34 | `D5JsCallback` | #18b — JS → C#: `DotNetObjectReference` + `[JSInvokable]`, the real keyboard nav |
+| 30 | `D2bForms` | Forms vocabulary: `EditForm` cascades an `EditContext`, `DataAnnotationsValidator` feeds it, `ValidationMessage` reads it. Live `InputText` |
+| 31 | `D2cInputBase` | #26 — write your own input: `DurationInput : InputBase<TimeSpan>` parsing "1h 30m", live. Step 1 the form, step 2 the component |
+| 32 | `D3DynamicComponent` | #17 — the deck's engine: one `<DynamicComponent>` swaps in whichever slide you're on |
+| 33 | `D3bErrorBoundary` | `ErrorBoundary` — the real wrap around this deck's slide host |
+| 34 | `D3cBoom` | ⭐ The payoff: a real slide throws live; the fallback appears, the deck survives, `→` keeps going |
+| 35 | `D4JsCall` | #18a — C# → JS: `IJSObjectReference` module import, `toggleFullscreen` |
+| 36 | `D5JsCallback` | #18b — JS → C#: `DotNetObjectReference` + `[JSInvokable]`, the real keyboard nav |
 
-### E · Performance (35–37)
+*30 exists for 31's sake: the deck has no other forms content, so without it `InputBase<T>` would be
+teaching how to join machinery the room has never seen. 31 shows usage before authorship for the
+same reason.*
 
-| # | Slide | Concept |
-|---|-------|---------|
-| 35 | `E1ShouldRender` | #22 — veto the renders that can't change your output; the deck guards tokenising instead |
-| 36 | `E2Key` | #19 — `@key` for stable list identity (the real `BulletList` + overview rows) |
-| 37 | `E3Virtualize` | #20 — the overview grid is a real `<Virtualize>` |
-
-### F · Reuse (38–39)
+### E · Performance (37–39)
 
 | # | Slide | Concept |
 |---|-------|---------|
-| 38 | `F1Libraries` | #23 — the RCL: `Sdk="Microsoft.NET.Sdk.Razor"`, assets under `_content/BlazorDeck/` |
-| 39 | `F2MudBlazor` | #24 — real MudBlazor components, themed by the shared palette |
+| 37 | `E1ShouldRender` | #22 — veto the renders that can't change your output; the deck guards tokenising instead |
+| 38 | `E2Key` | #19 — `@key` for stable list identity (the real `BulletList` + overview rows) |
+| 39 | `E3Virtualize` | #20 — the overview grid is a real `<Virtualize>` |
 
-### G · Testing (40)
+### F · Reuse (40–41)
 
 | # | Slide | Concept |
 |---|-------|---------|
-| 40 | `G1Bunit` | #25 *(flex)* — the deck's real `CaptionTests` under `BunitContext` |
+| 40 | `F1Libraries` | #23 — the RCL: `Sdk="Microsoft.NET.Sdk.Razor"`, assets under `_content/BlazorDeck/` |
+| 41 | `F2MudBlazor` | #24 — real MudBlazor components, themed by the shared palette |
 
-### H · Code tour (41)
+### G · Testing (42)
+
+| # | Slide | Concept |
+|---|-------|---------|
+| 42 | `G1Bunit` | #25 *(flex)* — the deck's real `CaptionTests` under `BunitContext` |
+
+### H · Code tour (43)
 
 | # | Slide | Beat |
 |---|-------|------|
-| 41 | `H1CodeTour` | `SectionSlide` segue: leave the deck, walk the real project in the editor — the `BlazorDeck` RCL and the MVVM starter in `samples/mvvm` (served live at `/demo/mvvm`) |
+| 43 | `H1CodeTour` | `SectionSlide` segue: leave the deck, walk the real project in the editor — the `BlazorDeck` RCL and the MVVM starter in `samples/mvvm` (served live at `/demo/mvvm`) |
 
-### Close (42)
+### Close (44)
 
 | # | Slide | Beat |
 |---|-------|------|
-| 42 | `Z1Close` | Thank-you + repo link + scannable QR. No recap — the source *is* the recap |
+| 44 | `Z1Close` | Thank-you + repo link + scannable QR. No recap — the source *is* the recap |
 
 ---
 
@@ -183,9 +189,9 @@ demo slides are safe to type in.
   the components." Knowing it doesn't spoil anything; watching it get built *is* the payoff.
 - **Live moments throughout**, not just at the end: the render-mode probe (6), two live iframes
   (7–8), the `@bind` toy (16), the live `<Stepper>` (17), the live `Card` (28) and `BulletList` (29),
-  a real slide crashing and recovering (32), fullscreen and keyboard interop (33–34), the
-  virtualized overview (37), live MudBlazor (39).
-- **Finale (41–42):** drop out of the deck into the editor, walk the real project, then hand them
+  two working forms with validation firing (30–31), a real slide crashing and recovering (34),
+  fullscreen and keyboard interop (35–36), the virtualized overview (39), live MudBlazor (41).
+- **Finale (43–44):** drop out of the deck into the editor, walk the real project, then hand them
   the repo.
 
 ## Anchor — the deck itself (`BlazorDeck`)
@@ -230,7 +236,7 @@ point that a slide can crash on stage, and RCL reusability is unarguable.
 | 5 | Attribute splatting | 15 | `CaptureUnmatchedValues` + `@attributes` on the root element | strong |
 | 6 | Data binding | 16 | Live `@bind` toy beside its own source | genuine (toy) |
 | 7 | `EventCallback` | 17 | `Stepper` raises, parent decides what a step means | strong (toy) |
-| 8 | Lifecycle | 18 | Full `ComponentBase` timeline; `OnAfterRender` pays off at 33 | strong |
+| 8 | Lifecycle | 18 | Full `ComponentBase` timeline; `OnAfterRender` pays off at 35 | strong |
 | — | `PersistentComponentState` | 19 | Prerender double-run; `[PersistentState]` + `??=` as the whole diff | made-up by design |
 | 9 | Parent/child | 20 | The communication map framing the segment | strong |
 | 10 | `@ref` | 21 | Capture an `<input>`, `FocusAsync` | illustrative |
@@ -242,27 +248,29 @@ point that a slide can crash on stage, and RCL reusability is unarguable.
 | 14 | `InvokeAsync`/threading | 27 | The transition timer's off-thread continuation | ⭐ genuine |
 | 15 | Templated components | 28 | Real `Card` with a named `Header` slot, rendered live | strong |
 | 16 | Generics | 29 | The real `BulletList<T>` that slides 4/5/10 already use | strong *(flex)* |
-| 17 | `DynamicComponent` | 30 | The deck's engine — renders the current slide **by type** | ⭐ load-bearing |
-| — | `ErrorBoundary` | 31–32 | The real wrap around the slide host; slide 32 throws live and recovers | ⭐ dogfooded |
-| 18a | JS interop C#→JS | 33 | `IJSObjectReference` → `toggleFullscreen` in the real `deck.js` | strong |
-| 18b | JS interop JS→C# | 34 | `DotNetObjectReference` + `[JSInvokable]` — every keypress you make | ⭐ strong |
-| 19 | `@key` | 36 | `BulletList` keys by item; overview rows key by index | genuine |
-| 20 | Virtualization | 37 | The overview grid is a real `<Virtualize>` | genuine |
+| — | Forms | 30 | `EditForm` + `DataAnnotationsValidator` + `InputText`, live — the vocabulary 31 needs | context slide |
+| 26 | `InputBase<T>` | 31 | `DurationInput : InputBase<TimeSpan>`, live: nonsense in, your own error out | ⭐ converges B2/B3/B4/C3/D2 |
+| 17 | `DynamicComponent` | 32 | The deck's engine — renders the current slide **by type** | ⭐ load-bearing |
+| — | `ErrorBoundary` | 33–34 | The real wrap around the slide host; slide 34 throws live and recovers | ⭐ dogfooded |
+| 18a | JS interop C#→JS | 35 | `IJSObjectReference` → `toggleFullscreen` in the real `deck.js` | strong |
+| 18b | JS interop JS→C# | 36 | `DotNetObjectReference` + `[JSInvokable]` — every keypress you make | ⭐ strong |
+| 19 | `@key` | 38 | `BulletList` keys by item; overview rows key by index | genuine |
+| 20 | Virtualization | 39 | The overview grid is a real `<Virtualize>` | genuine |
 | 21 | CSS isolation | 13 | The `b-…` rewrite; why a child's elements dodge it | strong |
-| 22 | `ShouldRender` | 35 | Framed as the flip side of #13½; `CodeWindow` guards the work instead | honest caveat *(flex)* |
-| 23 | RCL | 38 | `BlazorDeck` itself — reused every slide and every future talk | ⭐⭐ the payoff |
-| 24 | MudBlazor | 39 | Deck themes *are* `MudTheme`s; Mud components match with no extra styling | structural |
-| 25 | bUnit | 40 | The deck's real `CaptionTests` | strong *(flex)* |
+| 22 | `ShouldRender` | 37 | Framed as the flip side of #13½; `CodeWindow` guards the work instead | honest caveat *(flex)* |
+| 23 | RCL | 40 | `BlazorDeck` itself — reused every slide and every future talk | ⭐⭐ the payoff |
+| 24 | MudBlazor | 41 | Deck themes *are* `MudTheme`s; Mud components match with no extra styling | structural |
+| 25 | bUnit | 42 | The deck's real `CaptionTests` | strong *(flex)* |
 
 ## Slide-type palette — usage as built
 
 | Layout | Purpose | Uses |
 |--------|---------|------|
-| `CodeWindow` | One filenamed, highlighted, step-revealable code pane | 47 — the workhorse |
+| `CodeWindow` | One filenamed, highlighted, step-revealable code pane | 49 — the workhorse |
+| `Caption` | Inline prose/code annotation | 32 |
 | `Slide` | Generic title + freeform body | 26 |
-| `Caption` | Inline prose/code annotation | 24 |
-| `SplitSlide` | Two columns via named `Left`/`Right` fragments | 22 — the default concept-slide shape |
-| `LiveFrame` | Framed live component with a "live" tag | 9 |
+| `SplitSlide` | Two columns via named `Left`/`Right` fragments | 24 — the default concept-slide shape |
+| `LiveFrame` | Framed live component with a "live" tag | 11 |
 | `BulletList<T>` | Typed, templated, keyed list | 3 |
 | `TitleSlide` | Opening statement | 1 (A1) |
 | `SectionSlide` | Segment divider | 1 (H1) |
@@ -272,7 +280,13 @@ point that a slide can crash on stage, and RCL reusability is unarguable.
 | `DemoSlide` | Full-slide live component (now just a thin wrapper over `LiveFrame`) | **0 — orphan** |
 
 **Layout guardrails learned the hard way:**
-- Keep `SplitSlide` code windows ≤ ~36 chars wide — `.cs-pre` clips, it doesn't wrap.
+- Keep `SplitSlide` code windows ≤ ~36 chars wide — `.cs-pre` clips, it doesn't wrap. `WideLeft`
+  with a `LeftRatio` buys more; at `1.55` the cut lands around 46 chars. Re-wrap the displayed code
+  rather than letting a line vanish off the right edge.
+- On a stepped slide, keep every step's code **similar in line count**. The `SplitSlide` body scales
+  to fit its height, so advancing from a long step to a short one visibly zooms the whole column.
+- Scoped CSS can't reach inside a child component — style a built-in like `<InputText>` with
+  `::deep`, or give your own component its own `.razor.css` (what `DurationInput` does).
 - A related code-window **pair** stacks over-under; side-by-side is reserved for code + live demo.
 - A component tag written inside a CSS comment in a `<style>` block is parsed as markup — keep
   angle brackets out of `<style>` comments.
@@ -281,12 +295,17 @@ point that a slide can crash on stage, and RCL reusability is unarguable.
 
 ## Open items
 
-- [ ] **Forms & `InputBase<T>`** — the weakest meta-fit (a deck has no forms) but the #1 thing a
-      mixed audience actually ships. `PlaygroundSlide` could grow a validated parameter editor to
-      carry it — which would also un-orphan that layout.
+- [x] **Forms & `InputBase<T>`** — shipped as **slides 30–31**. 30 is the vocabulary slide the deck
+      otherwise lacked (`EditForm`/validator/`ValidationMessage`); 31 writes a real
+      `DurationInput : InputBase<TimeSpan>` that parses "1h 30m", shown usage-first. Both run live.
+      Illustrative, not dogfooded — a deck has no forms of its own. Closes the biggest content gap
+      against the conference abstract's "patterns for real-world apps".
 - [ ] **More `@bind` modifiers** — slide 16 covers `@bind` + `@bind:event` only. Consider
-      `@bind:format`, `@bind:after`, `@bind:get`/`@bind:set`, and `@bind-Value`. Open question:
-      a compact "modifiers" strip on slide 16, or its own slide.
+      `@bind:format`, `@bind:after`, `@bind:get`/`@bind:set`. (`@bind-Value` is now covered at 31.)
+      Open question: a compact "modifiers" strip on slide 16, or its own slide.
+- [ ] **Time budget** — the deck is now 44 slides against ~48 minutes of content. Candidate cuts
+      flagged earlier: fold `B1bAnatomyFiles` into `B1`, drop `C3bNamedCascading` (flex, and
+      explicitly fictional), fold `A6dPrerender` into `A6c`.
 - [ ] **Decide keep-or-delete on the three orphan layouts** — `CompareSlide`/`CompareOption`,
       `PlaygroundSlide`, `DemoSlide`. (`CodeSlide` and `SectionSlide` are no longer orphans: B1 and
       H1 use them.)

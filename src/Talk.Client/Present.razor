@@ -59,9 +59,12 @@
         // Segment D · Advanced composition
         new(typeof(D1Templated), "Templated components") { Tag = "RenderFragment" },
         new(typeof(D2Generic), "Generic components") { Tag = "GenericComponent" },
-        // Straight after generics: InputBase<T> is a generic base class, and it pays off
-        // parameters, splatting, @bind-Value and the EditContext cascade all at once.
-        new(typeof(D2bInputBase), "Custom form inputs") { Tag = "InputBase" },
+        // Forms, then custom inputs. D2b is the vocabulary slide (EditForm / validator /
+        // ValidationMessage) the deck otherwise never gives — without it D2c would be teaching
+        // how to join machinery the room has never seen. D2c then pays off parameters, splatting,
+        // @bind-Value, the EditContext cascade and generics all at once.
+        new(typeof(D2bForms), "Forms, briefly") { Tag = "EditForm" },
+        new(typeof(D2cInputBase), "Custom form inputs") { Tag = "InputBase" },
         new(typeof(D3DynamicComponent), "DynamicComponent") { Tag = "DynamicComponent" },
         new(typeof(D3bErrorBoundary), "ErrorBoundary") { Tag = "ErrorBoundary" },
         new(typeof(D3cBoom), "Break this slide") { Tag = "Boom" },

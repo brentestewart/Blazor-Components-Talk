@@ -1,0 +1,71 @@
+@namespace Talk.Client.Slides
+@using System.ComponentModel.DataAnnotations
+
+@* Forms, just enough of them. The deck has no forms of its own, so this is the vocabulary slide:
+   EditForm cascades an EditContext, DataAnnotationsValidator feeds the model's attributes into it,
+   the built-in inputs bind to it, ValidationMessage reads it back. It exists so the NEXT slide
+   (D2c, InputBase<T>) isn't the audience's first sight of EditForm — you can't teach joining the
+   machinery before showing the machinery. The form on the right is real: type one character and
+   the message appears. *@
+<SplitSlide Title="Forms, briefly" Subtitle="What you get before you write anything"
+            WideLeft="true" LeftRatio="1.55">
+    <Left>
+        <CodeWindow FileName="TaskForm.razor" Language="razor" Code="@Source" />
+    </Left>
+    <Right>
+        <div class="fb-live">
+            <LiveFrame Label="live: real EditForm">
+                <EditForm Model="_task">
+                    <DataAnnotationsValidator />
+                    <label class="fb-label" for="fb-title">Title</label>
+                    <InputText id="fb-title" @bind-Value="_task.Title" />
+                    <div class="fb-msg"><ValidationMessage For="() => _task.Title" /></div>
+                </EditForm>
+            </LiveFrame>
+        </div>
+
+        <Caption><code>&lt;EditForm&gt;</code> cascades an <code>EditContext</code> — the shared
+            object tracking every field's value, whether it's been touched, and its errors. Nothing
+            below is passed it by hand.</Caption>
+        <Caption Spaced><code>&lt;DataAnnotationsValidator&gt;</code> feeds the model's attributes
+            into that context; <code>&lt;ValidationMessage&gt;</code> reads them back out. The input
+            gets <code>valid</code>/<code>invalid</code>/<code>modified</code> classes for free.</Caption>
+    </Right>
+    <Footer>
+        <Caption>The built-ins — <code>InputText</code>, <code>InputNumber</code>,
+            <code>InputSelect</code>, <code>InputDate</code>, <code>InputCheckbox</code> — are all
+            the same component with a different parse. Next: writing your own.</Caption>
+    </Footer>
+</SplitSlide>
+
+@code {
+    private readonly TaskItem _task = new();
+
+    private sealed class TaskItem
+    {
+        [Required]
+        [StringLength(40, MinimumLength = 3, ErrorMessage = "Title needs at least 3 characters.")]
+        public string? Title { get; set; }
+    }
+
+    private const string Source = @"<EditForm Model=""_task"">
+    <DataAnnotationsValidator />
+
+    <label>Title</label>
+    <InputText @bind-Value=""_task.Title"" />
+
+    <ValidationMessage
+        For=""() => _task.Title"" />
+</EditForm>
+
+@code {
+    private readonly TaskItem _task = new();
+
+    private sealed class TaskItem
+    {
+        [Required]
+        [StringLength(40, MinimumLength = 3)]
+        public string? Title { get; set; }
+    }
+}";
+}
