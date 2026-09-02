@@ -1,0 +1,36 @@
+@namespace Talk.Client.Slides
+@using System.Diagnostics.CodeAnalysis
+@inherits InputBase<TimeSpan>
+
+@* A real custom form input — D2bInputBase dissects this exact file and renders it live.
+   Inheriting InputBase<TimeSpan> supplies Value / ValueChanged / ValueExpression (so @bind-Value
+   works), registers the field with the cascaded EditContext, and computes the valid/invalid/modified
+   CSS classes. All this component adds is the string -> TimeSpan parse.
+
+   AdditionalAttributes comes first so our own class="" wins the splat — the same ordering the
+   framework's own InputText uses. *@
+<input @attributes="AdditionalAttributes"
+       class="@CssClass"
+       @bind="CurrentValueAsString" />
+
+@code {
+    // The one member InputBase<T> makes you write. Return false and the string you hand back
+    // becomes the field's validation message — which is what turns the box red and fills in
+    // <ValidationMessage>. Nothing else is wired up by hand.
+    protected override bool TryParseValueFromString(
+        string? value, out TimeSpan result,
+        [NotNullWhen(false)] out string? error)
+    {
+        if (Duration.TryParse(value, out result))
+        {
+            error = null;
+            return true;
+        }
+
+        error = $"{DisplayName ?? FieldIdentifier.FieldName} must look like '1h 30m'.";
+        return false;
+    }
+
+    // The inverse direction: how the current value is rendered back into the box.
+    protected override string FormatValueAsString(TimeSpan value) => Duration.Format(value);
+}

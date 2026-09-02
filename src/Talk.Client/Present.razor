@@ -59,6 +59,9 @@
         // Segment D · Advanced composition
         new(typeof(D1Templated), "Templated components") { Tag = "RenderFragment" },
         new(typeof(D2Generic), "Generic components") { Tag = "GenericComponent" },
+        // Straight after generics: InputBase<T> is a generic base class, and it pays off
+        // parameters, splatting, @bind-Value and the EditContext cascade all at once.
+        new(typeof(D2bInputBase), "Custom form inputs") { Tag = "InputBase" },
         new(typeof(D3DynamicComponent), "DynamicComponent") { Tag = "DynamicComponent" },
         new(typeof(D3bErrorBoundary), "ErrorBoundary") { Tag = "ErrorBoundary" },
         new(typeof(D3cBoom), "Break this slide") { Tag = "Boom" },

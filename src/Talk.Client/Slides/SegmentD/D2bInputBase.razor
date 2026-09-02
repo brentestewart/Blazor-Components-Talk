@@ -1,0 +1,123 @@
+@namespace Talk.Client.Slides
+@inherits SteppableSlide
+
+@* Concept #26: writing your own form input by inheriting InputBase<T>. Placed straight after D2
+   generics because InputBase<T> IS a generic base class, and it converges most of the deck:
+   parameters (B2), splatting (B3), @bind-Value (B4), the EditContext cascade (C3) and generics (D2).
+   It also demonstrates @inherits, which the deck uses in its own slides but never teaches.
+   Step 1: the component you write. Step 2: the form that uses it.
+   The live frame on the right is the real DurationInput — type "banana" and the box goes red with
+   the message from TryParseValueFromString, neither of which is code we wrote.
+   Illustrative by necessity: a slide deck has no forms of its own to dogfood.
+   The shown code is the real file re-wrapped narrower — .cs-pre clips rather than wraps. *@
+<SplitSlide Title="Custom form inputs" Subtitle="@Sub" WideLeft="true" LeftRatio="1.55">
+    <Left>
+        <CodeWindow FileName="@(Step == 0 ? "DurationInput.razor" : "TaskForm.razor")"
+                    Language="razor" Code="@(Step == 0 ? Component : Caller)" />
+    </Left>
+    <Right>
+        <div class="fi-live">
+            <LiveFrame Label="live: this is the component">
+                <EditForm Model="_task">
+                    <DataAnnotationsValidator />
+                    <label class="fi-label" for="fi-est">Estimate</label>
+                    <DurationInput id="fi-est" DisplayName="Estimate"
+                                   @bind-Value="_task.Estimate" />
+                    <div class="fi-msg"><ValidationMessage For="() => _task.Estimate" /></div>
+                    <p class="fi-bound">bound value —
+                        <code>@_task.Estimate.ToString(@"hh\:mm")</code></p>
+                </EditForm>
+            </LiveFrame>
+        </div>
+
+        @if (Step == 0)
+        {
+            <Caption>Inheriting <code>InputBase&lt;TimeSpan&gt;</code> supplies
+                <code>Value</code>/<code>ValueChanged</code>/<code>ValueExpression</code>, registers the
+                field with the cascaded <code>EditContext</code>, and computes <code>CssClass</code>.
+                You write the parse.</Caption>
+            <Caption Spaced>Return <code>false</code> and your message becomes the field's validation
+                error — that's what reddens the box and fills <code>&lt;ValidationMessage&gt;</code>.</Caption>
+        }
+        else
+        {
+            <Caption><code>@@bind-Value</code> binds the <code>Value</code>/<code>ValueChanged</code>
+                pair the base class already declared; nobody passes <code>EditContext</code> — it
+                arrives by cascade from <code>&lt;EditForm&gt;</code>.</Caption>
+            <Caption Spaced>It behaves like a built-in <code>&lt;InputText&gt;</code> because it is
+                one — same base class, different parse.</Caption>
+        }
+    </Right>
+    <Footer>
+        <Caption>Two lines of markup and one override buys full <code>EditForm</code> integration —
+            that's the whole reason to reach for <code>InputBase&lt;T&gt;</code> over a hand-rolled
+            parameter and <code>EventCallback</code>.</Caption>
+    </Footer>
+</SplitSlide>
+
+@code {
+    public override int StepCount => 2;
+
+    // Angle brackets can't go in a component attribute literal, so the subtitle is a field.
+    private const string Sub = "Inherit InputBase<T>, own the parse";
+
+    private readonly TaskItem _task = new();
+
+    private sealed class TaskItem
+    {
+        // Starts populated so the box opens showing FormatValueAsString's output, not an empty field.
+        public TimeSpan Estimate { get; set; } = TimeSpan.FromMinutes(90);
+    }
+
+    // Step 1 — the component. This is DurationInput.razor, trimmed only of its comments.
+    private const string Component = @"@inherits InputBase<TimeSpan>
+
+<input @attributes=""AdditionalAttributes""
+       class=""@CssClass""
+       @bind=""CurrentValueAsString"" />
+
+@code {
+  protected override bool
+    TryParseValueFromString(
+      string? value,
+      out TimeSpan result,
+      [NotNullWhen(false)] out string? error)
+  {
+    if (Duration.TryParse(value, out result))
+    {
+      error = null;
+      return true;
+    }
+    error = $""{DisplayName} must look "" +
+            ""like '1h 30m'."";
+    return false;
+  }
+}";
+
+    // Step 2 — using it. Indistinguishable from using a built-in input, which is the point.
+    // Kept close to step 1's line count on purpose: the SplitSlide body scales to fit its height,
+    // so a much shorter step would visibly zoom the whole column on advance.
+    private const string Caller = @"<EditForm Model=""_task"">
+    <DataAnnotationsValidator />
+
+    <label>Estimate</label>
+
+    <DurationInput
+        DisplayName=""Estimate""
+        @bind-Value=""_task.Estimate"" />
+
+    <ValidationMessage
+        For=""() => _task.Estimate"" />
+</EditForm>
+
+@code {
+    private readonly TaskItem _task
+        = new();
+
+    private sealed class TaskItem
+    {
+        public TimeSpan Estimate
+        { get; set; }
+    }
+}";
+}

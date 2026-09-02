@@ -1,0 +1,31 @@
+/* Scoped to this component, which is the point: the slide that hosts it can't reach in here
+   (see B1cIsolation). The .valid / .invalid / .modified classes are Blazor's own, handed to us
+   by InputBase's CssClass — we only decide what they look like. */
+input {
+    font-family: inherit;
+    font-size: 1.35rem;
+    padding: 0.5rem 0.8rem;
+    border-radius: 8px;
+    border: 1px solid var(--deck-border);
+    background: var(--deck-surface);
+    color: var(--deck-fg);
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+/* Only once the field has been touched — an untouched form shouldn't open covered in green. */
+input.modified.valid {
+    border-color: color-mix(in srgb, #3fb950 60%, var(--deck-border));
+}
+
+input.invalid {
+    border-color: #f85149;
+    box-shadow: 0 0 0 3px color-mix(in srgb, #f85149 22%, transparent);
+}

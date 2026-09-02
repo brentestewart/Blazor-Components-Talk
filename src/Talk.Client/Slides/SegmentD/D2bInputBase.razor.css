@@ -1,0 +1,23 @@
+.fi-live { margin-bottom: 1.3rem; }
+
+.fi-label {
+    display: block;
+    font-size: 1.05rem;
+    letter-spacing: 0.02em;
+    color: color-mix(in srgb, var(--deck-fg) 65%, transparent);
+    margin-bottom: 0.45rem;
+}
+
+/* Reserved height, so the frame doesn't jump when the validation message appears. */
+.fi-msg {
+    min-height: 1.7rem;
+    margin-top: 0.5rem;
+    font-size: 1.05rem;
+    color: #f85149;
+}
+
+.fi-bound {
+    margin: 0.2rem 0 0;
+    font-size: 1.05rem;
+    color: color-mix(in srgb, var(--deck-fg) 60%, transparent);
+}
