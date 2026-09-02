@@ -115,11 +115,29 @@ const NAV_KEYS = [
     "PageUp", "PageDown", "Home", "End", " ", "Enter", "t", "f", "o", "r", "s", "Escape"
 ];
 
+// Whether the keystroke belongs to whatever the presenter is typing in rather than to the deck.
+// Slides demoing @bind or @ref put real text boxes on screen, and the shortcuts overlap ordinary
+// letters — without this, typing "fast test" on the data-binding slide silently cycles the theme,
+// swallows the spaces, and 'r' reloads the page mid-demo.
+function isTyping(target) {
+    if (!target) return false;
+    if (target.isContentEditable) return true;
+    const tag = target.tagName;
+    if (tag === "TEXTAREA" || tag === "SELECT") return true;
+    if (tag !== "INPUT") return false;
+    // Buttons and checkboxes aren't text entry — Space/Enter should still reach the deck from those
+    // (and the browser's own activation behaviour is what makes them work).
+    return !["button", "submit", "reset", "checkbox", "radio", "file"].includes(target.type);
+}
+
 export function registerKeys(dotNetRef) {
     // Drop any previous listener first, so the Server→WebAssembly auto-swap (which
     // registers again from the new runtime) never stacks two handlers.
     unregisterKeys();
     handler = (e) => {
+        // Escape is deliberately still handled while typing: it's the way out of the overview or
+        // settings, so it must never be trapped by a focused field.
+        if (isTyping(e.target) && e.key !== "Escape") return;
         if (NAV_KEYS.includes(e.key)) {
             e.preventDefault();
             // The invoke can race the render-mode swap / a circuit reconnect, when the
@@ -172,7 +190,20 @@ export function scrollToCurrentThumb() {
         if (!grid || !card) return;
         const gridRect = grid.getBoundingClientRect();
         const cardRect = card.getBoundingClientRect();
-        grid.scrollTop += (cardRect.top - gridRect.top) - (grid.clientHeight - cardRect.height) / 2;
+        // Called on every move while the overview is open, so do nothing when the card is already
+        // fully in view — otherwise arrowing between two visible neighbours re-centres the grid on
+        // each keypress, which reads as the whole overview lurching. Both rects are screen px, so
+        // comparing them to each other is fine.
+        if (cardRect.top >= gridRect.top && cardRect.bottom <= gridRect.bottom) return;
+        // scrollTop and clientHeight are LAYOUT px, but the rects above are SCREEN px — the deck sits
+        // inside the canvas's scale() transform. Mixing the two silently worked only while the canvas
+        // scale happened to be 1.0; at any other scale the delta is wrong by that factor, and can come
+        // out with the wrong sign entirely. Measure the scale off the grid itself rather than trusting
+        // --deck-scale, so this stays correct however the canvas is being sized.
+        const scale = gridRect.height / grid.offsetHeight || 1;
+        const cardTop = (cardRect.top - gridRect.top) / scale;
+        const cardHeight = cardRect.height / scale;
+        grid.scrollTop += cardTop - (grid.clientHeight - cardHeight) / 2;
     }));
 }
 

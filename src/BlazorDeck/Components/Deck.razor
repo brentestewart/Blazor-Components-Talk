@@ -248,6 +248,7 @@
     private DynamicComponent? _slide;   // the current slide instance, for reading its step count
     private ErrorBoundary? _boundary;   // wraps the slide host; Recover() re-attempts a failed slide
     private bool _overviewScaled;       // whether JS has set the thumbnail scale for the open overview
+    private int _ovScrolledIndex = -1;  // last slide the open overview was scrolled to
     private int _shownStep;             // step currently displayed (mirrors State.Step)
     private int _outgoingStep;          // step the exiting slide is frozen at during a transition
     private int _countedIndex = -1;     // last slide index whose step count we read (avoids a per-render read)
@@ -447,13 +448,23 @@
             if (!_overviewScaled && _module is not null)
             {
                 _overviewScaled = true;
+                _ovScrolledIndex = State.Index;
                 await _module.InvokeVoidAsync("setThumbScale");
+                await _module.InvokeVoidAsync("scrollToCurrentThumb");
+            }
+            // The arrow keys still move the selection while the overview is open, so follow it —
+            // otherwise the highlight walks off the bottom and the grid sits where it was. JS leaves
+            // the grid alone when the card is already in view, so neighbours don't cause a lurch.
+            else if (_ovScrolledIndex != State.Index && _module is not null)
+            {
+                _ovScrolledIndex = State.Index;
                 await _module.InvokeVoidAsync("scrollToCurrentThumb");
             }
         }
         else
         {
             _overviewScaled = false;
+            _ovScrolledIndex = -1;
         }
 
         // The presenter picked a different canvas shape. fitDeck re-fits the current slide and the

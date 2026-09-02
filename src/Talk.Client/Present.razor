@@ -24,8 +24,9 @@
         // Segment A · Set the stage
         // All slides inherit the deck default transition (change it in settings — 's').
         new(typeof(A1Title), "Title") { Tag = "Title" },
-        new(typeof(A2Reveal), "It's all components") { Tag = "Reveal" },
+        // Intro first, then the reveal: who's talking before what the deck is.
         new(typeof(A3Hello), "Hello") { Tag = "Hello" },
+        new(typeof(A2Reveal), "It's all components") { Tag = "Reveal" },
         new(typeof(A4Agenda), "What we'll cover") { Tag = "Agenda" },
         new(typeof(A5RenderModes), "Four render modes") { Tag = "RenderModes" },
         new(typeof(A6ModeLive), "Which mode is this slide?") { Tag = "RenderMode" },

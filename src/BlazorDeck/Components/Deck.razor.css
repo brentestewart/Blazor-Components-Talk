@@ -359,10 +359,10 @@
     padding: 0.5rem 0.25rem 1rem;
 }
 
-/* A third column only when there's real room for it. */
-@media (min-width: 1500px) {
-    .ov-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-}
+/* Two columns, always. This used to add a third above a 1500px viewport, from when .deck was the
+   viewport itself — but the canvas is a fixed 1280 wide now, so the grid has exactly the same room
+   on every screen and a third column only made the cards narrower for nothing. Column count is a
+   design choice here, not a responsive one, and two keeps the live thumbnails legible. */
 
 /* A card: the scaled-down live slide (top) plus a caption (bottom). It's a <button>, so reset the
    default flex/inline styling to an explicit vertical stack. */
