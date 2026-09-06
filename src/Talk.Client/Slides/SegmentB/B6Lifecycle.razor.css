@@ -40,6 +40,9 @@
     font-family: "Cascadia Code", "JetBrains Mono", ui-monospace, monospace;
     font-size: 1.3rem; font-weight: 600; color: var(--accent);
 }
+/* Hugs the name so it reads as a signature, not a separate token. Lighter than the name so the
+   hook still reads first, but heavier than the async twin — it's real API, not an aside. */
+.lc-param { font-size: 0.95rem; opacity: 0.65; font-weight: 400; }
 .lc-async { font-size: 0.95rem; opacity: 0.5; margin-left: 0.6rem; }
 .lc-desc { font-size: 1.02rem; opacity: 0.8; }
 .lc-when {
