@@ -33,7 +33,12 @@
         new(typeof(A6bStaticSsr), "Static SSR — no runtime") { Tag = "StaticSSR" },
         new(typeof(A6cRenderModes), "Render mode is per-component") { Tag = "Islands" },
         new(typeof(A6dPrerender), "Prerendering") { Tag = "Prerender" },
-        new(typeof(A7WhyItMatters), "Why render mode matters") { Tag = "WhyItMatters" },
+        // PARKED, not cut — redundant with the spoken intro to the modes, which already covers
+        // when you'd reach for each. The slide (A7WhyItMatters.razor) is still in the repo, so
+        // restoring it is uncommenting this one line.
+        // Note while it's out: this was the only place "scoped DI is per circuit vs per app" is
+        // stated, which is what sets up C4's register-in-both-Program.cs point. Cover it verbally.
+        // new(typeof(A7WhyItMatters), "Why render mode matters") { Tag = "WhyItMatters" },
 
         // Segment B · Fundamentals — each slide dissects a real deck component.
         new(typeof(B1Anatomy), "Anatomy — one file") { Tag = "ComponentAnatomy" },
