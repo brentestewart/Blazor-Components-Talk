@@ -1,1 +1,51 @@
 .di-stack { display: flex; flex-direction: column; gap: 0.9rem; }
+.di-side { display: flex; flex-direction: column; gap: 1.2rem; }
+
+/* The two columns ARE the two containers — that's the whole point of the slide, so they get
+   equal weight and a rule between them rather than a boxed-in table look. */
+.di-life { border-collapse: collapse; width: 100%; }
+
+.di-life th, .di-life td {
+    text-align: left;
+    vertical-align: top;
+    padding: 0.6rem 0.8rem;
+}
+
+.di-life thead th {
+    font-size: 0.72rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.09em;
+    color: color-mix(in srgb, var(--deck-fg) 55%, transparent);
+    padding-bottom: 0.3rem;
+}
+
+/* Row labels are the registration calls, so they read as code and carry the accent. */
+.di-life tbody th {
+    width: 1%; white-space: nowrap;
+    font-weight: 400;
+}
+.di-life tbody th code { color: var(--accent); font-size: 1.02rem; }
+
+.di-life tbody tr + tr th,
+.di-life tbody tr + tr td { border-top: 1px solid var(--deck-border); }
+
+.di-life td { font-size: 1.02rem; line-height: 1.4; }
+.di-life td strong { color: var(--deck-fg); font-weight: 700; }
+.di-life td span {
+    display: block; margin-top: 0.15rem;
+    font-size: 0.88rem; opacity: 0.62;
+}
+
+/* The punchline: the one thing to take away if they read nothing else.
+   NOT flex — flex would make every text run between the inline elements its own column. */
+.di-punch {
+    margin: 0;
+    font-size: 1.05rem; line-height: 1.5;
+    padding: 0.9rem 1.1rem; border-radius: 10px;
+    border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--deck-border));
+    background: color-mix(in srgb, var(--accent) 8%, transparent);
+}
+.di-punch strong { color: var(--accent); font-weight: 700; }
+.di-punch-mark {
+    font-weight: 700; color: var(--accent); margin-right: 0.5rem;
+    font-family: "Cascadia Code", "JetBrains Mono", ui-monospace, monospace;
+}

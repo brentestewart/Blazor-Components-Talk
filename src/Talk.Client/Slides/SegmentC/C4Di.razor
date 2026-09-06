@@ -1,18 +1,54 @@
 @namespace Talk.Client.Slides
 
-@* Concept #12: dependency injection. Register a service once; inject it anywhere with
-   @inject. DeckState is just the example service — the state-container slide it used to set up is parked. Real detail:
-   an InteractiveAuto app registers it in BOTH Program.cs files, since Server and WebAssembly each
-   have their own container. *@
-<Slide Title="Dependency injection" Subtitle="Register once, inject anywhere">
-    <div class="di-stack">
-        <CodeWindow FileName="Program.cs" Language="csharp" Code="@Register" />
-        <CodeWindow FileName="Deck.razor" Language="razor" Code="@Inject" />
-        <Caption>This deck is <strong>InteractiveAuto</strong>, so a component might run on
-            the Server circuit or in the WebAssembly runtime. Each has its own DI container, so
-            <code>DeckState</code> is registered in <em>both</em> <code>Program.cs</code> files.</Caption>
-    </div>
-</Slide>
+@* Concept #12: DI. Not a DI tutorial — the point is the requirement Blazor components add.
+   A Blazor Web App has TWO containers, so the same registration line means different things
+   depending on where the component renders, and a "singleton" is two objects, not one. The
+   registration + @inject code stays because the duplicated line is only legible as code.
+   Prerendering alone is enough to hit this: the component prerenders in the server container,
+   then goes interactive in the client one. *@
+<SplitSlide Title="Dependency injection" Subtitle="Two containers, two of everything"
+            LeftRatio="1.2">
+    <Left>
+        <div class="di-stack">
+            <CodeWindow FileName="Program.cs" Language="csharp" Code="@Register" />
+            <CodeWindow FileName="Deck.razor" Language="razor" Code="@Inject" />
+        </div>
+    </Left>
+    <Right>
+        <div class="di-side">
+            <table class="di-life">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Interactive Server</th>
+                        <th>Interactive WebAssembly</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th><code>AddScoped</code></th>
+                        <td>per <strong>circuit</strong><span>survives navigation</span></td>
+                        <td>per <strong>app</strong><span>no scopes — like a singleton</span></td>
+                    </tr>
+                    <tr>
+                        <th><code>AddSingleton</code></th>
+                        <td>per <strong>server process</strong><span>every user</span></td>
+                        <td>per <strong>browser tab</strong><span>one user</span></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p class="di-punch"><span class="di-punch-mark">!</span> Registered in both, a singleton
+                is <strong>two objects</strong> — one per runtime. Write to one, read from the other,
+                and it's empty.</p>
+        </div>
+    </Right>
+    <Footer>
+        <Caption>Same line in both files, and you still don't have one instance. That's why this
+            deck keeps the durable state — slide number, theme — in the <strong>URL</strong> rather
+            than in <code>DeckState</code>: it's the one thing both runtimes agree on.</Caption>
+    </Footer>
+</SplitSlide>
 
 @code {
     private const string Register = @"// same line lives in Talk/Program.cs
