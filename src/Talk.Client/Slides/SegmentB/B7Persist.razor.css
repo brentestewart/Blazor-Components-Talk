@@ -16,10 +16,3 @@
 .pcs-good .pcs-mark { color: var(--accent); }
 .pcs-when { margin: 0.2rem 0 0; font-size: 1rem; opacity: 0.78; line-height: 1.5; }
 .pcs-when strong { color: var(--accent); font-weight: 700; }
-
-/* A one-line prompt to talk from — the mechanism, not an explanation of it. */
-.pcs-how { margin: 0.1rem 0 0; font-size: 0.95rem; opacity: 0.7; line-height: 1.5; }
-.pcs-how-tag {
-    font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.1em;
-    color: var(--accent); opacity: 0.9; margin-right: 0.5rem;
-}

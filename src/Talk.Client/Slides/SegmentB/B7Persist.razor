@@ -25,16 +25,16 @@
                     <span class="pcs-mark">1&times;</span>
                     <div><code>[PersistentState]</code><span>persists the result after prerender; the client finds it already set and skips the refetch &mdash; the <code>??=</code> is the whole trick</span></div>
                 </div>
-                <p class="pcs-how"><span class="pcs-how-tag">how</span> serialized into the
-                    prerendered HTML, then assigned back <em>before</em> <code>OnInitialized</code> runs.</p>
             }
             <p class="pcs-when">Only matters under <strong>prerendering</strong> &mdash; Interactive
                 Server, WebAssembly, or Auto. No prerender, no double run.</p>
         </div>
     </Right>
     <Footer>
-        <Caption>Interactive render modes run your component twice;
-            <code>[PersistentState]</code> stops it <em>fetching</em> twice.</Caption>
+        <Caption>The component still runs twice — <code>[PersistentState]</code> doesn't stop that,
+            it carries the <em>data</em> across. Blazor serializes the property into the prerendered
+            HTML, then assigns it back <strong>before <code>OnInitialized</code> runs</strong>, so the
+            second pass finds it already set and skips the fetch.</Caption>
     </Footer>
 </SplitSlide>
 
