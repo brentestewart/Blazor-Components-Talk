@@ -7,17 +7,14 @@
     <div class="ref-body">
         <CodeWindow FileName="SearchBox.razor" Language="razor" Code="@Source" />
 
-        <p class="ref-lead">Sometimes a parent needs to <strong>reach in and call</strong>,
-            not just pass a value. <code>@@ref</code> captures a handle.</p>
+        <Caption>Sometimes a parent needs to <strong>reach in and call</strong>, not just pass a
+            value. <code>@@ref</code> captures a handle: an <code>ElementReference</code> for a DOM
+            node to focus, measure, or hand to JS, or a <strong>component</strong> instance so you
+            can call its public methods — i.e. <code>_child.Refresh()</code>.</Caption>
 
-        <ul class="ref-kinds">
-            <li><code>ElementReference</code>: a DOM node to focus, measure, or hand to JS.</li>
-            <li>A <strong>component</strong> instance, to call its public methods
-                (<code>_child.Refresh()</code>).</li>
-        </ul>
-
-        <p class="ref-when">A handle isn't valid until the <em>first render</em>, so use it from an
-            event handler or in <code>OnAfterRender</code>, never in the markup or an earlier hook.</p>
+        <Caption Spaced>A handle isn't valid until the <em>first render</em>, so use it from an
+            event handler or in <code>OnAfterRender</code> — never in the markup or an earlier
+            hook.</Caption>
     </div>
 </Slide>
 
