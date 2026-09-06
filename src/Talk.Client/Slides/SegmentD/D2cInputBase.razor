@@ -23,8 +23,7 @@
                 <EditForm Model="_task">
                     <DataAnnotationsValidator />
                     <label class="fi-label" for="fi-est">Estimate</label>
-                    <InputDuration id="fi-est" DisplayName="Estimate"
-                                   @bind-Value="_task.Estimate" />
+                    <InputDuration id="fi-est" @bind-Value="_task.Estimate" />
                     <div class="fi-msg"><ValidationMessage For="() => _task.Estimate" /></div>
                     <p class="fi-bound">bound value —
                         <code>@_task.Estimate.ToString(@"hh\:mm")</code></p>
@@ -103,10 +102,7 @@
     <DataAnnotationsValidator />
 
     <label>Estimate</label>
-
-    <InputDuration
-        DisplayName=""Estimate""
-        @bind-Value=""_task.Estimate"" />
+    <InputDuration @bind-Value=""_task.Estimate"" />
 
     <ValidationMessage
         For=""() => _task.Estimate"" />
