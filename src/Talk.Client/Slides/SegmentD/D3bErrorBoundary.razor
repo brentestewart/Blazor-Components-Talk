@@ -16,9 +16,10 @@
             down the circuit. Two slots: <strong>ChildContent</strong> for the normal UI, and
             <strong>ErrorContent</strong>, handed the exception.</Caption>
 
-        <Caption Spaced>This deck keys every slide, so each gets a fresh boundary — navigate away and
-            it recovers on its own, and <code>Recover()</code> re-attempts the same slide in
-            place.</Caption>
+        <Caption Spaced>A boundary that has caught stays caught. This deck
+            <code>@@key</code>s each slide, so every slide gets its own — move to another and the
+            errored one is discarded with it. <code>Recover()</code> clears it in place instead, to
+            retry the same slide.</Caption>
     </div>
 </Slide>
 
