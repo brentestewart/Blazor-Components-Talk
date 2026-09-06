@@ -8,13 +8,13 @@
    Usage first, then the component: step 1 is the form (the vocabulary from D2bForms, now with our
    own input in it), step 2 is how that input is written. Showing the component first meant the
    audience met InputBase before the machinery it plugs into.
-   The live frame on the right is the real DurationInput — type "banana" and the box goes red with
+   The live frame on the right is the real InputDuration — type "banana" and the box goes red with
    the message from TryParseValueFromString, neither of which is code we wrote.
    Illustrative by necessity: a slide deck has no forms of its own to dogfood.
    The shown code is the real file re-wrapped narrower — .cs-pre clips rather than wraps. *@
 <SplitSlide Title="Custom form inputs" Subtitle="@Sub" WideLeft="true" LeftRatio="1.55">
     <Left>
-        <CodeWindow FileName="@(Step == 0 ? "TaskForm.razor" : "DurationInput.razor")"
+        <CodeWindow FileName="@(Step == 0 ? "TaskForm.razor" : "InputDuration.razor")"
                     Language="razor" Code="@(Step == 0 ? Caller : Component)" />
     </Left>
     <Right>
@@ -23,7 +23,7 @@
                 <EditForm Model="_task">
                     <DataAnnotationsValidator />
                     <label class="fi-label" for="fi-est">Estimate</label>
-                    <DurationInput id="fi-est" DisplayName="Estimate"
+                    <InputDuration id="fi-est" DisplayName="Estimate"
                                    @bind-Value="_task.Estimate" />
                     <div class="fi-msg"><ValidationMessage For="() => _task.Estimate" /></div>
                     <p class="fi-bound">bound value —
@@ -71,7 +71,7 @@
         public TimeSpan Estimate { get; set; } = TimeSpan.FromMinutes(90);
     }
 
-    // Step 1 — the component. This is DurationInput.razor, trimmed only of its comments.
+    // Step 1 — the component. This is InputDuration.razor, trimmed only of its comments.
     private const string Component = @"@inherits InputBase<TimeSpan>
 
 <input @attributes=""AdditionalAttributes""
@@ -104,7 +104,7 @@
 
     <label>Estimate</label>
 
-    <DurationInput
+    <InputDuration
         DisplayName=""Estimate""
         @bind-Value=""_task.Estimate"" />
 

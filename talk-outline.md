@@ -106,7 +106,7 @@ depended on the container — its example is the deck's transition timer.*
 | 25 | `D1Templated` | #15 — `RenderFragment` slots: the real `Card.razor` (named `Header` + `ChildContent`), live |
 | 26 | `D2Generic` | #16 *(flex)* — the deck's real `BulletList<T>`: `@typeparam`, inferred `TItem` |
 | 27 | `D2bForms` | Forms vocabulary: `EditForm` cascades an `EditContext`, `DataAnnotationsValidator` feeds it, `ValidationMessage` reads it. Live `InputText` |
-| 28 | `D2cInputBase` | #26 — write your own input: `DurationInput : InputBase<TimeSpan>` parsing "1h 30m", live. Step 1 the form, step 2 the component |
+| 28 | `D2cInputBase` | #26 — write your own input: `InputDuration : InputBase<TimeSpan>` parsing "1h 30m", live. Step 1 the form, step 2 the component |
 | 29 | `D3DynamicComponent` | #17 — the deck's engine: one `<DynamicComponent>` swaps in whichever slide you're on |
 | 30 | `D3bErrorBoundary` | `ErrorBoundary` — the real wrap around this deck's slide host |
 | 31 | `D3cBoom` | ⭐ The payoff: a real slide throws live; the fallback appears, the deck survives, `→` keeps going |
@@ -266,7 +266,7 @@ point that a slide can crash on stage, and RCL reusability is unarguable.
 | 15 | Templated components | 25 | Real `Card` with a named `Header` slot, rendered live | strong |
 | 16 | Generics | 26 | The real `BulletList<T>` that the agenda slide (4) already uses | strong *(flex)* |
 | — | Forms | 27 | `EditForm` + `DataAnnotationsValidator` + `InputText`, live — the vocabulary 28 needs | context slide |
-| 26 | `InputBase<T>` | 28 | `DurationInput : InputBase<TimeSpan>`, live: nonsense in, your own error out | ⭐ converges B2/B3/B4/C3/D2 |
+| 26 | `InputBase<T>` | 28 | `InputDuration : InputBase<TimeSpan>`, live: nonsense in, your own error out | ⭐ converges B2/B3/B4/C3/D2 |
 | 17 | `DynamicComponent` | 29 | The deck's engine — renders the current slide **by type** | ⭐ load-bearing |
 | — | `ErrorBoundary` | 30–31 | The real wrap around the slide host; slide 31 throws live and recovers | ⭐ dogfooded |
 | 18a | JS interop C#→JS | 32 | `IJSObjectReference` → `toggleFullscreen` in the real `deck.js` | strong |
@@ -303,7 +303,7 @@ point that a slide can crash on stage, and RCL reusability is unarguable.
 - On a stepped slide, keep every step's code **similar in line count**. The `SplitSlide` body scales
   to fit its height, so advancing from a long step to a short one visibly zooms the whole column.
 - Scoped CSS can't reach inside a child component — style a built-in like `<InputText>` with
-  `::deep`, or give your own component its own `.razor.css` (what `DurationInput` does).
+  `::deep`, or give your own component its own `.razor.css` (what `InputDuration` does).
 - A related code-window **pair** stacks over-under; side-by-side is reserved for code + live demo.
 - A component tag written inside a CSS comment in a `<style>` block is parsed as markup — keep
   angle brackets out of `<style>` comments.
@@ -314,7 +314,7 @@ point that a slide can crash on stage, and RCL reusability is unarguable.
 
 - [x] **Forms & `InputBase<T>`** — shipped as **slides 27–28**. 27 is the vocabulary slide the deck
       otherwise lacked (`EditForm`/validator/`ValidationMessage`); 28 writes a real
-      `DurationInput : InputBase<TimeSpan>` that parses "1h 30m", shown usage-first. Both run live.
+      `InputDuration : InputBase<TimeSpan>` that parses "1h 30m", shown usage-first. Both run live.
       Illustrative, not dogfooded — a deck has no forms of its own. Closes the biggest content gap
       against the conference abstract's "patterns for real-world apps".
 - [ ] **More `@bind` modifiers** — slide 16 covers `@bind` + `@bind:event` only. Consider

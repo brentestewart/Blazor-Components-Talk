@@ -4,7 +4,7 @@ namespace Talk.Client.Slides;
 
 /// <summary>
 /// Parses and formats human durations like "1h 30m", "90m", "2h". Deliberately small: it exists so
-/// <c>DurationInput</c> has a real string ↔ <see cref="TimeSpan"/> conversion of its own to own,
+/// <c>InputDuration</c> has a real string ↔ <see cref="TimeSpan"/> conversion of its own to own,
 /// which is the whole reason a component would inherit <c>InputBase&lt;T&gt;</c> (see D2bInputBase).
 /// </summary>
 public static partial class Duration
