@@ -1,5 +1,14 @@
-.ref-side { display: flex; flex-direction: column; gap: 1rem; }
-.ref-lead { margin: 0; font-size: 1.15rem; line-height: 1.5; }
+.ref-body { display: flex; flex-direction: column; gap: 1rem; }
+.ref-lead { margin: 0; font-size: 1.15rem; line-height: 1.5; max-width: 92ch; }
 .ref-lead code, .ref-kinds code, .ref-when code { color: var(--accent); }
-.ref-kinds { margin: 0; padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.7rem; font-size: 1.02rem; line-height: 1.45; opacity: 0.9; }
-.ref-when { margin: 0; font-size: 1rem; opacity: 0.75; }
+
+/* The two kinds are parallel, so they read as a row rather than a stack — and it costs half the
+   vertical space, which is the scarce axis now that the code spans the full width. */
+.ref-kinds {
+    margin: 0; padding: 0; list-style: none;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem;
+    font-size: 1.02rem; line-height: 1.45; opacity: 0.9;
+}
+.ref-kinds li { padding-left: 0.9rem; border-left: 2px solid var(--deck-border); }
+
+.ref-when { margin: 0; font-size: 1rem; opacity: 0.75; max-width: 92ch; }

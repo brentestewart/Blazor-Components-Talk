@@ -1,26 +1,25 @@
 @namespace Talk.Client.Slides
 
-@* Concept #10: @ref. An illustrative example, not deck code: capture an <input> and call
-   FocusAsync after the first render. (Highlighting moved to C#, so CodeWindow no longer uses
-   @ref; the deck's only real @ref is the DynamicComponent in Deck.razor, too niche to teach.) *@
-<SplitSlide Title="@RefTitle" Subtitle="grab a handle" WideLeft="true">
-    <Left>
+@* Concept #10: @ref. Capture an <input> and call FocusAsync after the first render.
+   Notes sit BELOW the code, not beside it: the OnAfterRenderAsync signature is ~62 chars and
+   clipped in a SplitSlide column (.cs-pre clips rather than wraps). Full width fits it easily. *@
+<Slide Title="@RefTitle" Subtitle="grab a handle">
+    <div class="ref-body">
         <CodeWindow FileName="SearchBox.razor" Language="razor" Code="@Source" />
-    </Left>
-    <Right>
-        <div class="ref-side">
-            <p class="ref-lead">Sometimes a parent needs to <strong>reach in and call</strong>,
-                not just pass a value. <code>@@ref</code> captures a handle.</p>
-            <ul class="ref-kinds">
-                <li><code>ElementReference</code>: a DOM node to focus, measure, or hand to JS.</li>
-                <li>A <strong>component</strong> instance, to call its public methods
-                    (<code>_child.Refresh()</code>).</li>
-            </ul>
-            <p class="ref-when">A handle isn't valid until the <em>first render</em>, so use it from an
-                event handler or in <code>OnAfterRender</code>, never in the markup or an earlier hook.</p>
-        </div>
-    </Right>
-</SplitSlide>
+
+        <p class="ref-lead">Sometimes a parent needs to <strong>reach in and call</strong>,
+            not just pass a value. <code>@@ref</code> captures a handle.</p>
+
+        <ul class="ref-kinds">
+            <li><code>ElementReference</code>: a DOM node to focus, measure, or hand to JS.</li>
+            <li>A <strong>component</strong> instance, to call its public methods
+                (<code>_child.Refresh()</code>).</li>
+        </ul>
+
+        <p class="ref-when">A handle isn't valid until the <em>first render</em>, so use it from an
+            event handler or in <code>OnAfterRender</code>, never in the markup or an earlier hook.</p>
+    </div>
+</Slide>
 
 @code {
     private const string RefTitle = "@ref";
