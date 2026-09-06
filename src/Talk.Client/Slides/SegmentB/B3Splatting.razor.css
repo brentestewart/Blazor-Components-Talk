@@ -1,5 +1,1 @@
 .splat { display: flex; flex-direction: column; gap: 0.9rem; }
-
-/* Occupies its space but stays invisible until the reveal, so advancing a step doesn't change the
-   body's height (and therefore its fit-to-height scale). */
-.pending { visibility: hidden; }
