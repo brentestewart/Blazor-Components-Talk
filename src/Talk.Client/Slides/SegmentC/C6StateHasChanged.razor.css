@@ -15,4 +15,3 @@
 .sh-card.manual .sh-mark { color: var(--accent); }
 .sh ul { margin: 0; padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.55rem; font-size: 1.04rem; line-height: 1.4; opacity: 0.9; }
 .sh code { color: var(--accent); }
-.sh-eg { opacity: 0.7; font-size: 0.9rem; }

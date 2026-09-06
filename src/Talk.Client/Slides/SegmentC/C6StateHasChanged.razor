@@ -2,8 +2,9 @@
 
 @* Concept #13½: StateHasChanged, introduced before the off-thread gotcha (C7). Blazor
    re-renders a component automatically after its own events and lifecycle; when state changes
-   from somewhere it isn't watching, you call StateHasChanged() to ask. This is the missing
-   piece under the state-container subscribe line `State.OnChange += StateHasChanged`. *@
+   from somewhere it isn't watching, you call StateHasChanged() to ask.
+   The DeckState / shared-service material was dropped when that thread was parked — the timer
+   bullet now carries the slide straight into C7. *@
 <Slide Title="StateHasChanged" Subtitle="Ask to re-render">
     <p class="sh-intro">A component re-renders when Blazor <em>knows</em> its state changed.
         Most of the time it already does, but not always.</p>
@@ -19,16 +20,14 @@
         <div class="sh-card manual">
             <div class="sh-head"><span class="sh-mark">→</span> You call <code>StateHasChanged()</code></div>
             <ul>
-                <li>a shared service raises an event <span class="sh-eg">← <code>DeckState</code></span></li>
                 <li>a timer or background callback fires</li>
+                <li>an event you subscribed to is raised elsewhere</li>
                 <li>you want an interim render during a long <code>async</code> method</li>
             </ul>
         </div>
     </div>
-    <Caption Spaced>When a shared service like <code>DeckState</code> changes, the update came from
-        the service, not from this component, so Blazor won't re-render on its own. That's why each
-        subscriber runs <code>DeckState.OnChange += StateHasChanged</code>: when the service fires,
-        the component calls <code>StateHasChanged</code> to re-render itself.</Caption>
+    <Caption Spaced>The rule is the same in every case: if the change didn't come <em>through</em>
+        this component, Blazor has no way to know about it, so you have to ask.</Caption>
 </Slide>
 
 @code {

@@ -19,7 +19,7 @@ render modes from the inside. See Slide technology below.
 
 ## Status
 
-- **42 slides**, segments **A–H** plus a close (`Z`). Source of truth is the `Slides` table in
+- **40 slides**, segments **A–H** plus a close (`Z`). Source of truth is the `Slides` table in
   `src/Talk.Client/Present.razor` — that array *is* the table of contents.
 - **Concepts #2–#26**, plus lettered/fractional additions that earned their own slides
   (`#11b` named cascading, `#13½` `StateHasChanged`, `#18a`/`#18b` the two interop directions) and
@@ -29,13 +29,13 @@ render modes from the inside. See Slide technology below.
   named cascading (#11b), `ShouldRender` (#22), bUnit (#25).
   *(`DynamicComponent` #17 is not flex — it's the deck's rendering engine.)*
 - **Previously cut, since shipped:** `ErrorBoundary` (D3b/D3c) · `PersistentComponentState` (B7).
-- **Still cut:** QuickGrid · `Sections`. (Forms & validation shipped at 29–30.)
+- **Still cut:** QuickGrid · `Sections`. (Forms & validation shipped at 27–28.)
 - **Tests:** 6 passing in `tests/BlazorDeck.Tests` (bUnit for components, plain xunit for the
   pure `CodeHighlighter`).
 
 ---
 
-## Ordering — the 42 slides as built
+## Ordering — the 40 slides as built
 
 Numbers are live slide positions (`/slide/N`).
 
@@ -77,57 +77,66 @@ register-in-both-`Program.cs` point — cover that verbally when introducing the
 *CSS isolation moved here from Segment F: it's part of "what a component is made of", so it belongs
 next to the anatomy slides rather than in a styling segment at the end.*
 
-### C · Communication & DI (19–26) — dissecting the deck's own state container
+### C · Communication & DI (19–24)
 
 | # | Slide | Concept |
 |---|-------|---------|
-| 19 | `C1CommunicationMap` | #9 — the map: params down, `EventCallback` up, DI service anywhere |
-| 20 | `C2Ref` | #10 — `@ref`: capture an element, `FocusAsync` after first render *(illustrative)* |
-| 21 | `C3Cascading` | #11 — the real `<CascadingValue Value="State.Theme">` + a consumer |
-| 22 | `C3bNamedCascading` | #11b — two cascades of one type, disambiguated by `Name` *(illustrative)* |
-| 23 | `C4Di` | #12 — `AddScoped<DeckState>()` in **both** `Program.cs` files (the InteractiveAuto detail) |
-| 24 | `C5StateContainer` | #13 ⭐ — `DeckState`: state + `OnChange`; subscribe in `OnInitialized`, unsubscribe in `Dispose` |
-| 25 | `C6StateHasChanged` | #13½ — automatic re-render vs. asking for one |
-| 26 | `C7Threading` | #14 — the transition timer's off-thread continuation → `InvokeAsync(StateHasChanged)` |
+| 19 | `C2Ref` | #10 — `@ref`: capture an element, `FocusAsync` after first render |
+| 20 | `C3Cascading` | #11 — the real `<CascadingValue Value="State.Theme">` + a consumer |
+| 21 | `C3bNamedCascading` | #11b — two cascades of one type, disambiguated by `Name` |
+| 22 | `C4Di` | #12 — `AddScoped<DeckState>()` in **both** `Program.cs` files (the InteractiveAuto detail) |
+| 23 | `C6StateHasChanged` | #13½ — automatic re-render vs. asking for one |
+| 24 | `C7Threading` | #14 — the transition timer's off-thread continuation → `InvokeAsync(StateHasChanged)` |
+| — | `C1CommunicationMap` | **Parked** — the communication map |
+| — | `C5StateContainer` | **Parked** — the `DeckState` state container |
 
-### D · Advanced composition (27–35)
+*The **shared-service** thread is parked, not cut. A DI service holding state is ordinary .NET
+rather than a Blazor component feature, which made it the cheapest concept to give back for time.
+Both files are still in the repo; uncommenting two lines in `Present.razor` restores them.*
+
+*Knock-ons already applied: slide 23 lost its `DeckState` bullet and closing caption (the rule is
+now stated generically), and `C4Di`'s comment no longer says it sets up the next slide. `C4Di`
+still injects `DeckState`, which stands on its own as a DI example, and `C7Threading` never
+depended on the container — its example is the deck's transition timer.*
+
+### D · Advanced composition (25–33)
 
 | # | Slide | Concept |
 |---|-------|---------|
-| 27 | `D1Templated` | #15 — `RenderFragment` slots: the real `Card.razor` (named `Header` + `ChildContent`), live |
-| 28 | `D2Generic` | #16 *(flex)* — the deck's real `BulletList<T>`: `@typeparam`, inferred `TItem` |
-| 29 | `D2bForms` | Forms vocabulary: `EditForm` cascades an `EditContext`, `DataAnnotationsValidator` feeds it, `ValidationMessage` reads it. Live `InputText` |
-| 30 | `D2cInputBase` | #26 — write your own input: `DurationInput : InputBase<TimeSpan>` parsing "1h 30m", live. Step 1 the form, step 2 the component |
-| 31 | `D3DynamicComponent` | #17 — the deck's engine: one `<DynamicComponent>` swaps in whichever slide you're on |
-| 32 | `D3bErrorBoundary` | `ErrorBoundary` — the real wrap around this deck's slide host |
-| 33 | `D3cBoom` | ⭐ The payoff: a real slide throws live; the fallback appears, the deck survives, `→` keeps going |
-| 34 | `D4JsCall` | #18a — C# → JS: `IJSObjectReference` module import, `toggleFullscreen` |
-| 35 | `D5JsCallback` | #18b — JS → C#: `DotNetObjectReference` + `[JSInvokable]`, the real keyboard nav |
+| 25 | `D1Templated` | #15 — `RenderFragment` slots: the real `Card.razor` (named `Header` + `ChildContent`), live |
+| 26 | `D2Generic` | #16 *(flex)* — the deck's real `BulletList<T>`: `@typeparam`, inferred `TItem` |
+| 27 | `D2bForms` | Forms vocabulary: `EditForm` cascades an `EditContext`, `DataAnnotationsValidator` feeds it, `ValidationMessage` reads it. Live `InputText` |
+| 28 | `D2cInputBase` | #26 — write your own input: `DurationInput : InputBase<TimeSpan>` parsing "1h 30m", live. Step 1 the form, step 2 the component |
+| 29 | `D3DynamicComponent` | #17 — the deck's engine: one `<DynamicComponent>` swaps in whichever slide you're on |
+| 30 | `D3bErrorBoundary` | `ErrorBoundary` — the real wrap around this deck's slide host |
+| 31 | `D3cBoom` | ⭐ The payoff: a real slide throws live; the fallback appears, the deck survives, `→` keeps going |
+| 32 | `D4JsCall` | #18a — C# → JS: `IJSObjectReference` module import, `toggleFullscreen` |
+| 33 | `D5JsCallback` | #18b — JS → C#: `DotNetObjectReference` + `[JSInvokable]`, the real keyboard nav |
 
-*29 exists for 30's sake: the deck has no other forms content, so without it `InputBase<T>` would be
-teaching how to join machinery the room has never seen. 30 shows usage before authorship for the
+*27 exists for 28's sake: the deck has no other forms content, so without it `InputBase<T>` would be
+teaching how to join machinery the room has never seen. 28 shows usage before authorship for the
 same reason.*
 
-### E · Performance (36–38)
+### E · Performance (34–36)
 
 | # | Slide | Concept |
 |---|-------|---------|
-| 36 | `E1ShouldRender` | #22 — veto the renders that can't change your output; the deck guards tokenising instead |
-| 37 | `E2Key` | #19 — `@key` for stable list identity (the real `BulletList` + overview rows) |
-| 38 | `E3Virtualize` | #20 — the overview grid is a real `<Virtualize>` |
+| 34 | `E1ShouldRender` | #22 — veto the renders that can't change your output; the deck guards tokenising instead |
+| 35 | `E2Key` | #19 — `@key` for stable list identity (the real `BulletList` + overview rows) |
+| 36 | `E3Virtualize` | #20 — the overview grid is a real `<Virtualize>` |
 
-### F · Reuse (39–40)
-
-| # | Slide | Concept |
-|---|-------|---------|
-| 39 | `F1Libraries` | #23 — the RCL: `Sdk="Microsoft.NET.Sdk.Razor"`, assets under `_content/BlazorDeck/` |
-| 40 | `F2MudBlazor` | #24 — real MudBlazor components, themed by the shared palette |
-
-### G · Testing (41)
+### F · Reuse (37–38)
 
 | # | Slide | Concept |
 |---|-------|---------|
-| 41 | `G1Bunit` | #25 *(flex)* — the deck's real `CaptionTests` under `BunitContext` |
+| 37 | `F1Libraries` | #23 — the RCL: `Sdk="Microsoft.NET.Sdk.Razor"`, assets under `_content/BlazorDeck/` |
+| 38 | `F2MudBlazor` | #24 — real MudBlazor components, themed by the shared palette |
+
+### G · Testing (39)
+
+| # | Slide | Concept |
+|---|-------|---------|
+| 39 | `G1Bunit` | #25 *(flex)* — the deck's real `CaptionTests` under `BunitContext` |
 
 ### H · Code tour — **parked**
 
@@ -139,11 +148,11 @@ While it's parked, nothing in the deck reaches the MVVM starter in `samples/mvvm
 `/demo/mvvm`) — the tour was its only appearance. The closing slide still hands out the repo, so
 the code is available, just never walked on stage.
 
-### Close (42)
+### Close (40)
 
 | # | Slide | Beat |
 |---|-------|------|
-| 42 | `Z1Close` | Thank-you + repo link + scannable QR. No recap — the source *is* the recap |
+| 40 | `Z1Close` | Thank-you + repo link + scannable QR. No recap — the source *is* the recap |
 
 ---
 
@@ -196,10 +205,10 @@ demo slides are safe to type in.
 - **Cold open (slides 1–3):** state the meta outright — "this deck is a Blazor app; these slides are
   the components." Knowing it doesn't spoil anything; watching it get built *is* the payoff.
 - **Live moments throughout**, not just at the end: the render-mode probe (6), two live iframes
-  (7–8), the `@bind` toy (15), the live `<Stepper>` (16), the live `Card` (27) and `BulletList` (28),
-  two working forms with validation firing (29–30), a real slide crashing and recovering (33),
-  fullscreen and keyboard interop (34–35), the virtualized overview (38), live MudBlazor (40).
-- **Finale (42):** close on the repo — thank-you, link, QR. (The editor walk that used to sit here
+  (7–8), the `@bind` toy (15), the live `<Stepper>` (16), the live `Card` (25) and `BulletList` (26),
+  two working forms with validation firing (27–28), a real slide crashing and recovering (31),
+  fullscreen and keyboard interop (32–33), the virtualized overview (36), live MudBlazor (38).
+- **Finale (40):** close on the repo — thank-you, link, QR. (The editor walk that used to sit here
   is parked; see Segment H.)
 
 ## Anchor — the deck itself (`BlazorDeck`)
@@ -244,31 +253,31 @@ point that a slide can crash on stage, and RCL reusability is unarguable.
 | 5 | Attribute splatting | 14 | `CaptureUnmatchedValues` + `@attributes` on the root element | strong |
 | 6 | Data binding | 15 | Live `@bind` toy beside its own source | genuine (toy) |
 | 7 | `EventCallback` | 16 | `Stepper` raises, parent decides what a step means | strong (toy) |
-| 8 | Lifecycle | 17 | Full `ComponentBase` timeline; `OnAfterRender` pays off at 34 | strong |
+| 8 | Lifecycle | 17 | Full `ComponentBase` timeline; `OnAfterRender` pays off at 32 | strong |
 | — | `PersistentComponentState` | 18 | Prerender double-run; `[PersistentState]` + `??=` as the whole diff | made-up by design |
-| 9 | Parent/child | 19 | The communication map framing the segment | strong |
-| 10 | `@ref` | 20 | Capture an `<input>`, `FocusAsync` | illustrative |
-| 11 | Cascading params | 21 | The real theme cascade wrapping the whole stage | ⭐ strong |
-| 11b | Named cascading | 22 | Two same-typed cascades disambiguated by `Name` | illustrative *(flex)* |
-| 12 | DI | 23 | `AddScoped<DeckState>()` in **both** `Program.cs` files | ⭐ real detail |
-| 13 | State container | 24 | `DeckState` drives everything you're watching | ⭐ textbook |
-| 13½ | `StateHasChanged` | 25 | The missing piece under `State.OnChange += StateHasChanged` | strong |
-| 14 | `InvokeAsync`/threading | 26 | The transition timer's off-thread continuation | ⭐ genuine |
-| 15 | Templated components | 27 | Real `Card` with a named `Header` slot, rendered live | strong |
-| 16 | Generics | 28 | The real `BulletList<T>` that the agenda slide (4) already uses | strong *(flex)* |
-| — | Forms | 29 | `EditForm` + `DataAnnotationsValidator` + `InputText`, live — the vocabulary 30 needs | context slide |
-| 26 | `InputBase<T>` | 30 | `DurationInput : InputBase<TimeSpan>`, live: nonsense in, your own error out | ⭐ converges B2/B3/B4/C3/D2 |
-| 17 | `DynamicComponent` | 31 | The deck's engine — renders the current slide **by type** | ⭐ load-bearing |
-| — | `ErrorBoundary` | 32–33 | The real wrap around the slide host; slide 33 throws live and recovers | ⭐ dogfooded |
-| 18a | JS interop C#→JS | 34 | `IJSObjectReference` → `toggleFullscreen` in the real `deck.js` | strong |
-| 18b | JS interop JS→C# | 35 | `DotNetObjectReference` + `[JSInvokable]` — every keypress you make | ⭐ strong |
-| 19 | `@key` | 37 | `BulletList` keys by item; overview rows key by index | genuine |
-| 20 | Virtualization | 38 | The overview grid is a real `<Virtualize>` | genuine |
+| 9 | Parent/child | — | **Parked** with the communication map | — |
+| 10 | `@ref` | 19 | Capture an `<input>`, `FocusAsync` | strong |
+| 11 | Cascading params | 20 | The real theme cascade wrapping the whole stage | ⭐ strong |
+| 11b | Named cascading | 21 | Two same-typed cascades disambiguated by `Name` | strong *(flex)* |
+| 12 | DI | 22 | `AddScoped<DeckState>()` in **both** `Program.cs` files | ⭐ real detail |
+| 13 | State container | — | **Parked** — ordinary DI, not a component feature | — |
+| 13½ | `StateHasChanged` | 23 | When the change didn't come through this component, you have to ask | strong |
+| 14 | `InvokeAsync`/threading | 24 | The transition timer's off-thread continuation | ⭐ genuine |
+| 15 | Templated components | 25 | Real `Card` with a named `Header` slot, rendered live | strong |
+| 16 | Generics | 26 | The real `BulletList<T>` that the agenda slide (4) already uses | strong *(flex)* |
+| — | Forms | 27 | `EditForm` + `DataAnnotationsValidator` + `InputText`, live — the vocabulary 28 needs | context slide |
+| 26 | `InputBase<T>` | 28 | `DurationInput : InputBase<TimeSpan>`, live: nonsense in, your own error out | ⭐ converges B2/B3/B4/C3/D2 |
+| 17 | `DynamicComponent` | 29 | The deck's engine — renders the current slide **by type** | ⭐ load-bearing |
+| — | `ErrorBoundary` | 30–31 | The real wrap around the slide host; slide 31 throws live and recovers | ⭐ dogfooded |
+| 18a | JS interop C#→JS | 32 | `IJSObjectReference` → `toggleFullscreen` in the real `deck.js` | strong |
+| 18b | JS interop JS→C# | 33 | `DotNetObjectReference` + `[JSInvokable]` — every keypress you make | ⭐ strong |
+| 19 | `@key` | 35 | `BulletList` keys by item; overview rows key by index | genuine |
+| 20 | Virtualization | 36 | The overview grid is a real `<Virtualize>` | genuine |
 | 21 | CSS isolation | 12 | The `b-…` rewrite; why a child's elements dodge it | strong |
-| 22 | `ShouldRender` | 36 | Framed as the flip side of #13½; `CodeWindow` guards the work instead | honest caveat *(flex)* |
-| 23 | RCL | 39 | `BlazorDeck` itself — reused every slide and every future talk | ⭐⭐ the payoff |
-| 24 | MudBlazor | 40 | Deck themes *are* `MudTheme`s; Mud components match with no extra styling | structural |
-| 25 | bUnit | 41 | The deck's real `CaptionTests` | strong *(flex)* |
+| 22 | `ShouldRender` | 34 | Framed as the flip side of #13½; `CodeWindow` guards the work instead | honest caveat *(flex)* |
+| 23 | RCL | 37 | `BlazorDeck` itself — reused every slide and every future talk | ⭐⭐ the payoff |
+| 24 | MudBlazor | 38 | Deck themes *are* `MudTheme`s; Mud components match with no extra styling | structural |
+| 25 | bUnit | 39 | The deck's real `CaptionTests` | strong *(flex)* |
 
 ## Slide-type palette — usage as built
 
@@ -303,18 +312,22 @@ point that a slide can crash on stage, and RCL reusability is unarguable.
 
 ## Open items
 
-- [x] **Forms & `InputBase<T>`** — shipped as **slides 29–30**. 29 is the vocabulary slide the deck
-      otherwise lacked (`EditForm`/validator/`ValidationMessage`); 30 writes a real
+- [x] **Forms & `InputBase<T>`** — shipped as **slides 27–28**. 27 is the vocabulary slide the deck
+      otherwise lacked (`EditForm`/validator/`ValidationMessage`); 28 writes a real
       `DurationInput : InputBase<TimeSpan>` that parses "1h 30m", shown usage-first. Both run live.
       Illustrative, not dogfooded — a deck has no forms of its own. Closes the biggest content gap
       against the conference abstract's "patterns for real-world apps".
 - [ ] **More `@bind` modifiers** — slide 16 covers `@bind` + `@bind:event` only. Consider
       `@bind:format`, `@bind:after`, `@bind:get`/`@bind:set`. (`@bind-Value` is now covered at 31.)
       Open question: a compact "modifiers" strip on slide 16, or its own slide.
-- [ ] **Time budget** — 42 slides against ~53 minutes. Two things have been parked rather than cut:
-      the live code tour (Segment H) and `A7WhyItMatters`. Broader slide cuts were considered and
-      rejected — each removed a concept for a saving measured in seconds. If it still runs long the
-      lever is pace and the flex items (#16, #11b, #22, #25), not the slide list.
+- [ ] **Time budget** — 40 slides. Parked so far, none deleted: the live code tour (Segment H),
+      `A7WhyItMatters`, and the shared-service thread (`C1CommunicationMap`, `C5StateContainer`).
+      The filter for cutting is **"is it actually a Blazor component feature?"** — a DI service
+      holding state isn't, which is why that thread went; `@ref` and named cascading are, which is
+      why they stayed even though the deck doesn't dogfood them. If it still runs long the lever is
+      pace and the flex items (#16, #11b, #22, #25).
+      *No per-slide timings have ever been measured — any minute figures in this file or in
+      conversation are guesses. Rehearse with a timer before trusting them.*
 - [ ] **Decide keep-or-delete on the three orphan layouts** — `CompareSlide`/`CompareOption`,
       `PlaygroundSlide`, `DemoSlide`. (`CodeSlide` and `SectionSlide` are no longer orphans: B1 and
       H1 use them.)

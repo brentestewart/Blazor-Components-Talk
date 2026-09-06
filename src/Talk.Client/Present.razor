@@ -51,13 +51,18 @@
         new(typeof(B6Lifecycle), "Lifecycle methods") { Tag = "Lifecycle" },
         new(typeof(B7Persist), "PersistentComponentState") { Tag = "PersistState" },
 
-        // Segment C · Communication & DI — dissecting the deck's own state container.
-        new(typeof(C1CommunicationMap), "How components talk") { Tag = "Communication" },
+        // Segment C · Communication & DI
+        // The shared-service thread is PARKED, not cut: a DI service holding state is ordinary
+        // .NET, not a Blazor component feature, so it was the cheapest concept to give back.
+        // C1CommunicationMap.razor and C5StateContainer.razor are still in the repo — uncomment
+        // these two lines to restore the segment. C6StateHasChanged lost its DeckState material
+        // to match; C4Di still injects DeckState, which stands on its own as a DI example.
+        // new(typeof(C1CommunicationMap), "How components talk") { Tag = "Communication" },
         new(typeof(C2Ref), "@ref — grab a handle") { Tag = "Ref" },
         new(typeof(C3Cascading), "Cascading parameters") { Tag = "CascadingParameter" },
         new(typeof(C3bNamedCascading), "Named cascading") { Tag = "NamedCascade" },
         new(typeof(C4Di), "Dependency injection") { Tag = "DependencyInjection" },
-        new(typeof(C5StateContainer), "State container (DeckState)") { Tag = "StateContainer" },
+        // new(typeof(C5StateContainer), "State container (DeckState)") { Tag = "StateContainer" },
         new(typeof(C6StateHasChanged), "StateHasChanged") { Tag = "StateHasChanged" },
         new(typeof(C7Threading), "InvokeAsync threading") { Tag = "InvokeAsync" },
 
