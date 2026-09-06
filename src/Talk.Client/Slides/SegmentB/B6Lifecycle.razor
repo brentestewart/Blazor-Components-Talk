@@ -2,7 +2,9 @@
 
 @* Concept #8: lifecycle. The full ComponentBase hook sequence. Most come in a sync + async
    form; SetParametersAsync is async-only and ShouldRender is sync-only. A real OnAfterRender
-   use (JS interop) comes later, in Segment D; ShouldRender returns in Segment E. *@
+   use (JS interop) comes later, in Segment D; ShouldRender returns in Segment E.
+   The sync/async-only notes are dash-separated, not parenthesised: OnAfterRender shows a real
+   parameter list, and parentheses on the others read as signatures too. *@
 <Slide Title="The component lifecycle">
     <p class="lc-intro">Runs top to bottom. Most hooks have a sync and an <code>async</code> form.</p>
     <ul class="lifecycle">
@@ -32,10 +34,10 @@
 
     private static readonly Hook[] _hooks =
     {
-        new("SetParametersAsync", "(async only)", "raw parameters arrive; the base assigns them, then runs:", "on set"),
+        new("SetParametersAsync", "— async only", "raw parameters arrive; the base assigns them, then runs:", "on set"),
         new("OnInitialized", "OnInitializedAsync", "the component is created; set up initial state", "once", Nested: true),
         new("OnParametersSet", "OnParametersSetAsync", "a parameter is set or changes; react to new inputs", "on change", Nested: true),
-        new("ShouldRender", "(sync only)", "gate a re-render; return false to skip one", "before render"),
+        new("ShouldRender", "— sync only", "gate a re-render; return false to skip one", "before render"),
         new("OnAfterRender", "OnAfterRenderAsync", "it has rendered to the DOM; touch rendered elements", "after render",
             Param: "(bool firstRender)"),
     };
