@@ -25,6 +25,8 @@
                     <span class="pcs-mark">1&times;</span>
                     <div><code>[PersistentState]</code><span>persists the result after prerender; the client finds it already set and skips the refetch &mdash; the <code>??=</code> is the whole trick</span></div>
                 </div>
+                <p class="pcs-how"><span class="pcs-how-tag">how</span> serialized into the
+                    prerendered HTML, then assigned back <em>before</em> <code>OnInitialized</code> runs.</p>
             }
             <p class="pcs-when">Only matters under <strong>prerendering</strong> &mdash; Interactive
                 Server, WebAssembly, or Auto. No prerender, no double run.</p>
