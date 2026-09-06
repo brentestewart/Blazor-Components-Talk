@@ -11,19 +11,14 @@
     <div class="eb-body">
         <CodeWindow FileName="Deck.razor" Language="razor" Code="@Wrap" />
 
-        @* Three columns rather than a stack: the notes are parallel points, and vertical space is
-           the scarce axis once the code spans the full width. *@
-        <div class="eb-notes">
-            <Caption>Wrap a subtree in <code>&lt;ErrorBoundary&gt;</code>. If anything inside throws
-                — in render or a lifecycle method — it shows <strong>ErrorContent</strong> instead of
-                letting the failure tear down the circuit.</Caption>
-            <Caption>Two slots: <strong>ChildContent</strong> for the normal UI, and
-                <strong>ErrorContent</strong>, handed the exception.</Caption>
-            <Caption>This deck keys every slide, so each gets a fresh boundary — navigate away and it
-                recovers on its own. <code>Recover()</code> re-attempts the same slide in place.</Caption>
-        </div>
+        <Caption>Wrap a subtree in <code>&lt;ErrorBoundary&gt;</code> and a throw inside it — in
+            render or in a lifecycle method — shows <strong>ErrorContent</strong> instead of tearing
+            down the circuit. Two slots: <strong>ChildContent</strong> for the normal UI, and
+            <strong>ErrorContent</strong>, handed the exception.</Caption>
 
-        <Caption>Next: a real slide that throws — and the deck walks right past it.</Caption>
+        <Caption Spaced>This deck keys every slide, so each gets a fresh boundary — navigate away and
+            it recovers on its own, and <code>Recover()</code> re-attempts the same slide in
+            place.</Caption>
     </div>
 </Slide>
 
