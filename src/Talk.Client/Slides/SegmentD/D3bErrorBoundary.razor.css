@@ -1,3 +1,4 @@
-.eb-notes { display: flex; flex-direction: column; gap: 1rem; }
-.eb-notes p { margin: 0; font-size: 1.1rem; line-height: 1.5; }
-.eb-notes code { color: var(--accent); }
+/* Code, then prose. Caption owns the size and colour, so there's nothing to style but the stack. */
+.eb-body { display: flex; flex-direction: column; gap: 1rem; }
+
+.eb-notes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.6rem; }
