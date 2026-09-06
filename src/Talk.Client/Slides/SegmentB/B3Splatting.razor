@@ -1,21 +1,54 @@
 @namespace Talk.Client.Slides
+@inherits SteppableSlide
 
 @* Concept #5: attribute splatting. The component collects undeclared attributes; a caller
-   passes extras that land on the root element. *@
+   passes extras that land on the root element.
+   Two steps on purpose: step 1 poses the question (here's the component, here's the caller),
+   step 2 reveals the rendered HTML. Ask the room what comes out before advancing — the answer
+   surprises people, because the splat REPLACES class rather than merging it.
+   Verified against the real Slide component with a bUnit render, and it matches the documented
+   rule: attributes are processed right to left, first one processed (the rightmost) wins.
+   https://learn.microsoft.com/en-us/aspnet/core/blazor/components/splat-attributes-and-arbitrary-parameters *@
 <Slide Title="Attribute splatting" Subtitle="The pass-through">
     <div class="splat">
         <CodeWindow FileName="Slide.razor" Language="razor" Code="@Declare" />
         <CodeWindow FileName="Page.razor" Language="razor" Code="@Use" />
-        <Caption>
-            <code>class</code> and <code>data-track</code> aren't declared parameters, so they're
-            collected into <code>Extra</code> and splatted onto the root <code>&lt;div&gt;</code>.
-            Without it, an undeclared attribute is a <strong>runtime error</strong>: a component
-            rejects what it didn't expect.
-        </Caption>
+
+        @* Always rendered, hidden until the reveal. The SplitSlide/Slide body scales to fit its
+           height, so letting this window appear on advance would visibly shrink the whole column —
+           reserving the space keeps the reveal crisp. *@
+        <div class="@(Step == 0 ? "pending" : null)">
+            <CodeWindow FileName="rendered HTML" Language="html" Code="@Output" />
+        </div>
+
+        @if (Step == 0)
+        {
+            <Caption>
+                <code>class</code> and <code>data-track</code> aren't declared parameters, so they're
+                collected into <code>Extra</code> and splatted onto the root <code>&lt;div&gt;</code>.
+                Without it, an undeclared attribute is a <strong>runtime error</strong>: a component
+                rejects what it didn't expect.
+            </Caption>
+            <Caption Spaced>So what does that <code>&lt;div&gt;</code> actually render as? Both sides
+                set <code>class</code> — only one of them survives.</Caption>
+        }
+        else
+        {
+            <Caption>
+                <strong><code>class="slide"</code> is gone.</strong> A splat <strong>replaces</strong>
+                — it never merges — so the component's own class, and every <code>.slide</code> rule,
+                goes with it.
+            </Caption>
+            <Caption Spaced>Position decides which survives: attributes resolve
+                <strong>right to left</strong>, so the <strong>rightmost wins</strong>. Swap these two
+                and <code>slide</code> wins instead, silently dropping <code>wide</code>.</Caption>
+        }
     </div>
 </Slide>
 
 @code {
+    public override int StepCount => 2;
+
     // The component collects the leftovers and splats them onto an element.
     private const string Declare = @"<div class=""slide"" @attributes=""Extra""> ... </div>
 
@@ -26,4 +59,7 @@
 
     // A caller passes attributes the component never declared.
     private const string Use = @"<Slide Title=""Demo"" class=""wide"" data-track=""intro"" />";
+
+    // The real output — taken from a bUnit render of the actual Slide component, not written by hand.
+    private const string Output = @"<div class=""wide"" data-track=""intro"" b-t2m4o9m0u9> ... </div>";
 }
