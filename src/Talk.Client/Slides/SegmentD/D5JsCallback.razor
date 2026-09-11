@@ -3,8 +3,8 @@
 @* Concept #18b: calling C# from JS. Hand JavaScript a DotNetObjectReference to a component and
    mark the callable methods [JSInvokable]; JS invokes them by name. The deck's real deck.js does
    this for keyboard nav, every key comes back through OnKey. Dispose the reference to avoid a leak.
-   One column: the code was clipping badly in a SplitSlide column (~48 chars); full width holds
-   ~67. The deck.js header comment was 68 and is shortened to clear even that. *@
+   One column: the code was clipping badly in a SplitSlide column (~48 chars). The deck.js header
+   comment was 68 chars and is shortened to fit. The API calls are narrated, not listed. *@
 <Slide Title="JavaScript interop" Subtitle="JS → C#">
     <div class="js-body">
         <CodeWindow FileName="Deck.razor" Language="csharp" Code="@Cs" />
@@ -20,6 +20,8 @@
 
 @code {
     private const string Cs = @"@inject IJSRuntime JS
+
+var module = await JS.InvokeAsync<IJSObjectReference>(""import"", ""./deck.js"");
 
 // hand JS a reference to this component
 var meRef = DotNetObjectReference.Create(this);

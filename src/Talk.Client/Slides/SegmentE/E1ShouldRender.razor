@@ -26,13 +26,16 @@
 </SplitSlide>
 
 @code {
-    private const string Source = @"// Blazor calls ShouldRender before every render (after the first).
-// Return false to skip the diff + DOM update for this cycle.
-private int _shown = -1;
+    private const string Source = @"private int _shown = -1;
 
+// Runs before every render after the first.
 protected override bool ShouldRender()
 {
-    if (Count == _shown) return false;   // nothing we render changed
+    if (Count == _shown)
+    {
+        // nothing we render changed
+        return false;
+    }
     _shown = Count;
     return true;
 }";

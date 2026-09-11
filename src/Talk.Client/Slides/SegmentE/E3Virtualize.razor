@@ -1,8 +1,9 @@
 @namespace Talk.Client.Slides
 
 @* Concept #20: <Virtualize>. Renders only the rows in the viewport (plus a small buffer) and
-   recycles them as you scroll. Dissects the deck's real overview list, which virtualizes over
-   every slide, so a long deck renders only the handful you can see. *@
+   recycles them as you scroll. NOTE: this is an illustrative example, not deck source — the real
+   overview in Deck.razor is a plain @foreach over every slide. Virtualize's spacer divs don't
+   work inside its 2-column CSS grid, and its scroll-to-current needs the card in the DOM. *@
 <SplitSlide Title="Virtualize" Subtitle="Render only what's visible" WideLeft="true">
     <Left>
         <CodeWindow FileName="Deck.razor · overview" Language="razor" Code="@Source" />
@@ -18,8 +19,6 @@
                 <li>pair it with <code>@@key</code> so recycled rows keep the right identity</li>
                 <li><code>ItemsProvider</code> overload: fetch on demand, for paged or remote data</li>
             </ul>
-            <p class="real">The deck's overview (press <code>o</code>) is a <code>Virtualize</code> over
-                every slide, so a 200-slide deck still only renders the rows you can see.</p>
         </div>
     </Right>
 </SplitSlide>

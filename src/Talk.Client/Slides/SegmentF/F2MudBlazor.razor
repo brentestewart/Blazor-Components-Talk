@@ -1,17 +1,21 @@
 @namespace Talk.Client.Slides
 
-@* Concept #24: MudBlazor, a real third-party component library the deck already uses. AddMudServices
-   in Program.cs, one MudThemeProvider in Deck.razor fed by DeckTheme, so MudBlazor's palette tracks
-   the deck's accent. The live components on the right are real MudBlazor, themed by that sharing. *@
-<SplitSlide Title="MudBlazor" Subtitle="Third-party components, themed to match" WideLeft="true">
-    <Left>
-        <div class="mud-code">
-            <CodeWindow FileName="Program.cs" Language="csharp" Code="@Setup" />
-            <CodeWindow FileName="Deck.razor" Language="razor" Code="@Theme" />
-        </div>
-    </Left>
-    <Right>
-        <div class="mud-side">
+@* Concept #24: MudBlazor, a real third-party component library the deck already uses.
+   The code teaches the pattern that matters when you adopt a library: wrap it. AppButton renders
+   a MudButton but exposes YOUR API — attribute splatting (#B3) + ChildContent (#D1) reused as
+   payoff, so restyling or swapping libraries is one file, not every call site.
+   AppButton.razor is illustrative, NOT deck source — the deck's only real MudBlazor usage is the
+   MudThemeProvider line quoted in the closing note, which is Deck.razor:14 verbatim.
+   Dropped an AddMudServices window: "call the library's registration method" is true of every
+   .NET library and teaches nothing.
+   Full width, not a SplitSlide column: a column holds ~46 chars, which forces the [Parameter]
+   declarations to wrap onto 13 lines and shrinks the slide to half size. Full width holds ~67,
+   so they fit as written, and the demo sits beside the notes underneath. *@
+<Slide Title="MudBlazor" Subtitle="Third-party components, on your terms">
+    <div class="mud-body">
+        <CodeWindow FileName="AppButton.razor" Language="razor" Code="@Wrapper" />
+
+        <div class="mud-row">
             <LiveFrame Label="live: real MudBlazor">
                 <div class="mud-demo">
                     <MudButton Variant="Variant.Filled" Color="Color.Primary">Primary</MudButton>
@@ -19,19 +23,28 @@
                     <MudProgressLinear Color="Color.Primary" Value="64" Class="mud-bar" />
                 </div>
             </LiveFrame>
-            <p class="lead">A library hands you a themed toolkit, buttons, dialogs, data grids, so
-                you're not hand-rolling every control.</p>
-            <p class="real">These are real MudBlazor components. Each deck theme <em>is</em> a
-                <code>MudTheme</code>, so they share its palette and match the slide with no extra
-                styling.</p>
+
+            <div class="mud-notes">
+                <p class="lead">Wrap the library in your own component and the app codes against
+                    <strong>your</strong> API — restyle everywhere, or swap libraries, from one
+                    file.</p>
+                <p class="real">These buttons are real MudBlazor. The deck's whole use of it is one
+                    line — <code>&lt;MudThemeProvider Theme="@@t.Mud" IsDarkMode="t.IsDark" /&gt;</code>
+                    — because each deck theme <em>is</em> a <code>MudTheme</code>.</p>
+            </div>
         </div>
-    </Right>
-</SplitSlide>
+    </div>
+</Slide>
 
 @code {
-    private const string Setup = @"// Program.cs: register MudBlazor's services once
-builder.Services.AddMudServices();";
+    private const string Wrapper = @"<MudButton Color=""Color.Primary"" @attributes=""Extra"">
+    @ChildContent
+</MudButton>
 
-    private const string Theme = @"@* the preset's own MudTheme drives MudBlazor; IsDarkMode picks the mode *@
-<MudThemeProvider Theme=""@theme.Mud"" IsDarkMode=""theme.IsDark"" />";
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? Extra { get; set; }
+}";
 }

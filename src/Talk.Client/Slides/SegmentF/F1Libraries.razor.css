@@ -1,9 +1,15 @@
-.code-stack { display: flex; flex-direction: column; gap: 0.9rem; }
-.side { display: flex; flex-direction: column; gap: 0.95rem; }
-.lead { margin: 0; font-size: 1.1rem; line-height: 1.5; }
-.lead code, .lead strong { color: var(--accent); }
-.side ul { margin: 0; padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.6rem; font-size: 1.02rem; line-height: 1.4; opacity: 0.9; }
-.side ul code { color: var(--accent); }
-.real { margin: 0; font-size: 1rem; opacity: 0.8; line-height: 1.5;
-    padding-top: 0.85rem; border-top: 1px solid var(--deck-border); }
-.real code { color: var(--accent); }
+/* List only — BulletList owns the marker and spacing, so this is just the accent and the footer,
+   matching the agenda slide's treatment. */
+.accent { color: var(--accent); }
+.foot { margin: 2rem 0 0; opacity: 0.55; font-style: italic; }
+
+/* The sub text is a MarkupString, so its <code> tags are created at runtime and carry no scope
+   id — ::deep is what lets this rule reach them. nowrap keeps a tag like
+   <SupportedPlatform Include="browser" /> from breaking across two lines mid-token, and the hair
+   of margin stops monospace running into the sentence's punctuation. */
+.sub ::deep code {
+    color: var(--accent);
+    font-size: 0.82em;
+    white-space: nowrap;
+    margin-right: 0.08em;
+}
